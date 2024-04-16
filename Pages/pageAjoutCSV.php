@@ -23,6 +23,7 @@
 
 
 
+
 <body>
     <header>
         <nav class="navbar navbar-expand-lg" id="nav">
@@ -104,6 +105,7 @@
             </div>
             <input type="hidden" id="ligneIndex" name="ligneIndex">
             <button type="submit" class="btn btn-primary" name="btnValue" value="ajout">Ajouter Ligne</button>
+            <button type="submit" class="btn btn-primary" name="btnValue" value="ajoutMax">Passer à la CAC suivante</button>
             <button type="submit" class="btn btn-primary" name="btnValue" value="modif">Modifier Ligne</button>
             <button type="submit" class="btn btn-primary" name="btnValue" value="suppr">Supprimer Ligne</button>
         </form>

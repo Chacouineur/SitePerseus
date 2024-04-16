@@ -24,28 +24,85 @@ if (!empty($_POST['carte']) && !empty($csvFileName) && !empty($_POST['btnValue']
         $depVannes="#";
     }
     
-    
+    // Ouvrir le fichier CSV en mode écriture
+    $monFichier = fopen($csvFileName, "r+");  // 'r+' permet la lecture et l'écriture
+    if (!$monFichier) {
+        die("Impossible d'ouvrir le fichier");
+    }
 
     switch($btnValue){
         case "ajout":
-            $monFichier = fopen($csvFileName, "a");
-            if (!$monFichier){
-                print("Impossible d'ouvrir le fichier");
-                exit;
+            // Compter le nombre de lignes pour la carte spécifiée
+            $nombreDeLignesParCarte = 0;
+            while (($data = fgetcsv($monFichier, 1000, ";")) !== FALSE) {
+                if ($data[0] === $carte) {
+                    $nombreDeLignesParCarte++;
+                }
             }
-            else{
+
+            // Ajouter une nouvelle ligne si le nombre de lignes est inférieur à 12
+            if ($nombreDeLignesParCarte < 12) {
+                
+                fseek($monFichier, 0, SEEK_END); // Aller à la fin du fichier pour l'écriture
+
                 $ligne = [$carte, $vannesEtat, $valeur, $timeDep, $depVannes];
-                    
-                // Écriture de l'entête dans le fichier CSV
-                fputcsv($monFichier, $ligne, ';'); 
+                fputcsv($monFichier, $ligne, ';');
+            } else {
+                echo "La limite de 12 lignes pour la carte $carte a été atteinte.";
+            }
+
+            fclose($monFichier);
+            break;
+        case "ajoutMax":
+            // Compter le nombre de lignes pour la carte spécifiée
+            $nombreDeLignesParCarte = 0;
+            while (($data = fgetcsv($monFichier, 1000, ";")) !== FALSE) {
+                if ($data[0] === $carte) {
+                    $nombreDeLignesParCarte++;
+                }
+            }
+
+            // Ajouter une nouvelle ligne si le nombre de lignes est inférieur à 12
+            if ($nombreDeLignesParCarte < 12) {
+                
+                fseek($monFichier, 0, SEEK_END); // Aller à la fin du fichier pour l'écriture
+                $ligne = [$carte, $vannesEtat, $valeur, $timeDep, $depVannes];
+                $ligneVide = [$carte,"#","#","#","#"];
+                $offset = ["OFFSET","GE","#","#","#"];
+                fputcsv($monFichier, $ligne, ';');
+                for($nombreDeLignesParCarte+1;$nombreDeLignesParCarte+1<12;$nombreDeLignesParCarte++){
+                    fputcsv($monFichier, $ligneVide, ';');
+                }
+                fputcsv($monFichier, $offset, ';');
+                
+            } else {
+                echo "La limite de 12 lignes pour la carte $carte a été atteinte.";
+            }
+
+            fclose($monFichier);
+            break;
+        case "modif":
+            if ($numLigne) {
+                $ligne = [$carte, $vannesEtat, $valeur, $timeDep, $depVannes];
+                $csvData[$numLigne] = $ligne;
+                $csvData[0] = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
+            
+                $monFichier = fopen($csvFileName, "w");
+            
+                if (!$monFichier) {
+                    die("Impossible d'ouvrir le fichier $csvFileName pour écriture.");
+                }
+            
+                foreach ($csvData as $ligne) {
+                    if (fputcsv($monFichier, $ligne, ';') === false) {
+                        die("Erreur lors de l'écriture dans le fichier $csvFileName.");
+                    }
+                }
+            
                 fclose($monFichier);
             }
             break;
-        case "modif":
-            if($numLigne){
-                
-            }
-            break;
+            
         case "suppr":
             if($numLigne){
                 // Supprimer la ligne correspondant à $numLigne du tableau $csvData
@@ -75,9 +132,6 @@ if (!empty($_POST['carte']) && !empty($csvFileName) && !empty($_POST['btnValue']
             break;
     }
     
-
-    
-
     // Lire le contenu du fichier CSV dans un tableau
     $lines = file($csvFileName, FILE_IGNORE_NEW_LINES);
  

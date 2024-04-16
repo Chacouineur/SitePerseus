@@ -24,11 +24,11 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
 
     // Stocker la valeur de csvFileName dans une variable de session
     $_SESSION['csvFileName'] = $csvFileName;
-    session_write_close();
     if (!$file) {
         print("Erreur ! Impossible d ouvrir le fichier.");
+        unset($_SESSION['csvFileName']); 
         ?>
-        <html><a class="btn btn-primary" href="AjoutCSV.php" role="button">Retour</a>
+        <html><a class="btn btn-primary" href="Pages/pageAjoutCSV.php" role="button">Retour</a>
         </html><?php
         exit();
     }
@@ -54,17 +54,20 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     // Vérifier si les valeurs existent déjà dans le fichier
     if (valuesExist($hexadecimal, $csvFileName, $filePath)) {
         print("Erreur ! Les valeurs existent deja dans le fichier.");
+        unset($_SESSION['csvFileName']);
         ?>
-        <html><a class="btn btn-primary" href="AjoutCSV.php" role="button">Retour</a>
+        <html><a class="btn btn-primary" href="Pages/pageAjoutCSV.php" role="button">Retour</a>
         </html><?php
         exit();
     }
 
     if (!fwrite($file, $hexadecimal . ';' . $csvFileName . "\n")) {
         print("Erreur ! La valeur n a pas ete ajoutee.");
+        unset($_SESSION['csvFileName']);
         ?>
-        <html><a class="btn btn-primary" href="AjoutCSV.php" role="button">Retour</a>
-        </html><?php
+        <html><a class="btn btn-primary" href="Pages/pageAjoutCSV.php" role="button">Retour</a>
+        </html>
+        <?php
         exit();
     } else {
         fclose($file);
@@ -80,20 +83,27 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
             
             // Fermeture du fichier
             fclose($handle);
+            unset($_SESSION['csvData']);
+            session_write_close();
             header('Location: Pages/pageAjoutCSV.php');
             exit();
         } else {
             echo "Erreur lors de la creation du fichier.";
+            unset($_SESSION['csvFileName']); 
             ?>
             <html><a class="btn btn-primary" href="AjoutCSV.php" role="button">Retour</a>
             </html><?php
+            
+            exit();
         }
     }
 } else {
     print("Erreur ! Les champs code et nom doivent etre remplis.");
+    unset($_SESSION['csvFileName']); 
     ?>
     <html><a class="btn btn-primary" href="AjoutCSV.php" role="button">Retour</a>
     </html><?php
+    exit();
 }
 
 // Fonction pour vérifier si les valeurs existent déjà dans le fichier
@@ -123,8 +133,10 @@ function valuesExist($codeEG, $csvFileName, $filePath) {
             }
         }
     }
-
+    
     fclose($file);
     return false; // Retourner false si les valeurs n'ont pas été trouvées
 }
+unset($_SESSION['csvData']);
+session_write_close();
 ?>
