@@ -1,24 +1,27 @@
 <?php 
-    $titre = "Page Ajout CSV";
-    $page = "../pageAjoutCSV.css";
-    require '../header.inc.php';
-    session_start();
+   $titre = "Page Ajout CSV";
+   $page = "../pageAjoutCSV.css";
+   require '../header.inc.php';
+   session_start();
+   include '../afficher.php';
 
-    // Vérifier si la variable de session 'csvData' est définie
-    if(isset($_SESSION['csvData'])) 
-        $csvData = $_SESSION['csvData'];
-    else {
-        // Initialisez $csvData comme un tableau vide si la session n'a pas encore été définie
-        $csvData = [];
-    }
-    // Vérifier si la variable de session 'csvFileName' est définie
-    if(isset($_SESSION['csvFileName'])) 
-        $csvFileName = $_SESSION['csvFileName'];
-    else {
-        // Initialisez $csvFileName comme un tableau vide si la session n'a pas encore été définie
-        $csvFileName = [];
-    }
+   // Vérifier si la variable de session 'csvFileName' est définie
+   if(isset($_SESSION['csvFileName'])){
+       $csvFileName = $_SESSION['csvFileName'];
+       afficherData($csvFileName); 
+   } else {
+       // Initialisez $csvFileName comme un tableau vide si la session n'a pas encore été définie
+       $csvFileName = [];
+   }
 
+   // Vérifier si la variable de session 'csvData' est définie
+   if(isset($_SESSION['csvData'])) 
+       $csvData = $_SESSION['csvData'];
+   else {
+       // Initialisez $csvData comme un tableau vide si la session n'a pas encore été définie
+       $csvData = [];
+   }
+        
 ?>
 
 

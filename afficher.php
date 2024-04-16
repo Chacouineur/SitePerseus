@@ -1,21 +1,26 @@
 <?php
-    $fichier = "../liaisonEGEtat.csv";
-    $monFichier = fopen($fichier, "r");
+function afficherData($csvFileName){
+    // Lire le contenu du fichier CSV dans un tableau
+    $lines = file($csvFileName, FILE_IGNORE_NEW_LINES);
 
-    if (!($monFichier)){
-        print("Impossible d'ouvrir le fichier");
-        exit;
-    }
-    else{
-        fgetcsv($monFichier, null, ";");
-        while( $ligne = fgetcsv($monFichier,null,";")){
-            $nbElements = count($ligne); // Nombre d'éléments dans la ligne
-            for($i = 0; $i < $nbElements; $i++){
-                print($ligne[$i] . " ");
-            }
-            print("<br>");
-        }
+    // Vérifier si la fonction file() a réussi à lire le fichier
+    if ($lines === false) {
+        exit("Impossible de lire le fichier CSV.");
     }
 
-    fclose($monFichier);
-    ?>
+    // Initialiser un tableau pour stocker les données du CSV
+    $csvData = [];
+
+    // Parcourir chaque ligne du fichier CSV
+    foreach ($lines as $line) {
+        // Diviser chaque ligne en colonnes en utilisant le délimiteur ';' et stocker les colonnes dans un tableau
+        $data = explode(';', $line);
+        
+        // Ajouter les données de chaque ligne dans le tableau csvData
+        $csvData[] = $data;
+    }
+
+    // Stocker les données dans la session
+    $_SESSION['csvData'] = $csvData;
+}
+?>

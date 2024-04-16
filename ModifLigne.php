@@ -132,18 +132,6 @@ if (!empty($_POST['carte']) && !empty($csvFileName) && !empty($_POST['btnValue']
             break;
     }
     
-    // Lire le contenu du fichier CSV dans un tableau
-    $lines = file($csvFileName, FILE_IGNORE_NEW_LINES);
- 
-    // Parcourir chaque ligne du fichier CSV
-    foreach ($lines as $line) {
-        // Diviser chaque ligne en colonnes en utilisant le délimiteur ';' et stocker les colonnes dans un tableau
-        $data = explode(';', $line);
-        
-        // Ajouter les données de chaque ligne dans le tableau csvData
-        $fData[] = $data;
-    }
-    $_SESSION['csvData'] = $fData;
 
     // Rediriger vers la page AjoutCSV.php
     header('Location: Pages/pageAjoutCSV.php');
