@@ -2,6 +2,7 @@
     $titre = "Page Suppression CSV";
     $page = "../pages.css";
     require '../header.inc.php';
+    include '../rechercheCSV.php';
     session_start();
 ?>
 <body>
@@ -39,6 +40,56 @@
                 </div>
             </div>
         </nav>
-
     </header>
+    <main>
+        <form method="post" action="../supprimerCSV.php" class="mx-auto p-5 rounded" id="ligne">
+            <div class="row">
+                <div class="col-4 mb-3 mr-5">
+                    <label for="selectFile" class="form-label">Fichier CSV :</label>
+                    <select class="form-select" name="FileName" id="selectFile" placeholder="Selectionnez un fichier"required>
+                        <?php
+                        if (!empty($csvFiles)) {
+                            foreach ($csvFiles as $file) {
+                                echo "<option value=\"$file\">$file</option>";
+                            }
+                        }else{
+                            echo "<option value=\"\">Veuillez creer un fichier dans « Ajouter Fichier » </option>";
+                        }
+                        ?>
+                    </select>
+                    <button type="submit" class="btn btn-primary" name="btnValue" value="afficher">Afficher le fichier</button>
+                    <button type="submit" class="btn btn-primary" name="btnValue" value="supprimer">Supprimer le fichier</button>
+                </div>
+                <div class="col-4 mb-3 ml-5">
+                    <table class="tableau" id="myTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Carte</th>
+                                <th scope="col">Vannes/Etat</th>
+                                <th scope="col">Valeur</th>
+                                <th scope="col">Timer dépendance</th>
+                                <th scope="col">Dépendance vannes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Vérifiez si $csvData est défini avant d'utiliser la boucle foreach
+                            if(isset($csvData)) {
+                                // Boucle à travers $csvData à partir de la deuxième ligne
+                                for($i = 1; $i < count($csvData); $i++) {
+                                    echo "<tr>";
+                                    foreach ($csvData[$i] as $cell) {
+                                        echo "<td>$cell</td>";
+                                    }
+                                    echo "</tr>";
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+        
+    </main>
 </body>

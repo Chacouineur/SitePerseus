@@ -1,3 +1,21 @@
 header{
     padding: 15px;
 }
+
+button {
+    margin-top: 15px;
+}
+
+.tableau {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    background-color: white;
+}
+
+.tableau th,
+.tableau td {
+    color: black;
+    text-align: center;
+    border: 1px solid #202020;
+}
