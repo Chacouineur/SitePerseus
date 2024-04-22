@@ -125,9 +125,9 @@
                 </div>
                 <input type="hidden" id="ligneIndex" name="ligneIndex">
                 <input type="hidden" id="csvFileName" name="csvFileName" value="<?php echo $csvFileName; ?>">
-                <button type="submit" class="btn btn-primary" name="btnValue" value="ajoutMax">Passer à la CAC suivante</button>
+                <button type="submit" class="btn btn-primary" name="btnValue" value="ajoutMax">Ajouter Carte</button>
                 <button type="submit" class="btn btn-primary" name="btnValue" value="modif" disabled>Modifier Ligne</button>
-                <button type="submit" class="btn btn-primary" name="btnValue" value="suppr"disabled>Supprimer Ligne</button>
+                <button type="submit" class="btn btn-primary" name="btnValue" value="suppr"disabled>Supprimer Carte</button>
             </form>
 
             <table class="tableau" id="myTable">
