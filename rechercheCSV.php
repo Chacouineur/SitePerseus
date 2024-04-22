@@ -1,6 +1,6 @@
 <?php
 // Chemin du répertoire contenant les fichiers CSV
-$directoryPath = 'C:\UwAmp\www\Web_CAC/';
+$directoryPath = getcwd();;
 
 // Initialiser un tableau pour stocker les noms de fichiers CSV
 $csvFiles = [];
