@@ -10,7 +10,9 @@ if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
     $vannesEtat = $_POST['vannesEtat'];
     $valeur = $_POST['valeur'];
     $timeDep = $_POST['timeDep'];
-    $depVannes = isset($_POST['selectValue']) ? $_POST['selectValue'] : "#";
+    $depVannes = isset($_POST['checkboxes']) ? $_POST['checkboxes'] : "#";
+    $concatenatedString = implode('|', $depVannes);
+
     $btnValue = $_POST['btnValue']; 
     $numLigne = $_POST['ligneIndex'];
     
@@ -70,7 +72,7 @@ if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
                 // Ne modifie pas la ligne
             } else {
                 // Ignorer la modification du champ "Carte"
-                $ligne = [$csvData[$numLigne][0], $vannesEtat, $valeur, $timeDep, $depVannes];
+                $ligne = [$csvData[$numLigne][0], $vannesEtat, $valeur, $timeDep, $concatenatedString];
                 $csvData[$numLigne] = $ligne;
                 $csvData[0] = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
                 $csvData[1] = ["OFFSET", "EG", "#", "#", "#"];
