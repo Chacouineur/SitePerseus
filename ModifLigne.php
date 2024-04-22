@@ -131,6 +131,7 @@ if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
     
 
     // Rediriger vers la page AjoutCSV.php
+    session_write_close(); 
     header('Location: Pages/pageAjoutCSV.php');
     exit();
 } else {

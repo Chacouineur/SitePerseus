@@ -300,3 +300,4 @@
         }?>
     </main>
 </body>
+<?php session_write_close(); ?>

@@ -47,4 +47,5 @@
 
 <?php unset($_SESSION['csvData']);
 unset($_SESSION['csvFileName']);
-unset($_SESSION['csvName']); ?>
+unset($_SESSION['csvName']); 
+session_write_close();?>
