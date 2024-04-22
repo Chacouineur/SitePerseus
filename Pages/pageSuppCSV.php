@@ -4,6 +4,20 @@
     require '../header.inc.php';
     include '../rechercheCSV.php';
     session_start();
+    unset($_SESSION['csvFileName']);
+    if(isset($_SESSION['csvName'])){
+        $csvName = $_SESSION['csvName']; 
+    } else {
+        // Initialisez $csvFileName comme un tableau vide si la session n'a pas encore été définie
+        $csvName = [];
+    }
+    if(isset($_SESSION['csvData'])){
+        $csvData = $_SESSION['csvData'];
+    } else {
+        // Initialisez $csvFileName comme un tableau vide si la session n'a pas encore été définie
+        $csvData = [];
+    }
+    
 ?>
 <body>
     <header>
@@ -44,13 +58,15 @@
     <main>
         <form method="post" action="../supprimerCSV.php" class="mx-auto p-5 rounded" id="ligne">
             <div class="row">
-                <div class="col-4 mb-3 mr-5">
+                <div class="col-4 mb-3 mr-5" id="formSelect">
                     <label for="selectFile" class="form-label">Fichier CSV :</label>
                     <select class="form-select" name="FileName" id="selectFile" placeholder="Selectionnez un fichier"required>
                         <?php
                         if (!empty($csvFiles)) {
                             foreach ($csvFiles as $file) {
-                                echo "<option value=\"$file\">$file</option>";
+                                $selected = ($file == $csvName) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
+                                echo "<option value=\"$file\" $selected>$file</option>";
+
                             }
                         }else{
                             echo "<option value=\"\">Veuillez creer un fichier dans « Ajouter Fichier » </option>";
@@ -58,10 +74,12 @@
                         ?>
                     </select>
                     <button type="submit" class="btn btn-primary" name="btnValue" value="afficher">Afficher le fichier</button>
-                    <button type="submit" class="btn btn-primary" name="btnValue" value="supprimer">Supprimer le fichier</button>
+                    <button type="submit" class="btn btn-primary" name="btnValue" value="supprimer" onclick="return confirmDelete();">Supprimer le fichier</button>
                 </div>
                 <div class="col-4 mb-3 ml-5">
-                    <table class="tableau" id="myTable">
+                    <?php if(!empty($csvName)){ ?>
+                        <h4>Fichier : <?php echo $csvName ?></h4>
+                        <table class="tableau" id="myTable">
                         <thead>
                             <tr>
                                 <th scope="col">Carte</th>
@@ -84,12 +102,21 @@
                                     echo "</tr>";
                                 }
                             }
+                            else{
+                                echo "\$csvData vide.";
+                            }
                             ?>
                         </tbody>
-                    </table>
+                    </table><?php } ?>
+                    
                 </div>
             </div>
         </form>
-        
+        <script>
+            function confirmDelete() {
+                return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
+            }
+        </script>
     </main>
+    
 </body>

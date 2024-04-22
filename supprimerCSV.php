@@ -3,10 +3,12 @@ $filePath = $_POST['FileName'];
 $btnValue = $_POST['btnValue']; 
 session_start();
 
+
 // Vérifiez si le fichier existe avant de tenter de le supprimer
 if (file_exists($filePath) && !empty($btnValue)) {
     switch($btnValue){
         case 'afficher':
+            $_SESSION['csvName'] = $filePath;
             $lines = file($filePath, FILE_IGNORE_NEW_LINES);
             // Vérifier si la fonction file() a réussi à lire le fichier
             if ($lines === false) {
@@ -27,38 +29,44 @@ if (file_exists($filePath) && !empty($btnValue)) {
 
             // Stocker les données dans la session
             $_SESSION['csvData'] = $csvData;
-            
-            session_write_close();
+
             header('Location: Pages/pageSuppCSV.php');
             exit();
             break;
         case 'supprimer':
-            session_write_close();
+            if($filePath == $_SESSION['csvName']){
+                unset($_SESSION['csvName']);
+            }
             if (unlink($filePath)) {
-                // Nom du fichier liaisonEGEtat.csv
+                // Chemin du fichier liaisonEGEtat.csv
                 $liaisonFileName = 'liaisonEGEtat.csv';
 
-                // Lire le contenu du fichier CSV dans un tableau
+                // Lire le contenu du fichier dans un tableau
                 $lines = file($liaisonFileName, FILE_IGNORE_NEW_LINES);
 
-                // Vérifier si le fichier a pu être lu
+                // Vérifier si la lecture du fichier a réussi
                 if ($lines === false) {
-                    exit("Impossible de lire le fichier CSV.");
+                    exit("Impossible de lire le fichier liaisonEGEtat.csv.");
                 }
 
-                // Parcourir chaque ligne du fichier CSV
-                foreach ($lines as $key => $line) {
-                    // Vérifier si la ligne contient le nom du fichier à supprimer
-                    if (strpos($line, $filePath) !== false) {
-                        // Supprimer la ligne du tableau
-                        unset($lines[$key]);
-                        // Sortir de la boucle car la ligne a été trouvée et supprimée
-                        break;
+                // Initialiser un tableau pour stocker les lignes mises à jour
+                $updatedLines = [];
+
+                // Parcourir chaque ligne du fichier
+                foreach ($lines as $line) {
+                    // Diviser la ligne en colonnes en utilisant le délimiteur ';'
+                    $data = explode(';', $line);
+
+                    // Vérifier si le nom du fichier à supprimer apparaît dans la deuxième colonne ou dans la ligne
+                    if ($data[1] != $filePath) {
+                        // Ajouter la ligne au tableau des lignes mises à jour
+                        $updatedLines[] = $line;
                     }
                 }
 
-                // Écrire le contenu mis à jour dans le fichier CSV
-                file_put_contents($liaisonFileName, implode("\n", $lines));
+                // Écrire le contenu mis à jour dans le fichier liaisonEGEtat.csv
+                file_put_contents($liaisonFileName, implode("\n", $updatedLines)."\n");
+
                 header('Location: Pages/pageSuppCSV.php');
                 exit();
             } else {

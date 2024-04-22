@@ -1,26 +1,27 @@
 <?php 
-   $titre = "Page Ajout CSV";
-   $page = "../pageAjoutCSV.css";
-   require '../header.inc.php';
-   session_start();
-   include '../afficher.php';
+    $titre = "Page Ajout CSV";
+    $page = "../pageAjoutCSV.css";
+    require '../header.inc.php';
+    session_start();
+    include '../afficher.php';
+    unset($_SESSION['csvName']);
 
-   // Vérifier si la variable de session 'csvFileName' est définie
-   if(isset($_SESSION['csvFileName'])){
-       $csvFileName = $_SESSION['csvFileName'];
-       afficherData($csvFileName); 
-   } else {
-       // Initialisez $csvFileName comme un tableau vide si la session n'a pas encore été définie
-       $csvFileName = [];
-   }
+    // Vérifier si la variable de session 'csvFileName' est définie
+    if(isset($_SESSION['csvFileName'])){
+        $csvFileName = $_SESSION['csvFileName'];
+        afficherData($csvFileName); 
+    } else {
+        // Initialisez $csvFileName comme un tableau vide si la session n'a pas encore été définie
+        $csvFileName = [];
+    }
 
-   // Vérifier si la variable de session 'csvData' est définie
-   if(isset($_SESSION['csvData'])) 
-       $csvData = $_SESSION['csvData'];
-   else {
-       // Initialisez $csvData comme un tableau vide si la session n'a pas encore été définie
-       $csvData = [];
-   }
+    // Vérifier si la variable de session 'csvData' est définie
+    if(isset($_SESSION['csvData'])) 
+        $csvData = $_SESSION['csvData'];
+    else {
+        // Initialisez $csvData comme un tableau vide si la session n'a pas encore été définie
+        $csvData = [];
+    }
         
 ?>
 
@@ -102,15 +103,31 @@
                         <input type="number" step="0.1" min="0.1" class="form-control" name="timeDep" id="exampleInputTimeDep" aria-describedby="codeHelp" placeholder="Valeur timer">
                     </div>
                     <div class="col-auto">
-                        <label for="exampleInputDepVannes" class="form-label">Dépendance vannes:</label>
-                        <input type="text" class="form-control" name="depVannes" id="exampleInputDepVannes" aria-describedby="codeHelp" placeholder="Modification dans « Modifier Fichier »" disabled>
+                        <label for="selectedLabels" class="form-label">Dépendance vannes:</label>
+                        <div class="input-group">
+                            <div class="multiselect">
+                                <div class="selectBox" onclick="showCheckBoxes()">
+                                    <select class="form-select" aria-label="Default select example" id="">
+                                        <option>Select an option</option>
+                                    </select>
+                                    <div class="overSelect"></div>
+                                </div>
+                                <div id="checkboxes">
+                                <ul class="list-group">
+                                </ul>
+                                </div>
+                            </div>
+
+                            <input type="text" class="form-control" id="selectedLabels" placeholder="Choisissez une valeur" aria-label="Texte des labels sélectionnés" disabled>
+                            <input type="hidden" class="form-control" id="selectedValues" placeholder="Valeurs sélectionnées" name="select" aria-label="Valeurs sélectionnées" disabled>
+                        </div>
                     </div>
                 </div>
                 <input type="hidden" id="ligneIndex" name="ligneIndex">
-                <button type="submit" class="btn btn-primary" name="btnValue" value="ajout">Ajouter Ligne</button>
+                <input type="hidden" id="csvFileName" name="csvFileName" value="<?php echo $csvFileName; ?>">
                 <button type="submit" class="btn btn-primary" name="btnValue" value="ajoutMax">Passer à la CAC suivante</button>
-                <button type="submit" class="btn btn-primary" name="btnValue" value="modif">Modifier Ligne</button>
-                <button type="submit" class="btn btn-primary" name="btnValue" value="suppr">Supprimer Ligne</button>
+                <button type="submit" class="btn btn-primary" name="btnValue" value="modif" disabled>Modifier Ligne</button>
+                <button type="submit" class="btn btn-primary" name="btnValue" value="suppr"disabled>Supprimer Ligne</button>
             </form>
 
             <table class="tableau" id="myTable">
@@ -139,11 +156,29 @@
                     ?>
                 </tbody>
             </table>
-
+            
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 
             <script>
+                var expanded = false;
+                function showCheckBoxes(){
+                    const checkboxes = document.getElementById("checkboxes");
+                    if (!expanded) {
+                        checkboxes.style.display = "block";
+                        expanded = true;
+                    } else {
+                        checkboxes.style.display = "none";
+                        expanded = false;
+                    }
+                }
+
                 document.addEventListener('DOMContentLoaded', function () {
                     var table = document.getElementById('myTable');
+                    var selectedRowIndex = null; // Pour stocker l'index de la ligne sélectionnée
+
+
 
                     table.addEventListener('click', function(event) {
                         var target = event.target; // où a eu lieu le clic
@@ -158,36 +193,109 @@
                                 var vannesEtat = document.getElementById('exampleInputVannesEtat');
                                 var valeur = document.getElementById('exampleInputValeur');
                                 var timerDep = document.getElementById('exampleInputTimeDep');
-                                var ligneIndex = document.getElementById('ligneIndex'); // Pour le champ caché
+                                var depVannes = document.getElementById('selectedLabels'); 
+                                var ligneIndex = document.getElementById('ligneIndex'); 
+                                var modifierBtn = document.querySelector('button[name="btnValue"][value="modif"]');
+                                var supprimerBtn = document.querySelector('button[name="btnValue"][value="suppr"]');
 
+                                var checkboxes = document.getElementById("checkboxes").querySelector('ul');
+                                checkboxes.innerHTML = ''; // Supprimer toutes les cases à cocher existantes
+         
+                               
                                 // Mise à jour des valeurs des champs de formulaire
                                 carte.value = cells[0].textContent;
                                 vannesEtat.value = cells[1].textContent;
                                 valeur.value = cells[2].textContent;
                                 timerDep.value = cells[3].textContent;
+                                modifierBtn.disabled = false; // Désactiver les boutons
+                                supprimerBtn.disabled = false;
+                                
 
                                 // Mise à jour de l'index de la ligne
                                 ligneIndex.value = rowIndex+1; // Pour le champ caché
+                                
+                                // Gérer la surbrillance de la ligne
+                                var rows = document.querySelectorAll("#myTable tbody tr");
+                                rows.forEach(row => {
+                                    if (rowIndex === Array.prototype.indexOf.call(row.parentNode.children, row)) {
+                                        if (!row.classList.contains("selected")) {
+                                            row.classList.add("selected"); // Ajouter la classe "selected" pour la surbrillance
+                                            var csvFileName = document.getElementById('csvFileName').getAttribute('value');
+                                            var csvFilePath = "../" + csvFileName;
 
-                                ligneIndexDisplay.textContent = 'Ligne sélectionnée: ' + (ligneIndex.value); // Pour l'affichage
+                                            fetch(csvFilePath)
+                                                .then(response => response.text())
+                                                .then(data => {
+                                                    var lines = data.split('\n'); // Split the string into an array of lines
+                                                    // Filter out lines starting with "OFFSET"
+                                                    var withoutOFFSET = lines.filter(line => line.split(';')[0] !== 'OFFSET');
+                                                    // Further filter to exclude lines where the second column is '#'
+                                                    var filteredRows = withoutOFFSET.filter(line => {
+                                                        const columns = line.split(';');
+                                                        return columns[1] !== '#' && columns[0] === carte.value; // Assuming 'carte.value' is defined elsewhere
+                                                    });
+                                                    // Map the filtered lines to create an array of the second column's values and their original line number
+                                                    var result = filteredRows.map((line, index) => {
+                                                        const columns = line.split(';');
+                                                        let originalIndex = lines.indexOf(line) - 1; 
+                                                        return [columns[1], originalIndex];
+                                                    });
+                                                    console.log(result);
+
+                                                    var displayedValues = [];
+                                                    
+                                                    result.forEach(item => {
+                                                        // Vérifier si la valeur n'est pas déjà affichée
+                                                        if (!displayedValues.includes(item[1])) {
+                                                            addCheckboxWithValue(item[1], item[0]); // Ajouter une case à cocher pour chaque élément de result
+                                                            displayedValues.push(item[1]); // Ajouter la valeur à la liste des valeurs déjà affichées
+                                                        }
+                                                    });
+
+                                                    function addCheckboxWithValue(value, labelValue) {
+                                                        var listItem = document.createElement("li");
+                                                        listItem.className = "list-group-item";
+                                                        var checkbox = document.createElement("input");
+                                                        checkbox.type = "checkbox";
+                                                        checkbox.className = "form-check-input me-1";
+                                                        checkbox.name = "checkboxes[]"; // Nom de la case à cocher pour l'envoi POST ou GET
+                                                        checkbox.value = value; // Définir la valeur de la checkbox
+                                                        checkbox.onclick = updateSelectedValues; // Écouteur d'événements pour mettre à jour les valeurs sélectionnées
+
+                                                        var label = document.createElement("label");
+                                                        label.className = "form-check-label";
+                                                        label.textContent = labelValue;
+                                                        
+                                                        listItem.appendChild(checkbox);
+                                                        listItem.appendChild(label);
+                                                        checkboxes.appendChild(listItem);
+                                                    }   
+                                                })
+                                                .catch(error => {
+                                                    console.error('Erreur lors du chargement du fichier :', error);
+                                                });
+
+                                        } else {
+                                            row.classList.remove("selected"); // Supprimer la classe "selected" pour la désurbrillance
+                                            modifierBtn.disabled = true; // Désactiver les boutons
+                                            supprimerBtn.disabled = true;
+                                            
+                                        }
+                                    } else {
+                                        row.classList.remove("selected"); // Désurbriller les autres lignes
+
+                                    }
+                                });
                             }
                         }
                     });
-                    
                 });
-                // Sélectionner toutes les lignes de la table
-                const rows = document.querySelectorAll("#myTable tbody tr");
-
-                // Ajouter un gestionnaire d'événement de clic à chaque ligne
-                rows.forEach(row => {
-                    row.addEventListener("click", () => {
-                        // Supprimer la classe 'selected' de toutes les lignes
-                        rows.forEach(r => r.classList.remove("selected"));
-                        // Ajouter la classe 'selected' à la ligne cliquée
-                        row.classList.add("selected");
-                    });
-                });
-
+                
+                function updateSelectedValues() {
+                    var selectedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+                    var selectedValues = Array.from(selectedCheckboxes).map(cb => cb.value).join('|');
+                    document.getElementById('selectedLabels').value = selectedValues;
+                }
             </script><?php
         }?>
     </main>

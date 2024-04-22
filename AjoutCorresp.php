@@ -77,10 +77,12 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
             
             // Définition de l'entête du fichier CSV
             $entete = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
-            
             // Écriture de l'entête dans le fichier CSV
             fputcsv($handle, $entete, ';'); 
-            
+            $ligne1 = ["OFFSET", "EG", "#", "#", "#"];
+            // Écriture de l'entête dans le fichier CSV
+            fputcsv($handle, $ligne1, ';'); 
+
             // Fermeture du fichier
             fclose($handle);
             unset($_SESSION['csvData']);
