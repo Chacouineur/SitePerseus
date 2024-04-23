@@ -66,7 +66,6 @@
                             foreach ($csvFiles as $file) {
                                 $selected = ($file == $csvName) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
                                 echo "<option value=\"$file\" $selected>$file</option>";
-
                             }
                         }else{
                             echo "<option value=\"\">Veuillez creer un fichier dans « Ajouter Fichier » </option>";
