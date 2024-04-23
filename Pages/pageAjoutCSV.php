@@ -221,9 +221,9 @@
                                         if (!row.classList.contains("selected")) {
                                             row.classList.add("selected"); // Ajouter la classe "selected" pour la surbrillance
                                             var csvFileName = document.getElementById('csvFileName').getAttribute('value');
-                                            var csvFilePath = "../" + csvFileName;
-
-                                            fetch(csvFilePath)
+                                            csvFileName = "../commonCSVFiles/stateCSV/" + csvFileName;
+                                            console.log(csvFileName);
+                                            fetch(csvFileName)
                                                 .then(response => response.text())
                                                 .then(data => {
                                                     var lines = data.split('\n'); // Split the string into an array of lines

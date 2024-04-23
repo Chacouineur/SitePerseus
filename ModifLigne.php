@@ -1,33 +1,35 @@
 <?php
 session_start();
-$csvFileName = $_SESSION['csvFileName'];
+$csvFilePath = $_SESSION['csvFilePath'];
 $csvData = $_SESSION['csvData'];
 
 // Initialiser un tableau pour stocker toutes les données du fichier CSV
 
-if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
+if (!empty($csvFilePath) && !empty($_POST['btnValue'])) {
     $carte = $_POST['carte'];
     $vannesEtat = $_POST['vannesEtat'];
     $valeur = $_POST['valeur'];
     $timeDep = $_POST['timeDep'];
-    $depVannes = isset($_POST['checkboxes']) ? $_POST['checkboxes'] : "#";
-    $concatenatedString = implode('|', $depVannes);
+    $depVannes = isset($_POST['checkboxes']) ? $_POST['checkboxes'] : [];
 
     $btnValue = $_POST['btnValue']; 
     $numLigne = $_POST['ligneIndex'];
     
-    if($vannesEtat==null){
+    if(empty($vannesEtat)){
         $vannesEtat="#";
-    }if($valeur==null){
+    }if(empty($valeur)){
         $valeur="#";
-    }if($timeDep==null){
+    }if(empty($timeDep)){
         $timeDep="#";
-    }if($depVannes==null){
-        $depVannes="#";
-    }
+    }if (empty($depVannes)) {
+        $concatenatedString = "#";
+    } else {
+        $concatenatedString = implode('|', $depVannes);
+        echo ".$concatenatedString.";
+    }    
     
     // Ouvrir le fichier CSV en mode écriture
-    $monFichier = fopen($csvFileName, "r+");  // 'r+' permet la lecture et l'écriture
+    $monFichier = fopen($csvFilePath, "r+");  // 'r+' permet la lecture et l'écriture
     if (!$monFichier) {
         die("Impossible d'ouvrir le fichier");
     }
@@ -46,7 +48,7 @@ if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
             if ($nombreDeLignesParCarte < 12 && $carte != 'OFFSET') {
                 
                 fseek($monFichier, 0, SEEK_END); // Aller à la fin du fichier pour l'écriture
-                $ligne = [$carte, $vannesEtat, $valeur, $timeDep, $depVannes];
+                $ligne = [$carte, $vannesEtat, $valeur, $timeDep, $concatenatedString];
                 $ligneVide = [$carte,"#","#","#","#"];
                 $offset = ["OFFSET","EG","#","#","#"];
                 fputcsv($monFichier, $ligne, ';');
@@ -77,15 +79,15 @@ if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
                 $csvData[0] = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
                 $csvData[1] = ["OFFSET", "EG", "#", "#", "#"];
             
-                $monFichier = fopen($csvFileName, "w");
+                $monFichier = fopen($csvFilePath, "w");
             
                 if (!$monFichier) {
-                    die("Impossible d'ouvrir le fichier $csvFileName pour écriture.");
+                    die("Impossible d'ouvrir le fichier $csvFilePath pour écriture.");
                 }
             
                 foreach ($csvData as $ligne) {
                     if (fputcsv($monFichier, $ligne, ';') === false) {
-                        die("Erreur lors de l'écriture dans le fichier $csvFileName.");
+                        die("Erreur lors de l'écriture dans le fichier $csvFilePath.");
                     }
                 }
             
@@ -108,7 +110,7 @@ if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
                 }
     
                 // Ouvrir le fichier CSV en mode écriture
-                $monFichier = fopen($csvFileName, "w");
+                $monFichier = fopen($csvFilePath, "w");
     
                 if (!$monFichier) {
                     print("Impossible d'ouvrir le fichier");

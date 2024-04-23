@@ -1,14 +1,15 @@
 <?php
-$filePath = $_POST['FileName'];
+$filePath = __DIR__."/commonCSVFiles/stateCSV/".$_POST['FileName'];
+$fileName = $_POST['FileName'];
 $btnValue = $_POST['btnValue']; 
 session_start();
 
-
+echo $filePath;
 // Vérifiez si le fichier existe avant de tenter de le supprimer
 if (file_exists($filePath) && !empty($btnValue)) {
     switch($btnValue){
         case 'afficher':
-            $_SESSION['csvName'] = $filePath;
+            $_SESSION['csvName'] = $_POST['fileName'];
             $lines = file($filePath, FILE_IGNORE_NEW_LINES);
             // Vérifier si la fonction file() a réussi à lire le fichier
             if ($lines === false) {
@@ -34,12 +35,12 @@ if (file_exists($filePath) && !empty($btnValue)) {
             exit();
             break;
         case 'supprimer':
-            if($filePath == $_SESSION['csvName']){
+            if($filePath == __DIR__."/commonCSVFiles/stateCSV/".$fileName){
                 unset($_SESSION['csvName']);
             }
             if (unlink($filePath)) {
                 // Chemin du fichier liaisonEGEtat.csv
-                $liaisonFileName = 'liaisonEGEtat.csv';
+                $liaisonFileName = __DIR__.'/commonCSVFiles/liaisonEGEtat.csv';
 
                 // Lire le contenu du fichier dans un tableau
                 $lines = file($liaisonFileName, FILE_IGNORE_NEW_LINES);
@@ -58,7 +59,7 @@ if (file_exists($filePath) && !empty($btnValue)) {
                     $data = explode(';', $line);
 
                     // Vérifier si le nom du fichier à supprimer apparaît dans la deuxième colonne ou dans la ligne
-                    if ($data[1] != $filePath) {
+                    if ($data[1] != $fileName) {
                         // Ajouter la ligne au tableau des lignes mises à jour
                         $updatedLines[] = $line;
                     }

@@ -8,7 +8,7 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     $codeEG = $_POST['code'];
     $nom = $_POST['nom'];
 
-    $filePath = "liaisonEGEtat.csv";
+    $filePath = __DIR__."/commonCSVFiles/liaisonEGEtat.csv";
 
     // Ouvrir le fichier en mode "ajout"
     $file = fopen($filePath, "a");
@@ -16,17 +16,20 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     // Vérifier si l'extension ".csv" est déjà présente dans $nom
     if (!preg_match('/\.csv$/', $nom)) {
         // Si l'extension n'est pas présente, ajoutez-la
-        $csvFileName = $nom . '.csv';
+        $csvFilePath = __DIR__."/commonCSVFiles/stateCSV/".$nom . '.csv';
+        $nom = $nom . '.csv';
     } else {
         // Si l'extension est déjà présente, utilisez simplement $nom
-        $csvFileName = $nom;
+        $csvFilePath = __DIR__."/commonCSVFiles/stateCSV/".$nom;
     }
 
     // Stocker la valeur de csvFileName dans une variable de session
-    $_SESSION['csvFileName'] = $csvFileName;
+    $_SESSION['csvFileName'] = $nom;
+    $_SESSION['csvFilePath'] = $csvFilePath;
     if (!$file) {
         print("Erreur ! Impossible d ouvrir le fichier.");
-        unset($_SESSION['csvFileName']); 
+        unset($_SESSION['csvFileName']);
+        unset($_SESSION['csvFilePath']);  
         ?>
         <html><a class="btn btn-primary" href="Pages/pageAjoutCSV.php" role="button">Retour</a>
         </html><?php
@@ -52,18 +55,20 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     $hexadecimal = "0x" . $hexadecimal;
 
     // Vérifier si les valeurs existent déjà dans le fichier
-    if (valuesExist($hexadecimal, $csvFileName, $filePath)) {
+    if (valuesExist($hexadecimal, $nom, $filePath)) {
         print("Erreur ! Les valeurs existent deja dans le fichier.");
         unset($_SESSION['csvFileName']);
+        unset($_SESSION['csvFilePath']);
         ?>
         <html><a class="btn btn-primary" href="Pages/pageAjoutCSV.php" role="button">Retour</a>
         </html><?php
         exit();
     }
 
-    if (!fwrite($file, $hexadecimal . ';' . $csvFileName . "\n")) {
+    if (!fwrite($file, $hexadecimal . ';' . $nom . "\n")) {
         print("Erreur ! La valeur n a pas ete ajoutee.");
         unset($_SESSION['csvFileName']);
+        unset($_SESSION['csvFilePath']);  
         ?>
         <html><a class="btn btn-primary" href="Pages/pageAjoutCSV.php" role="button">Retour</a>
         </html>
@@ -73,7 +78,7 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
         fclose($file);
 
         // Tente d'ouvrir le fichier CSV en mode écriture, crée le fichier s'il n'existe pas
-        if (($handle = fopen($csvFileName, 'w')) !== FALSE) {
+        if (($handle = fopen($csvFilePath, 'w')) !== FALSE) {
             
             // Définition de l'entête du fichier CSV
             $entete = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
@@ -91,7 +96,8 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
             exit();
         } else {
             echo "Erreur lors de la creation du fichier.";
-            unset($_SESSION['csvFileName']); 
+            unset($_SESSION['csvFileName']);
+            unset($_SESSION['csvFilePath']);   
             ?>
             <html><a class="btn btn-primary" href="AjoutCSV.php" role="button">Retour</a>
             </html><?php
@@ -101,7 +107,8 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     }
 } else {
     print("Erreur ! Les champs code et nom doivent etre remplis.");
-    unset($_SESSION['csvFileName']); 
+    unset($_SESSION['csvFileName']);
+    unset($_SESSION['csvFilePath']);  
     ?>
     <html><a class="btn btn-primary" href="AjoutCSV.php" role="button">Retour</a>
     </html><?php
@@ -109,7 +116,7 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
 }
 
 // Fonction pour vérifier si les valeurs existent déjà dans le fichier
-function valuesExist($codeEG, $csvFileName, $filePath) {
+function valuesExist($codeEG, $nom, $filePath) {
     // Ouvrir le fichier en mode lecture
     $file = fopen($filePath, "r");
 
@@ -129,7 +136,7 @@ function valuesExist($codeEG, $csvFileName, $filePath) {
             $existingName = trim($values[1]);
 
             // Comparer le code et le nom avec les valeurs fournies
-            if ($existingCode === $codeEG || $existingName === $csvFileName) {
+            if ($existingCode === $codeEG || $existingName === $nom) {
                 fclose($file);
                 return true; // Retourner true si les valeurs existent déjà
             }
