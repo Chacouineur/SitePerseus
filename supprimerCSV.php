@@ -4,12 +4,11 @@ $fileName = $_POST['FileName'];
 $btnValue = $_POST['btnValue']; 
 session_start();
 
-echo $filePath;
 // Vérifiez si le fichier existe avant de tenter de le supprimer
 if (file_exists($filePath) && !empty($btnValue)) {
     switch($btnValue){
         case 'afficher':
-            $_SESSION['csvName'] = $_POST['fileName'];
+            $_SESSION['csvName'] = $fileName;
             $lines = file($filePath, FILE_IGNORE_NEW_LINES);
             // Vérifier si la fonction file() a réussi à lire le fichier
             if ($lines === false) {
@@ -30,7 +29,7 @@ if (file_exists($filePath) && !empty($btnValue)) {
 
             // Stocker les données dans la session
             $_SESSION['csvData'] = $csvData;
-
+            session_write_close();
             header('Location: Pages/pageSuppCSV.php');
             exit();
             break;
@@ -67,7 +66,7 @@ if (file_exists($filePath) && !empty($btnValue)) {
 
                 // Écrire le contenu mis à jour dans le fichier liaisonEGEtat.csv
                 file_put_contents($liaisonFileName, implode("\n", $updatedLines)."\n");
-
+                session_write_close();
                 header('Location: Pages/pageSuppCSV.php');
                 exit();
             } else {

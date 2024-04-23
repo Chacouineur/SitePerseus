@@ -1,2 +1,3 @@
 #Ignore les fichiers csv
-*.csv
+activation.csv
+liaisonEGEtat.csv
