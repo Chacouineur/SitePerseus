@@ -1,92 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Checkbox Values</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Votre Titre</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        .selectBox {
-            position: relative;
-        }
-        .selectBox select {
-            width: 100%;
-            font-weight: bold;
-        }
-        .overSelect {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-        }
-        #checkboxes {
-            display: none;
-            border: 1px solid #ddd;
-            padding: 10px;
+        /* Ajoutez ici vos styles CSS */
+        /* Vous pouvez personnaliser davantage les couleurs et les styles si nécessaire */
+        .table-active {
+            background-color: #6edff6; /* Couleur de fond pour la ligne sélectionnée */
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Colonne 1</th>
-                    <th>Colonne 2</th>
-                    <th>Colonne 3</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php for ($i = 1; $i <= 5; $i++): ?>
-                <tr onclick="addCheckbox(this)">
-                    <td><?= $i ?></td>
-                    <td>Colonne 2 - Ligne <?= $i ?></td>
-                    <td>Colonne 3 - Ligne <?= $i ?></td>
-                </tr>
-                <?php endfor; ?>
-            </tbody>
-        </table>
-        <div id="checkboxes">
-            <!-- Les cases à cocher seront ajoutées ici -->
-        </div>
-        <input type="text" id="selectedValues" class="form-control mt-3" disabled placeholder="Selected values appear here...">
-    </div>
+    <table class="table table-hover" id="myTable">
+        <thead>
+            <tr>
+                <th scope="col">Carte</th>
+                <th scope="col">Vannes/Etat</th>
+                <th scope="col">Valeur</th>
+                <th scope="col">Timer dépendance</th>
+                <th scope="col">Dépendance vannes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            // Générez des valeurs aléatoires pour chaque cellule
+            $row_count = 10; // Nombre de lignes
+            $col_count = 5; // Nombre de colonnes
+
+            // Boucle à travers les lignes
+            for($i = 0; $i < $row_count; $i++) {
+                echo "<tr onclick=\"selectRow(this)\">";
+                // Boucle à travers les colonnes
+                for($j = 0; $j < $col_count; $j++) {
+                    // Générez une valeur aléatoire
+                    $random_value = rand(0, 100); // Chiffre aléatoire entre 0 et 100
+                    echo "<td>$random_value</td>";
+                }
+                echo "</tr>";
+            }
+            ?>
+        </tbody>
+    </table>
 
     <script>
-        function addCheckbox(row) {
-            var cellValue = row.cells[0].innerText; // Prendre la valeur de la première colonne
-            var checkboxes = document.getElementById("checkboxes");
-            var checkboxExists = document.getElementById("checkbox_" + cellValue);
-            if (!checkboxExists) {
-                var checkboxWrapper = document.createElement("div");
-                checkboxWrapper.className = "form-check";
-                
-                var checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.className = "form-check-input";
-                checkbox.id = "checkbox_" + cellValue;
-                checkbox.name = "checkboxes[]";
-                checkbox.value = cellValue;
-                checkbox.onclick = updateSelectedValues; // Écouteur d'événements pour mettre à jour les valeurs sélectionnées
+        // Fonction pour sélectionner une ligne
+        function selectRow(row) {
+            // Réinitialiser la couleur de toutes les lignes
+            var rows = document.querySelectorAll("#myTable tbody tr");
+            rows.forEach(row => {
+                row.classList.remove("table-active"); // Supprimer la classe "table-active" de toutes les lignes
+            });
 
-                var label = document.createElement("label");
-                label.className = "form-check-label";
-                label.htmlFor = "checkbox_" + cellValue;
-                label.textContent = "Selected Value: " + cellValue;
-
-                checkboxWrapper.appendChild(checkbox);
-                checkboxWrapper.appendChild(label);
-                checkboxes.appendChild(checkboxWrapper);
-                checkboxes.style.display = "block";
-            }
-        }
-
-        function updateSelectedValues() {
-            var selectedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-            var selectedValues = Array.from(selectedCheckboxes).map(cb => cb.value).join(', ');
-            document.getElementById('selectedValues').value = selectedValues;
+            // Appliquer la classe "table-active" à la ligne sélectionnée
+            row.classList.add("table-active");
         }
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

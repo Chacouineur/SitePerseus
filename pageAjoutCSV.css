@@ -3,8 +3,9 @@
 }
 
 /* Style pour la couleur de fond initiale des lignes */
-.selected {
-    background-color: yellow;
+.table-active {
+    background-color:#0d9dfd;
+
 }
 
 /* Style pour la table et ses éléments */
@@ -21,6 +22,11 @@
     text-align: center;
     border: 1px solid #202020;
 }
+
+.selected-row {
+    background-color: yellow;
+}
+
 
 header{
     padding: 15px;

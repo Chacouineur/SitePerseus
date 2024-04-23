@@ -25,9 +25,6 @@
         
 ?>
 
-
-
-
 <body>
     <header>
         <nav class="navbar navbar-expand-lg" id="nav">
@@ -130,7 +127,7 @@
                 <button type="submit" class="btn btn-primary" name="btnValue" value="suppr"disabled>Supprimer Carte</button>
             </form>
 
-            <table class="tableau" id="myTable">
+            <table class="tableau table table-hover" id="myTable">
                 <thead>
                     <tr>
                         <th scope="col">Carte</th>
@@ -157,10 +154,6 @@
                 </tbody>
             </table>
             
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-
             <script>
                 var expanded = false;
                 function showCheckBoxes(){
@@ -173,12 +166,10 @@
                         expanded = false;
                     }
                 }
-
+                
                 document.addEventListener('DOMContentLoaded', function () {
                     var table = document.getElementById('myTable');
                     var selectedRowIndex = null; // Pour stocker l'index de la ligne sélectionnée
-
-
 
                     table.addEventListener('click', function(event) {
                         var target = event.target; // où a eu lieu le clic
@@ -197,7 +188,7 @@
                                 var ligneIndex = document.getElementById('ligneIndex'); 
                                 var modifierBtn = document.querySelector('button[name="btnValue"][value="modif"]');
                                 var supprimerBtn = document.querySelector('button[name="btnValue"][value="suppr"]');
-
+                               
                                 var checkboxes = document.getElementById("checkboxes").querySelector('ul');
                                 checkboxes.innerHTML = ''; // Supprimer toutes les cases à cocher existantes
          
@@ -218,11 +209,12 @@
                                 var rows = document.querySelectorAll("#myTable tbody tr");
                                 rows.forEach(row => {
                                     if (rowIndex === Array.prototype.indexOf.call(row.parentNode.children, row)) {
-                                        if (!row.classList.contains("selected")) {
-                                            row.classList.add("selected"); // Ajouter la classe "selected" pour la surbrillance
+                                        if (!row.classList.contains("table-active")) {
+                                            row.classList.remove("table-active"); // Supprimer la classe "table-active" de toutes les lignes
+                                            row.classList.add("table-active");
+                                            
                                             var csvFileName = document.getElementById('csvFileName').getAttribute('value');
                                             csvFileName = "../commonCSVFiles/stateCSV/" + csvFileName;
-                                            console.log(csvFileName);
                                             fetch(csvFileName)
                                                 .then(response => response.text())
                                                 .then(data => {
@@ -251,7 +243,7 @@
                                                             displayedValues.push(item[1]); // Ajouter la valeur à la liste des valeurs déjà affichées
                                                         }
                                                     });
-
+                                                    
                                                     function addCheckboxWithValue(value, labelValue) {
                                                         var listItem = document.createElement("li");
                                                         listItem.className = "list-group-item";
@@ -276,13 +268,13 @@
                                                 });
 
                                         } else {
-                                            row.classList.remove("selected"); // Supprimer la classe "selected" pour la désurbrillance
+                                            row.classList.remove("table-active"); // Supprimer la classe "table-active" pour la désurbrillance
                                             modifierBtn.disabled = true; // Désactiver les boutons
                                             supprimerBtn.disabled = true;
                                             
                                         }
                                     } else {
-                                        row.classList.remove("selected"); // Désurbriller les autres lignes
+                                        row.classList.remove("table-active"); // Désurbriller les autres lignes
 
                                     }
                                 });
