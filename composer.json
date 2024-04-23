@@ -1,5 +1,5 @@
 {
     "require": {
-        "palepurple/nmap": "^0.5.0"
+        "palepurple/nmap": "^1.2"
     }
 }
