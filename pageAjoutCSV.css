@@ -4,7 +4,7 @@
 
 /* Style pour la couleur de fond initiale des lignes */
 .table-active {
-    background-color:#0d9dfd;
+    background-color:#59A9FF;
 
 }
 
@@ -44,7 +44,6 @@ h5 {
 }
 .selectBox select {
     width: 100%;
-    font-weight: bold;
 }
 .overSelect {
     position: absolute;

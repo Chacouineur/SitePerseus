@@ -31,7 +31,7 @@
                             <a class="nav-link" href="pageSuppCSV.php">Supprimer Fichier</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageDeploiements.php">Déploiements</a>
+                            <a class="nav-link" href="pageDeploiements.php" style="font-weight: bold;">Déploiements</a>
                         </li>
                         
                     </ul>
@@ -42,67 +42,129 @@
 
     </header>
     <main>
-        <?php 
-        require __DIR__ . '/../vendor/autoload.php';
+        <form method="post" class="mx-auto p-5 rounded" id="mappingForm">
+            
+            <label for="code" class="form-label">Adresses IP :</label>
+            <div class="input-group mb-3" id="ipRange">
+                
+                <span class="input-group-text">De</span>
+                <input type="text" class="form-control" name="ipDebut" id="debut" aria-describedby="codeHelp" placeholder="192.168.1.*" required>
+                <span class="input-group-text">à</span>
+                <input type="text" class="form-control" name="ipFin" id="fin" aria-describedby="nomHelp" placeholder="192.168.1.*" required>
+            </div>
 
-        use Nmap\Address;
-        use Nmap\Host;
-        use Nmap\Nmap;
-        use Nmap\Port;
-        use Nmap\Hostname;
-        use Nmap\XmlOutputParser;
+            <button type="submit" class="btn btn-primary" id="btnAddCorrespondance">Mapping</button>
+        </form>
+        <form method="post" class="mx-auto p-5 rounded" id="deploiement">
+            
+            <label for="selectedLabels" class="form-label">Cartes :</label>
+            <div class="input-group">
+                <div class="multiselect">
+                    <div class="selectBox" onclick="showCheckBoxes()">
+                        <select class="form-select" aria-label="Default select example" id="">
+                            <option>Selectionne Carte(s)</option>
+                        </select>
+                        <div class="overSelect"></div>
+                    </div>
+                    <div id="checkboxes">
+                    <ul class="list-group">
+                    
+                    <?php 
+                    require __DIR__ . '/../vendor/autoload.php';
 
-        // Custom error handler function
-        function customErrorHandler($errno, $errstr, $errfile, $errline) {
-            // Check if the error is a fatal error
-            if ($errno & (E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)) {
-                // Log the error or handle it as needed
-                // For now, we are just returning true to ignore the error
-                return true;
+                    use Nmap\Address;
+                    use Nmap\Host;
+                    use Nmap\Nmap;
+                    use Nmap\Port;
+                    use Nmap\Hostname;
+                    use Nmap\XmlOutputParser;
+
+                    // Custom error handler function
+                    function customErrorHandler($errno, $errstr, $errfile, $errline) {
+                        // Check if the error is a fatal error
+                        if ($errno & (E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)) {
+                            // Log the error or handle it as needed
+                            // For now, we are just returning true to ignore the error
+                            return true;
+                        }
+                        
+                        // Let PHP's default error handler handle other errors
+                        return false;
+                    }
+                    if(!empty($_POST['ipDebut'])&& !empty($_POST['ipFin'])){
+                        $ipDebut = $_POST['ipDebut'];
+                        $ipFin = $_POST['ipFin'];
+                    
+                        // Divisez l'adresse IP par le caractère '.'
+                        $partsDebut = explode('.', $ipDebut);
+                        $partsFin = explode('.', $ipFin);
+                    
+                        // Obtenez la dernière partie de l'adresse IP
+                        $lastPartDeb = end($partsDebut);
+                        $lastPartFin = end($partsFin);
+                    
+                        if($lastPartDeb<=$lastPartFin){
+                            // Register the custom error handler
+                            set_error_handler('customErrorHandler');
+                    
+                            for ($i = $lastPartDeb; $i <= $lastPartFin; $i++) {
+                                $ip = '192.168.1.' . $i;
+                                $files = glob('/tmp/nmap-scan-output*');
+                                foreach ($files as $file) {
+                                    unlink($file);
+                                }
+                                try {
+                                    $nmap = new Nmap();
+                                    // Scan the current IP address
+                                    $hosts = $nmap->scan([$ip], [ 21, 22, 80 ]);
+                                    // Check if the host is active
+                                    if (!empty($hosts)) {
+                                        $addresses = $hosts[0]->getAddresses();
+
+                                        foreach ($addresses as $address) {
+                                            echo "<li class=\"list-group-item\">
+                                                <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$address->getAddress()."\"></input>
+                                                <label class=\"form-check-label\">".$address->getAddress()."</label>
+                                            </li>";
+
+                                        }
+                                        
+                                        $hostnames = $hosts[0]->getHostnames();
+
+                                        foreach ($hostnames as $hostname) {
+                                            echo "Hostname: " . $hostname->getName() . "<br>";
+                                        }
+                                    }
+                                } catch (Exception $e) {
+                                    // Handle the exception (optional)
+                                    // For now, we are just ignoring it
+                                    echo 'inactive ip' . "<br>";
+                                }
+                            }
+                        }
+                    }?>
+                    </ul>
+                    </div>
+                </div>
+            </div>
+        
+        </form>
+        
+        <script>
+            
+            var expanded = false;
+            function showCheckBoxes(){
+                const checkboxes = document.getElementById("checkboxes");
+                if (!expanded) {
+                    checkboxes.style.display = "block";
+                    expanded = true;
+                } else {
+                    checkboxes.style.display = "none";
+                    expanded = false;
+                }
             }
             
-            // Let PHP's default error handler handle other errors
-            return false;
-        }
-
-        // Register the custom error handler
-        set_error_handler('customErrorHandler');
-
-        echo 'Scanning...' . "<br>";
-
-        for ($i = 20; $i <= 26; $i++) {
-            $ip = '192.168.1.' . $i;
-            echo $ip;
-            $files = glob('/tmp/nmap-scan-output*');
-            foreach ($files as $file) {
-                unlink($file);
-            }
-            try {
-                $nmap = new Nmap();
-                // Scan the current IP address
-                $hosts = $nmap->scan([$ip], [ 21, 22, 80 ]);
-                echo 'ok' . "<br>";
-                // Check if the host is active
-                if (!empty($hosts)) {
-                    $addresses = $hosts[0]->getAddresses();
-
-                    foreach ($addresses as $address) {
-                        echo "IP Address: " . $address->getAddress() . "<br>";
-                    }
-                    
-                    $hostnames = $hosts[0]->getHostnames();
-
-                    foreach ($hostnames as $hostname) {
-                        echo "Hostname: " . $hostname->getName() . "<br>";
-                    }
-                }
-            } catch (Exception $e) {
-                // Handle the exception (optional)
-                // For now, we are just ignoring it
-                echo 'inactive ip' . "<br>";
-            }
-        }
-        ?>
+        </script>
     </main>
 </body>
 <?php session_write_close(); ?>

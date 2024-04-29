@@ -10,8 +10,8 @@
         <nav class="navbar navbar-expand-lg" id="nav">
             <div class="container-fluid">
                 <!-- Bouton de logo à gauche -->
-                <a class="navbar-brand" href="index.php">
-                    <img src="logo.png" alt="Logo" width="100" height="100" class="d-inline-block align-text-center">HOME
+                <a class="navbar-brand" href="index.php" style="font-weight: bold;">
+                    <img src="logo.png" alt="Logo" width="100" height="100" class="d-inline-block align-text-center" >HOME
                 </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">

@@ -43,7 +43,7 @@
                             <a class="nav-link" href="pageModifCSV.php">Modifier Fichier</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageSuppCSV.php">Supprimer Fichier</a>
+                            <a class="nav-link" href="pageSuppCSV.php" style="font-weight: bold;">Supprimer Fichier</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="pageDeploiements.php">Déploiements</a>
@@ -80,13 +80,16 @@
                         <h4>Fichier : <?php echo $csvName ?></h4>
                         <table class="tableau" id="myTable">
                         <thead>
-                            <tr>
-                                <th scope="col">Carte</th>
-                                <th scope="col">Vannes/Etat</th>
-                                <th scope="col">Valeur</th>
-                                <th scope="col">Timer dépendance</th>
-                                <th scope="col">Dépendance vannes</th>
-                            </tr>
+                            <?php 
+                            if(isset($csvData)) {
+                                // Boucle à travers $csvData à partir de la deuxième ligne
+                                echo "<tr>";
+                                foreach ($csvData[0] as $cell) {
+                                    echo "<th scope=\"col\">$cell</th>";
+                                }
+                                echo "</tr>";
+                            }
+                            ?>
                         </thead>
                         <tbody>
                             <?php
