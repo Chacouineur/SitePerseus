@@ -7,14 +7,17 @@
     include '../rechercheCSVCapteurs.php';
     session_start();
     unset($_SESSION['csvFileName']);
+    unset($_SESSION['csvName']);
+    unset($_SESSION['csvData']);
+    
     if(isset($_SESSION['fileName'])){
         $fileName = $_SESSION['fileName']; 
     } else {
         // Initialisez $fileName comme un tableau vide si la session n'a pas encore été définie
         $fileName = [];
     }
-    if(isset($_SESSION['csvData'])){
-        $csvData = $_SESSION['csvData'];
+    if(isset($_SESSION['csvData2'])){
+        $csvData = $_SESSION['csvData2'];
     } else {
         // Initialisez $csvData comme un tableau vide si la session n'a pas encore été définie
         $csvData = [];
@@ -35,7 +38,9 @@
 
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageAjoutConfig.php">Ajouter Config</a>
+                        </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichier</a>
                         </li>
@@ -61,7 +66,7 @@
         <div class="row">
             <div class="col-4">
                 <form method="post" action="../modifierCSV.php" class="ml-5 mr-5 mb-3" id="firstForm">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col" id="formSelect">
                             <label for="selectFile" class="form-label">Fichier CSV etats :</label>
                             <select class="form-select" name="FileName" id="selectFile" placeholder="Selectionnez un fichier"required>
@@ -83,7 +88,7 @@
                     
                 </form>
                 <form method="post" action="../modifierCSV.php" class="ml-5 mr-5 mb-3" id="ligne">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col" id="formSelect">
                             <label for="selectFile" class="form-label">Fichier CSV activation :</label>
                             <input type="text" class="form-control" name="FileName" id="activation" value="activation.csv" readonly>
@@ -93,7 +98,7 @@
                     <button type="submit" class="btn btn-primary" name="btnValue" value="afficher">Afficher le fichier</button> 
                 </form>
                 <form method="post" action="../modifierCSV.php" class="ml-5 mr-5 mb-3" id="ligne">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col" id="formSelect">
                             <label for="selectFile" class="form-label">Fichier CSV configuration physique capteurs :</label>
                             <select class="form-select" name="FileName" id="selectFile" placeholder="Selectionnez un fichier"required>
@@ -114,7 +119,7 @@
                     <button type="submit" class="btn btn-primary" name="btnValue" value="afficher">Afficher le fichier</button>
                 </form>
                 <form method="post" action="../modifierCSV.php" class="ml-5 mr-5 mb-3" id="ligne">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col" id="formSelect">
                             <label for="selectFile" class="form-label">Fichier CSV configuration physique vannes :</label>
                             <select class="form-select" name="FileName" id="selectFile" placeholder="Selectionnez un fichier"required>
@@ -161,7 +166,7 @@
                                 </div>
                                 <div class="col">
                                     <label for="maxValue" class="form-label">Max value :</label>
-                                    <input type="number" class="form-control" name="maxValue" id="maxValue" placeholder="Valeur max">
+                                    <input type="number" class="form-control" name="maxValue" id="maxValue" placeholder="Valeur port GPIO">
                                 </div>
                             </div>
                             <input type="hidden" id="ligneIndex" name="ligneIndex">
@@ -283,7 +288,7 @@
                         <thead>
                             <tr>
                                 <?php
-                                if (isset($csvData)){
+                                if (isset($csvData) && !empty($csvData)){
                                     foreach ($csvData[0] as $cell) {
                                         echo "<td>$cell</td>";
                                     }
@@ -294,7 +299,7 @@
                         <tbody>
                             <?php
                             // Vérifiez si $csvData est défini avant d'utiliser la boucle foreach
-                            if(isset($csvData)) {
+                            if(isset($csvData) && !empty($csvData)) {
                                 // Boucle à travers $csvData à partir de la deuxième ligne
                                 for($i = 1; $i < count($csvData); $i++) {
                                     echo "<tr>";
@@ -326,8 +331,7 @@
                 
                 document.addEventListener('DOMContentLoaded', function () {
                     var table = document.getElementById('myTable');
-                    var selectedRowIndex = null; // Pour stocker l'index de la ligne sélectionnée
-
+                    
                     table.addEventListener('click', function(event) {
                         var target = event.target; // où a eu lieu le clic
                         while (target && target.nodeName !== "TR") { // remonter jusqu'à l'élément TR

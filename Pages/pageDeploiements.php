@@ -19,13 +19,15 @@
 
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageAjoutConfig.php">Ajouter Config</a>
+                        </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichier</a>
                         </li>
 
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageModifCSV.php">Modifier Fichier</a>
+                            <a class="nav-link" href="pageModifCSV.php" style="font-weight: bold;">Modifier Fichier</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="pageSuppCSV.php">Supprimer Fichier</a>
@@ -45,7 +47,7 @@
         <form method="post" class="mx-auto p-5 rounded" id="mappingForm">
             
             <label for="code" class="form-label">Adresses IP :</label>
-            <div class="input-group mb-3" id="ipRange">
+            <div class="input-group" id="ipRange">
                 
                 <span class="input-group-text">De</span>
                 <input type="text" class="form-control" name="ipDebut" id="debut" aria-describedby="codeHelp" placeholder="192.168.1.*" required>

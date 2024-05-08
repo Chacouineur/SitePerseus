@@ -41,7 +41,7 @@ if (file_exists($filePath) && !empty($btnValue)) {
             }
 
             // Stocker les données dans la session
-            $_SESSION['csvData'] = $csvData;
+            $_SESSION['csvData2'] = $csvData;
             session_write_close();
             header('Location: Pages/pageModifCSV.php');
             exit();
