@@ -21,7 +21,7 @@ switch($btnValue){
                 if ($line[0] === $nomConfig) {
                     $found = true;
                     // Vérifier si la troisième colonne ne contient pas de #
-                    if (!strpos($line[2], '#') && $found) {
+                    if (strpos($line[2], '#')===false && $found===true) {
                         $nom = explode('|',$line[2]);
                         $dossierConfig = __DIR__."/Configurations/$nomConfig";
                         $dossierCommonCSVFiles = $dossierConfig."/commonCSVFiles";
@@ -42,9 +42,11 @@ switch($btnValue){
                             fputcsv($handle, $dataEG,';');
                             fclose($handle);
                     
-                            $data="*csv";
+                            $data="*.csv";
+                            $data2="*";
                             $gitIgnoreState = $dossierStateCSV.'/.gitignore';
                             $gitIgnoreCommon = $dossierCommonCSVFiles.'/.gitignore';
+                            $gitIgnoreConfig = __DIR__."/Configurations/.gitignore";
                             
                             $handle = fopen($gitIgnoreCommon,'w');
                             fwrite($handle, $data);
@@ -54,6 +56,11 @@ switch($btnValue){
                             $handle = fopen($gitIgnoreState,'w');
                             fwrite($handle, $data);
                             fclose($handle);
+
+                            $handle = fopen($gitIgnoreConfig,'w');
+                            fwrite($handle, $data2);
+                            fclose($handle);
+
                             for($i=1;$i<=$line[1];$i++){
                                 $dossierPhysicalCSV = $dossierConfig."/physicalCSV_CN$i";
                                 mkdir($dossierPhysicalCSV,0777, true);
@@ -87,11 +94,15 @@ switch($btnValue){
                                     fputcsv($handle, $content[$j],';');
                                 }
                                 fclose($handle);
-                    
+                                
                             }
                         }else{
                             header('Location: Pages/pageAjoutConfig.php?erreur');
+                            exit();
                         }
+                    }else{
+                        header('Location: Pages/pageAjoutConfig.php?erreur');
+                        exit();
                     }
                 }
             }
@@ -165,41 +176,47 @@ switch($btnValue){
             // Si la configuration est trouvée, la modifier
             if ($found) {
                 $currentConfig = $csvData[$currentConfigIndex];
-                echo $csvData[$currentConfigIndex][0].";".$csvData[$currentConfigIndex][1].";".$csvData[$currentConfigIndex][2];
                 $nbCartes = $currentConfig[1];
                 $noms = explode('|', $currentConfig[2]);
-               
-                $noms[$ligneIndex-1] = $nomCarte; // Modifier le nom de la carte spécifique
+                if (in_array($nomCarte, $noms)) {
+                    header('Location: Pages/pageAjoutConfig.php?erreur=nom_existe');
+                    exit();
+                }
+                else{
+                    $noms[$ligneIndex-1] = $nomCarte; // Modifier le nom de la carte spécifique
                 
-                $currentConfig[2] = implode('|', $noms); // Réassembler la chaîne des noms de cartes
-                $csvData[$currentConfigIndex] = $currentConfig; // Mettre à jour la ligne dans le tableau
-                echo $currentConfig[0] . ";" . $currentConfig[1] .";".$currentConfig[2];
-                
-                // Réécrire le fichier CSV avec les nouvelles données
-                if (($handle = fopen($configurations, 'w')) !== false) {
-                    foreach ($csvData as $line) {
-                        fputcsv($handle, $line, ';');
+                    $currentConfig[2] = implode('|', $noms); // Réassembler la chaîne des noms de cartes
+                    $csvData[$currentConfigIndex] = $currentConfig; // Mettre à jour la ligne dans le tableau
+                    
+                    // Réécrire le fichier CSV avec les nouvelles données
+                    if (($handle = fopen($configurations, 'w')) !== false) {
+                        foreach ($csvData as $line) {
+                            fputcsv($handle, $line, ';');
+                        }
+                        fclose($handle);
+                    } else {
+                        die("Impossible d'ouvrir le fichier $configurations pour écriture.");
                     }
-                    fclose($handle);
-                } else {
-                    die("Impossible d'ouvrir le fichier $configurations pour écriture.");
-                }
-                $csvData =[];
-                 // Créer les nouvelles lignes pour chaque carte
-                for($i = 0; $i < $currentConfig[1]; $i++) {
-                    $numCarte = "CN" . ($i+1);
-                    $nomCarte = $noms[$i];        
-                    $csvData[] = [$numCarte, $nomCarte];
-                }
+                    $csvData =[];
+                    // Créer les nouvelles lignes pour chaque carte
+                    for($i = 0; $i < $currentConfig[1]; $i++) {
+                        $numCarte = "CN" . ($i+1);
+                        $nomCarte = $noms[$i];        
+                        $csvData[] = [$numCarte, $nomCarte];
+                    }
 
-                $_SESSION['dataConfig']= $csvData;
+                    $_SESSION['dataConfig']= $csvData;
+                }
+                
             } else {
-                // Rediriger si la configuration n'est pas trouvée
-                header('Location: Pages/pageAjoutConfig.php?erreur');
-                exit;
+                header('Location: Pages/pageAjoutConfig.php?erreur=not_found');
+                exit();
             }
            
 
+        }else{
+            header('Location: Pages/pageAjoutConfig.php?erreur=line_not_clicked');
+            exit();
         }
         break;        
     default:
@@ -208,6 +225,5 @@ switch($btnValue){
 
 session_write_close();
 header('Location: Pages/pageAjoutConfig.php');
-
 exit();
 ?>
