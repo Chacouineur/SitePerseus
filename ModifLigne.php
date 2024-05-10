@@ -132,9 +132,6 @@ if (!empty($csvFilePath) && !empty($_POST['btnValue'])) {
             echo "Erreur ! Aucun bouton n'a été appuyé.";
             break;
     }
-    
-
-    // Rediriger vers la page AjoutCSV.php
     session_write_close(); 
     header('Location: Pages/pageAjoutCSV.php');
     exit();

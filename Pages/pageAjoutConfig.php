@@ -4,7 +4,16 @@
     require '../header.inc.php';
     session_start();
     unset($_SESSION['csvName']);
-
+    if(isset($_SESSION['dataConfig'])){
+        $csvData = $_SESSION['dataConfig'] ;
+    }else{
+        $csvData=[];
+    }
+    if(isset($_SESSION['nomConfig'])){
+        $nomConfig = $_SESSION['nomConfig'];
+    }else{
+        $nomConfig = [];
+    }
         
 ?>
 
@@ -52,14 +61,14 @@
             
             <div class="mb-3" id="config">
                 <label for="code" class="form-label">Nom de la configuration :</label>
-                <input type="text" class="form-control" name="config" id="config" placeholder="Configuration *" required>
+                <input type="text" class="form-control" name="config" id="config" placeholder="Configuration *">
             </div>
             
             <div class="mb-3 " id="nb">
                 <label for="nom" class="form-label">Nombre de cartes :</label>
                 <div class="input-group mb-3">
-                    <input type="number" min="1" max="239"class="form-control" name="nbCartes" id="nbCartes"  placeholder="min: 1 | max: 239" required>
-                    <button class="btn btn-primary" type="button" id="ajoutNom" onclick="creerTableau()">Créer Tableau</button>
+                    <input type="number" min="1" max="239"class="form-control" name="nbCartes" id="nbCartes"  placeholder="min: 1 | max: 239">
+                    <button class="btn btn-primary" type="submit" id="ajoutNom" name="btnValue" value="creerTab">Créer Tableau</button>
                 </div>
             </div>
 
@@ -69,55 +78,40 @@
                     <input type="text" class="form-control" placeholder="nom*" aria-label="nomCarte" name="nomCarte" id="nomCarte" >
                     <button class="btn btn-primary" type="submit" name="btnValue" id="ajoutNom" value="modif">Modifier</button>
                 </div>
-                <input type="hidden" class="form-control" placeholder="Noms" name="noms"id="noms" required>
                 <input type="hidden" class="form-control" placeholder="ligneIndex" name="ligneIndex" id="ligneIndex">
             </div>
             <button type="submit" class="btn btn-primary" name="btnValue" id="btnAddCorrespondance" value="ajoutCorresp">Ajouter Configuration</button>
         </form>
-        <div id="tableContainer"></div>
+        <?php if(!empty($nomConfig) && !empty($csvData)){?>
+            <h4>Nom de la configuration : <?php echo $nomConfig ?></h4>
+            <div id="tableContainer">
+                <table class="tableau table table-hover" id="myTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Numero Carte</th>
+                            <th scope="col">Nom Carte</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <?php
+                            for($i = 0; $i < count($csvData); $i++) {
+                                echo "<tr>";
+                                foreach ($csvData[$i] as $cell) {
+                                    echo "<td>$cell</td>";
+                                }
+                                echo "</tr>";
+                            }
+                        ?>
+                        </tr>
+                    </tbody>
+                </table>
+            </div><?php
+        }?>
+
+        
     </main>
     <script>
-        function creerTableau() {
-            const nombreLignes = document.getElementById('nbCartes').value;
-            const data = [];
-            for (let i = 1; i <= nombreLignes; i++) {
-                data.push([`CN${i}`, `Nom${i}`]); // Modifier pour inclure des noms de cartes fictifs
-            }
-
-            const table = document.createElement('table');
-            table.setAttribute('id', 'myTable');
-            table.classList.add('tableau', 'table', 'table-hover');
-
-            const thead = document.createElement('thead');
-            const headerRow = document.createElement('tr');
-            const headers = ["Num Carte", "NomCarte"];
-            headers.forEach(headerText => {
-                const th = document.createElement('th');
-                th.setAttribute('scope', 'col');
-                th.textContent = headerText;
-                headerRow.appendChild(th);
-            });
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
-
-            const tbody = document.createElement('tbody');
-            data.forEach(rowData => {
-                const row = document.createElement('tr');
-                rowData.forEach(cellData => {
-                    const cell = document.createElement('td');
-                    cell.textContent = cellData;
-                    row.appendChild(cell);
-                });
-                tbody.appendChild(row);
-            });
-            table.appendChild(tbody);
-
-            const tableContainer = document.getElementById('tableContainer');
-            tableContainer.innerHTML = ''; 
-            tableContainer.appendChild(table);
-
-            
-        }
         var ligneIndex = document.getElementById('ligneIndex');
         // Attacher l'événement click pour sélectionner une ligne du tableau
         document.addEventListener('click', function(event) {
@@ -158,3 +152,5 @@
         });
     </script>
 </body>
+<?php 
+session_write_close(); ?>
