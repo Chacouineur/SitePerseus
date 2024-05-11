@@ -9,6 +9,8 @@
     unset($_SESSION['csvFileName']);
     unset($_SESSION['csvName']);
     unset($_SESSION['csvData']);
+    unset($_SESSION['dataConfig']);
+    unset($_SESSION['nomCOnfig']);
     
     if(isset($_SESSION['fileName'])){
         $fileName = $_SESSION['fileName']; 

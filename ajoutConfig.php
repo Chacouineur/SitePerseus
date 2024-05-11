@@ -42,10 +42,7 @@ switch($btnValue){
                             fputcsv($handle, $dataEG,';');
                             fclose($handle);
                     
-                            $data="*.csv";
                             $data2="*";
-                            $gitIgnoreState = $dossierStateCSV.'/.gitignore';
-                            $gitIgnoreCommon = $dossierCommonCSVFiles.'/.gitignore';
                             $gitIgnoreConfig = __DIR__."/Configurations/.gitignore";
                             
                             $handle = fopen($gitIgnoreCommon,'w');

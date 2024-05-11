@@ -4,12 +4,16 @@
     require '../header.inc.php';
     session_start();
     include '../afficher.php';
+    include '../rechercheConfig.php';
     unset($_SESSION['csvName']);
+    unset($_SESSION['dataConfig']);
+    unset($_SESSION['nomCOnfig']);
 
     // Vérifier si la variable de session 'csvFileName' est définie
-    if(isset($_SESSION['csvFileName'])){
+    if(isset($_SESSION['csvFileName']) && isset($_SESSION['configName'])){
         $csvFileName = $_SESSION['csvFileName'];
-        afficherData($csvFileName); 
+        $nomConfig = $_SESSION['configName'];
+        afficherData($csvFileName,$nomConfig); 
     } else {
         // Initialisez $csvFileName comme un tableau vide si la session n'a pas encore été définie
         $csvFileName = [];
@@ -66,7 +70,21 @@
     </header>
     <main>
         <form method="post" action="../AjoutCorresp.php" class="mx-auto p-5 rounded" >
-        
+            <div class="mb-3" id="config">
+                <label for="config" class="form-label">Configuration :</label>
+                <select class="form-select" name="config" id="selectFile" placeholder="Selectionnez une configuration"required>
+                    <?php
+                    if (!empty($configNames)) {
+                        foreach ($configNames as $config) {
+                            $selected = ($config == $nomConfig) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
+                            echo "<option value=\"$config\" $selected>$config</option>";
+                        }
+                    }else{
+                        echo "<option value=\"\">Veuillez creer un fichier dans « Ajouter Fichier » </option>";
+                    }
+                    ?>
+                </select>
+            </div>
             <div class="mb-3" id="code">
                 <label for="code" class="form-label">Code État Général :</label>
                 <input type="text" class="form-control" name="code" id="code" aria-describedby="codeHelp" placeholder="0x****" required>
@@ -87,7 +105,7 @@
                 <div class="row">
                     <div class="col-auto">
                         <label for="exampleInputCarte" class="form-label">Carte :</label>
-                        <input type="text" class="form-control" name="carte" id="exampleInputCarte" aria-describedby="codeHelp" placeholder="CACMO/CACOE/etc" required>
+                        <input type="text" class="form-control" name="carte" id="exampleInputCarte" aria-describedby="codeHelp" placeholder="CACMO/CACOE/etc" readonly>
                     </div>
                     <div class="col-auto">
                         <label for="exampleInputVannesEtat" class="form-label">Vannes/Etat :</label>
@@ -124,9 +142,8 @@
                 </div>
                 <input type="hidden" id="ligneIndex" name="ligneIndex">
                 <input type="hidden" id="csvFileName" name="csvFileName" value="<?php echo $csvFileName; ?>">
-                <button type="submit" class="btn btn-primary" name="btnValue" value="ajoutMax">Ajouter Carte</button>
+                <input type="hidden" id="csvConfigName" name="csvConfigName" value="<?php echo $nomConfig; ?>">
                 <button type="submit" class="btn btn-primary" name="btnValue" value="modif" disabled>Modifier Ligne</button>
-                <button type="submit" class="btn btn-primary" name="btnValue" value="suppr"disabled>Supprimer Carte</button>
             </form>
 
             <table class="tableau table table-hover" id="myTable">
@@ -218,7 +235,9 @@
                                             row.classList.add("table-active");
                                             
                                             var csvFileName = document.getElementById('csvFileName').getAttribute('value');
-                                            csvFileName = "../commonCSVFiles/stateCSV/" + csvFileName;
+                                            var csvConfigName = document.getElementById('csvConfigName').getAttribute('value');
+
+                                            csvFileName = "../Configurations/"+csvConfigName+"/commonCSVFiles/stateCSV/" + csvFileName;
                                             fetch(csvFileName)
                                                 .then(response => response.text())
                                                 .then(data => {
@@ -236,7 +255,6 @@
                                                         let originalIndex = lines.indexOf(line) - 1; 
                                                         return [columns[1], originalIndex];
                                                     });
-                                                    console.log(result);
 
                                                     var displayedValues = [];
                                                     

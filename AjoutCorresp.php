@@ -7,8 +7,11 @@ session_start(); // Démarrer la session
 if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     $codeEG = $_POST['code'];
     $nom = $_POST['nom'];
+    $nomConfig = $_POST['config'];
 
-    $filePath = __DIR__."/commonCSVFiles/liaisonEGEtat.csv";
+    $_SESSION['configName'] = $nomConfig;
+
+    $filePath = __DIR__."/Configurations/$nomConfig/commonCSVFiles/liaisonEGEtat.csv";
 
     // Ouvrir le fichier en mode "ajout"
     $file = fopen($filePath, "a");
@@ -16,16 +19,16 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     // Vérifier si l'extension ".csv" est déjà présente dans $nom
     if (!preg_match('/\.csv$/', $nom)) {
         // Si l'extension n'est pas présente, ajoutez-la
-        $csvFilePath = __DIR__."/commonCSVFiles/stateCSV/".$nom . '.csv';
+        $csvFilePath = __DIR__."/Configurations/$nomConfig/commonCSVFiles/stateCSV/".$nom . '.csv';
         $nom = $nom . '.csv';
     } else {
         // Si l'extension est déjà présente, utilisez simplement $nom
-        $csvFilePath = __DIR__."/commonCSVFiles/stateCSV/".$nom;
+        $csvFilePath = __DIR__."/Configurations/$nomConfig/commonCSVFiles/stateCSV/".$nom;
     }
 
-    // Stocker la valeur de csvFileName dans une variable de session
     $_SESSION['csvFileName'] = $nom;
     $_SESSION['csvFilePath'] = $csvFilePath;
+
     if (!$file) {
         print("Erreur ! Impossible d ouvrir le fichier.");
         unset($_SESSION['csvFileName']);
@@ -35,6 +38,24 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
         </html><?php
         exit();
     }
+
+    $configurations = __DIR__ . "/configurations.csv";
+
+    $cartesConfig = [];
+    $nbConfig=[];
+
+    if (($handle = fopen($configurations, 'r')) !== false) {
+        while (($line = fgetcsv($handle, 1000, ";")) !== false) {
+            // Ignorer la première ligne qui contient les en-têtes
+            if ($line[0] == $nomConfig) {
+                $cartesConfig = $line[2];
+                $nbConfig=$line[1];
+            }
+        }
+        fclose($handle);
+    }
+
+    $cartes = explode('|',$cartesConfig);
 
     // Vérifier si la valeur commence par "0x" pour déterminer si elle est en hexadécimal
     if (substr($codeEG, 0, 2) === "0x") {
@@ -77,16 +98,21 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     } else {
         fclose($file);
 
-        // Tente d'ouvrir le fichier CSV en mode écriture, crée le fichier s'il n'existe pas
         if (($handle = fopen($csvFilePath, 'w')) !== FALSE) {
-            
-            // Définition de l'entête du fichier CSV
+           
             $entete = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
-            // Écriture de l'entête dans le fichier CSV
             fputcsv($handle, $entete, ';'); 
+
             $ligne1 = ["OFFSET", "EG", "#", "#", "#"];
-            // Écriture de l'entête dans le fichier CSV
             fputcsv($handle, $ligne1, ';'); 
+
+            for($i=0;$i<$nbConfig;$i++){
+                for($j=0;$j<12;$j++){
+                    $ligne= [$cartes[$i],"#","#","#","#"];
+                    fputcsv($handle, $ligne, ';');
+                }
+                fputcsv($handle, $ligne1, ';');
+            }
 
             // Fermeture du fichier
             fclose($handle);

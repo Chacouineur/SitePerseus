@@ -5,6 +5,8 @@
     include '../rechercheCSV.php';
     session_start();
     unset($_SESSION['csvFileName']);
+    unset($_SESSION['dataConfig']);
+    unset($_SESSION['nomCOnfig']);
     if(isset($_SESSION['csvName'])){
         $csvName = $_SESSION['csvName']; 
     } else {

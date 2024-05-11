@@ -1,8 +1,8 @@
 <?php
-function afficherData($csvFileName){
+function afficherData($csvFileName,$nomConfig){
     // Lire le contenu du fichier CSV dans un tableau
 
-    $lines = file("../commonCSVFiles/stateCSV/".$csvFileName, FILE_IGNORE_NEW_LINES);
+    $lines = file("../Configurations/$nomConfig/commonCSVFiles/stateCSV/".$csvFileName, FILE_IGNORE_NEW_LINES);
 
     // Vérifier si la fonction file() a réussi à lire le fichier
     if ($lines === false) {

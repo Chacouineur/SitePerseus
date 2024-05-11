@@ -35,35 +35,6 @@ if (!empty($csvFilePath) && !empty($_POST['btnValue'])) {
     }
 
     switch($btnValue){
-        case "ajoutMax":
-            // Compter le nombre de lignes pour la carte spécifiée
-            $nombreDeLignesParCarte = 0;
-            while (($data = fgetcsv($monFichier, 1000, ";")) !== FALSE) {
-                if ($data[0] === $carte) {
-                    $nombreDeLignesParCarte++;
-                }
-            }
-
-            // Ajouter une nouvelle ligne si le nombre de lignes est inférieur à 12
-            if ($nombreDeLignesParCarte < 12 && $carte != 'OFFSET') {
-                
-                fseek($monFichier, 0, SEEK_END); // Aller à la fin du fichier pour l'écriture
-                $ligne = [$carte, $vannesEtat, $valeur, $timeDep, $concatenatedString];
-                $ligneVide = [$carte,"#","#","#","#"];
-                $offset = ["OFFSET","EG","#","#","#"];
-                fputcsv($monFichier, $ligne, ';');
-                for($nombreDeLignesParCarte+1;$nombreDeLignesParCarte+1<12;$nombreDeLignesParCarte++){
-                    fputcsv($monFichier, $ligneVide, ';');
-                }
-                fputcsv($monFichier, $offset, ';');
-                
-            }else {
-                echo "La limite de 12 lignes pour la carte $carte a été atteinte et/ou vous avez tente dajouter une carte OFFSET";
-            }
-
-            fclose($monFichier);
-            break;
-
         case "modif":
             if ($numLigne && ($numLigne - 1) % 13 == 0) {
                 // Vérifier si le nom de la carte de la ligne précédente est "OFFSET"
@@ -97,37 +68,6 @@ if (!empty($csvFilePath) && !empty($_POST['btnValue'])) {
             
             break;
             
-        case "suppr":
-            if($carte !== 'OFFSET'){
-                $csvDataSansCarte = [];
-                $csvDataSansCarte[0] = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
-                $csvDataSansCarte[1] = ["OFFSET", "EG", "#", "#", "#"];
-                for($i=2;$i < count($csvData);$i++){
-                    
-                    if($csvData[$i][0]!== $carte && !($csvData[$i-1][0]===$carte && $csvData[$i][0]==='OFFSET')){
-                        $csvDataSansCarte[$i]=$csvData[$i];
-                    }
-                }
-    
-                // Ouvrir le fichier CSV en mode écriture
-                $monFichier = fopen($csvFilePath, "w");
-    
-                if (!$monFichier) {
-                    print("Impossible d'ouvrir le fichier");
-                    exit;
-                } else {
-                    // Parcourir les lignes restantes du tableau csvData et les écrire dans le fichier CSV
-                    foreach ($csvDataSansCarte as $ligne) {
-                        // Écrire chaque élément de la ligne dans le fichier CSV
-                        fputcsv($monFichier, $ligne, ';');
-                    }
-                }
-    
-                fclose($monFichier);
-            }
-            
-            break;
-        
         default:
             echo "Erreur ! Aucun bouton n'a été appuyé.";
             break;

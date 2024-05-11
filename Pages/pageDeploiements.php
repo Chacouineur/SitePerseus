@@ -3,6 +3,8 @@
     $page = "../pages.css";
     require '../header.inc.php';
     session_start();
+    unset($_SESSION['dataConfig']);
+    unset($_SESSION['nomCOnfig']);
 ?>
 <body>
     <header>
