@@ -17,7 +17,7 @@ if (!empty($csvFilePath) && !empty($_POST['btnValue'])) {
     
     if(empty($vannesEtat)){
         $vannesEtat="#";
-    }if(empty($valeur)){
+    }if($valeur !== '0' && $valeur !== '1'){
         $valeur="#";
     }if(empty($timeDep)){
         $timeDep="#";

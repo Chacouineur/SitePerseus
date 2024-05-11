@@ -135,8 +135,7 @@
                                 </div>
                             </div>
 
-                            <input type="text" class="form-control" id="selectedLabels" placeholder="Choisissez une valeur" aria-label="Texte des labels sélectionnés" disabled>
-                            <input type="hidden" class="form-control" id="selectedValues" placeholder="Valeurs sélectionnées" name="select" aria-label="Valeurs sélectionnées" disabled>
+                            <input type="text" class="form-control" id="selectedLabels" placeholder="Choisissez une valeur" aria-label="Texte des labels sélectionnés" readonly>
                         </div>
                     </div>
                 </div>
@@ -208,6 +207,7 @@
                                 var depVannes = document.getElementById('selectedLabels'); 
                                 var ligneIndex = document.getElementById('ligneIndex'); 
                                 var modifierBtn = document.querySelector('button[name="btnValue"][value="modif"]');
+
                                
                                 var checkboxes = document.getElementById("checkboxes").querySelector('ul');
                                 checkboxes.innerHTML = ''; // Supprimer toutes les cases à cocher existantes
@@ -218,9 +218,9 @@
                                 vannesEtat.value = cells[1].textContent;
                                 valeur.value = cells[2].textContent;
                                 timerDep.value = cells[3].textContent;
+                                depVannes.value = cells[4].textContent;
                                 modifierBtn.disabled = false; // Désactiver les boutons
                                 
-
                                 // Mise à jour de l'index de la ligne
                                 ligneIndex.value = rowIndex+1; // Pour le champ caché
                                 
@@ -231,7 +231,6 @@
                                         if (!row.classList.contains("table-active")) {
                                             row.classList.remove("table-active"); // Supprimer la classe "table-active" de toutes les lignes
                                             row.classList.add("table-active");
-                                            
                                             var csvFileName = document.getElementById('csvFileName').getAttribute('value');
                                             var csvConfigName = document.getElementById('csvConfigName').getAttribute('value');
 
@@ -253,9 +252,8 @@
                                                         let originalIndex = lines.indexOf(line) - 1; 
                                                         return [columns[1], originalIndex];
                                                     });
-
-                                                    var displayedValues = [];
                                                     
+                                                    var displayedValues = [];
                                                     result.forEach(item => {
                                                         // Vérifier si la valeur n'est pas déjà affichée
                                                         if (!displayedValues.includes(item[1])) {
@@ -264,29 +262,15 @@
                                                         }
                                                     });
                                                     
-                                                    function addCheckboxWithValue(value, labelValue) {
-                                                        var listItem = document.createElement("li");
-                                                        listItem.className = "list-group-item";
-                                                        var checkbox = document.createElement("input");
-                                                        checkbox.type = "checkbox";
-                                                        checkbox.className = "form-check-input me-1";
-                                                        checkbox.name = "checkboxes[]"; // Nom de la case à cocher pour l'envoi POST ou GET
-                                                        checkbox.value = value; // Définir la valeur de la checkbox
-                                                        checkbox.onclick = updateSelectedValues; // Écouteur d'événements pour mettre à jour les valeurs sélectionnées
+                                                    
+                                                    checkCheckboxes(cells);
 
-                                                        var label = document.createElement("label");
-                                                        label.className = "form-check-label";
-                                                        label.textContent = labelValue;
-                                                        
-                                                        listItem.appendChild(checkbox);
-                                                        listItem.appendChild(label);
-                                                        checkboxes.appendChild(listItem);
-                                                    }   
+                                                    
                                                 })
                                                 .catch(error => {
                                                     console.error('Erreur lors du chargement du fichier :', error);
                                                 });
-
+                                            
                                         } else {
                                             row.classList.remove("table-active"); // Supprimer la classe "table-active" pour la désurbrillance
                                             modifierBtn.disabled = true; // Désactiver les boutons
@@ -306,6 +290,43 @@
                     var selectedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
                     var selectedValues = Array.from(selectedCheckboxes).map(cb => cb.value).join('|');
                     document.getElementById('selectedLabels').value = selectedValues;
+                }
+                function addCheckboxWithValue(value, labelValue) {
+                    var listItem = document.createElement("li");
+                    listItem.className = "list-group-item";
+                    var checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.className = "form-check-input me-1";
+                    checkbox.name = "checkboxes[]"; // Nom de la case à cocher pour l'envoi POST ou GET
+                    checkbox.value = value; // Définir la valeur de la checkbox
+                    checkbox.onclick = updateSelectedValues; // Écouteur d'événements pour mettre à jour les valeurs sélectionnées
+
+                    var label = document.createElement("label");
+                    label.className = "form-check-label";
+                    label.textContent = labelValue;
+                    
+                    listItem.appendChild(checkbox);
+                    listItem.appendChild(label);
+                    checkboxes.appendChild(listItem);
+                }  
+                function checkCheckboxes(cells) {
+                    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                    var cellContent = cells[4].textContent; // Récupérer le contenu de cells[4]
+
+                    // Diviser la chaîne en un tableau de valeurs
+                    var values = cellContent.split('|');
+
+                    // Parcourir chaque valeur
+                    values.forEach(function(value) {
+                        // Récupérer la case à cocher correspondante en fonction du numéro de ligne
+                        var checkboxIndex = parseInt(value) - 1; // Convertir la valeur en nombre et soustraire 1 pour l'index
+                        var checkbox = checkboxes[checkboxIndex];
+                        
+                        // Cocher la case à cocher si elle existe
+                        if (checkbox) {
+                            checkbox.checked = true;
+                        }
+                    });
                 }
             </script><?php
         }?>
