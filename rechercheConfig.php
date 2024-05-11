@@ -1,20 +1,26 @@
 <?php
-$configurations = __DIR__ . "../configurations.csv";
+// Chemin du répertoire contenant les fichiers CSV
+$directoryPath = "../Configurations";
 
-// Tableau pour stocker les noms de configuration
-$configNames = [];
+// Initialiser un tableau pour stocker les noms de dossiers
+$folders = [];
 
-// Ouvrir le fichier configurations.csv en lecture
-if (($handle = fopen($configurations, 'r')) !== false) {
-    // Lire chaque ligne du fichier
-    while (($line = fgetcsv($handle, 1000, ";")) !== false) {
-        // Ignorer la première ligne qui contient les en-têtes
-        if ($line[0] !== 'Nom') {
-            // Ajouter le nom de la configuration au tableau
-            $configNames[] = $line[0];
+// Ouvrir le répertoire
+if ($handle = opendir($directoryPath)) {
+    // Parcourir chaque fichier dans le répertoire
+    while (false !== ($entry = readdir($handle))) {
+        // Ignorer les dossiers spécifiés
+        if ($entry == "." || $entry == ".." || $entry == ".gitignore") {
+            continue;
+        }
+        // Vérifier si l'entrée est un dossier
+        if (is_dir($directoryPath . '/' . $entry)) {
+            // Ajouter le dossier à la liste
+            $folders[] = $entry;
         }
     }
-    fclose($handle);
+    // Fermer le gestionnaire de répertoire
+    closedir($handle);
 }
 
 ?>

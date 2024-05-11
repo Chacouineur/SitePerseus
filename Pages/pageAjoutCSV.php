@@ -74,13 +74,13 @@
                 <label for="config" class="form-label">Configuration :</label>
                 <select class="form-select" name="config" id="selectFile" placeholder="Selectionnez une configuration"required>
                     <?php
-                    if (!empty($configNames)) {
-                        foreach ($configNames as $config) {
+                    if (!empty($folders)) {
+                        foreach ($folders as $config) {
                             $selected = ($config == $nomConfig) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
                             echo "<option value=\"$config\" $selected>$config</option>";
                         }
                     }else{
-                        echo "<option value=\"\">Veuillez creer un fichier dans « Ajouter Fichier » </option>";
+                        echo "<option value=\"\">Veuillez creer une configuration dans « Ajouter Config » </option>";
                     }
                     ?>
                 </select>
@@ -208,7 +208,6 @@
                                 var depVannes = document.getElementById('selectedLabels'); 
                                 var ligneIndex = document.getElementById('ligneIndex'); 
                                 var modifierBtn = document.querySelector('button[name="btnValue"][value="modif"]');
-                                var supprimerBtn = document.querySelector('button[name="btnValue"][value="suppr"]');
                                
                                 var checkboxes = document.getElementById("checkboxes").querySelector('ul');
                                 checkboxes.innerHTML = ''; // Supprimer toutes les cases à cocher existantes
@@ -220,7 +219,6 @@
                                 valeur.value = cells[2].textContent;
                                 timerDep.value = cells[3].textContent;
                                 modifierBtn.disabled = false; // Désactiver les boutons
-                                supprimerBtn.disabled = false;
                                 
 
                                 // Mise à jour de l'index de la ligne
@@ -292,7 +290,6 @@
                                         } else {
                                             row.classList.remove("table-active"); // Supprimer la classe "table-active" pour la désurbrillance
                                             modifierBtn.disabled = true; // Désactiver les boutons
-                                            supprimerBtn.disabled = true;
                                             
                                         }
                                     } else {

@@ -44,15 +44,8 @@ switch($btnValue){
                     
                             $data2="*";
                             $gitIgnoreConfig = __DIR__."/Configurations/.gitignore";
-                            
-                            $handle = fopen($gitIgnoreCommon,'w');
-                            fwrite($handle, $data);
-                            fclose($handle);
                     
                             mkdir($dossierStateCSV,0777, true);
-                            $handle = fopen($gitIgnoreState,'w');
-                            fwrite($handle, $data);
-                            fclose($handle);
 
                             $handle = fopen($gitIgnoreConfig,'w');
                             fwrite($handle, $data2);
