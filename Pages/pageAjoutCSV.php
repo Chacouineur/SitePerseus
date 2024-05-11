@@ -262,6 +262,24 @@
                                                         }
                                                     });
                                                     
+                                                    function addCheckboxWithValue(value, labelValue) {
+                                                        var listItem = document.createElement("li");
+                                                        listItem.className = "list-group-item";
+                                                        var checkbox = document.createElement("input");
+                                                        checkbox.type = "checkbox";
+                                                        checkbox.className = "form-check-input me-1";
+                                                        checkbox.name = "checkboxes[]"; // Nom de la case à cocher pour l'envoi POST ou GET
+                                                        checkbox.value = value; // Définir la valeur de la checkbox
+                                                        checkbox.onclick = updateSelectedValues; // Écouteur d'événements pour mettre à jour les valeurs sélectionnées
+
+                                                        var label = document.createElement("label");
+                                                        label.className = "form-check-label";
+                                                        label.textContent = labelValue;
+                                                        
+                                                        listItem.appendChild(checkbox);
+                                                        listItem.appendChild(label);
+                                                        checkboxes.appendChild(listItem);
+                                                    }  
                                                     
                                                     checkCheckboxes(cells);
 
@@ -291,24 +309,7 @@
                     var selectedValues = Array.from(selectedCheckboxes).map(cb => cb.value).join('|');
                     document.getElementById('selectedLabels').value = selectedValues;
                 }
-                function addCheckboxWithValue(value, labelValue) {
-                    var listItem = document.createElement("li");
-                    listItem.className = "list-group-item";
-                    var checkbox = document.createElement("input");
-                    checkbox.type = "checkbox";
-                    checkbox.className = "form-check-input me-1";
-                    checkbox.name = "checkboxes[]"; // Nom de la case à cocher pour l'envoi POST ou GET
-                    checkbox.value = value; // Définir la valeur de la checkbox
-                    checkbox.onclick = updateSelectedValues; // Écouteur d'événements pour mettre à jour les valeurs sélectionnées
-
-                    var label = document.createElement("label");
-                    label.className = "form-check-label";
-                    label.textContent = labelValue;
-                    
-                    listItem.appendChild(checkbox);
-                    listItem.appendChild(label);
-                    checkboxes.appendChild(listItem);
-                }  
+                
                 function checkCheckboxes(cells) {
                     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
                     var cellContent = cells[4].textContent; // Récupérer le contenu de cells[4]
@@ -316,18 +317,16 @@
                     // Diviser la chaîne en un tableau de valeurs
                     var values = cellContent.split('|');
 
-                    // Parcourir chaque valeur
-                    values.forEach(function(value) {
-                        // Récupérer la case à cocher correspondante en fonction du numéro de ligne
-                        var checkboxIndex = parseInt(value) - 1; // Convertir la valeur en nombre et soustraire 1 pour l'index
-                        var checkbox = checkboxes[checkboxIndex];
-                        
-                        // Cocher la case à cocher si elle existe
-                        if (checkbox) {
+                    // Parcourir chaque case à cocher
+                    checkboxes.forEach(function(checkbox) {
+                        // Vérifier si la valeur de la case à cocher est dans la liste des valeurs
+                        if (values.includes(checkbox.value)) {
+                            // Cocher la case à cocher si sa valeur correspond à une valeur dans la liste
                             checkbox.checked = true;
                         }
                     });
                 }
+
             </script><?php
         }?>
     </main>
