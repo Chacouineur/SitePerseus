@@ -68,7 +68,7 @@
                 <label for="nom" class="form-label">Nombre de cartes :</label>
                 <div class="input-group mb-3">
                     <input type="number" min="1" max="239"class="form-control" name="nbCartes" id="nbCartes"  placeholder="min: 1 | max: 239">
-                    <button class="btn btn-primary" type="submit" id="ajoutNom" name="btnValue" value="creerTab">Créer Tableau</button>
+                    <button class="btn btn-primary" type="submit" id="creerTab" name="btnValue" value="creerTab">Créer Tableau</button>
                 </div>
             </div>
 
@@ -113,6 +113,11 @@
     </main>
     <script>
         var ligneIndex = document.getElementById('ligneIndex');
+        var btnModif = document.getElementById('ajoutNom');
+        var nomCartes = document.getElementById('nomCarte');
+
+        btnModif.disabled = true;
+        nomCartes.disabled =true;
         // Attacher l'événement click pour sélectionner une ligne du tableau
         document.addEventListener('click', function(event) {
             const target = event.target;
@@ -130,11 +135,17 @@
                 const rows = document.querySelectorAll("#tableContainer #myTable tbody tr");
                 rows.forEach(row => {
                     row.classList.remove("table-active");
+                    btnModif.disabled = true;
+                    nomCartes.disabled =true;
+
                 });
 
                 // Si la ligne n'est pas déjà active, l'activer, sinon la désactiver
                 if (!isActive) {
                     selectedRow.classList.add("table-active"); // Ajouter la classe "table-active" à la ligne sélectionnée
+                    btnModif.disabled = false;
+                    nomCartes.disabled =false;
+
                 }
 
                 // Mettre à jour l'index de ligne seulement si la ligne est active
@@ -147,7 +158,7 @@
                     const cellValue = row.children[1].textContent;
                     values.push(cellValue);
                 });
-                console.log(values.join('|')); // Afficher les valeurs de la deuxième colonne séparées par '|'
+                
             }
         });
     </script>
