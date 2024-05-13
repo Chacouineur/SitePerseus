@@ -98,6 +98,7 @@ switch($btnValue){
             }
             fclose($handleConfig);
         }
+        header('Location: Pages/pageAjoutConfig.php?reussite');
         break;
 
     case "creerTab":
@@ -145,6 +146,7 @@ switch($btnValue){
             $_SESSION['dataConfig']= $csvData;
             
         }
+        header('Location: Pages/pageAjoutConfig.php?reussiteCreerTab');
         break;
     case "modif":
         if (!empty($_SESSION['nomConfig']) && isset($ligneIndex) && !empty($nomCarte)) {
@@ -208,12 +210,12 @@ switch($btnValue){
             header('Location: Pages/pageAjoutConfig.php?erreur=line_not_clicked');
             exit();
         }
+        header('Location: Pages/pageAjoutConfig.php?reussiteModif');
         break;        
     default:
         break;
 }
 
 session_write_close();
-header('Location: Pages/pageAjoutConfig.php');
 exit();
 ?>

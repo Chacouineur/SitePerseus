@@ -73,80 +73,88 @@
                     <div id="checkboxes">
                     <ul class="list-group">
                     
-                    <?php 
-                    require __DIR__ . '/../vendor/autoload.php';
+                    <?php
+require __DIR__ . '/../vendor/autoload.php';
 
-                    use Nmap\Address;
-                    use Nmap\Host;
-                    use Nmap\Nmap;
-                    use Nmap\Port;
-                    use Nmap\Hostname;
-                    use Nmap\XmlOutputParser;
+use Nmap\Nmap;
 
-                    // Custom error handler function
-                    function customErrorHandler($errno, $errstr, $errfile, $errline) {
-                        // Check if the error is a fatal error
-                        if ($errno & (E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)) {
-                            // Log the error or handle it as needed
-                            // For now, we are just returning true to ignore the error
-                            return true;
-                        }
-                        
-                        // Let PHP's default error handler handle other errors
-                        return false;
-                    }
-                    if(!empty($_POST['ipDebut'])&& !empty($_POST['ipFin'])){
-                        $ipDebut = $_POST['ipDebut'];
-                        $ipFin = $_POST['ipFin'];
-                    
-                        // Divisez l'adresse IP par le caractère '.'
-                        $partsDebut = explode('.', $ipDebut);
-                        $partsFin = explode('.', $ipFin);
-                    
-                        // Obtenez la dernière partie de l'adresse IP
-                        $lastPartDeb = end($partsDebut);
-                        $lastPartFin = end($partsFin);
-                    
-                        if($lastPartDeb<=$lastPartFin){
-                            // Register the custom error handler
-                            set_error_handler('customErrorHandler');
-                    
-                            for ($i = $lastPartDeb; $i <= $lastPartFin; $i++) {
-                                $ip = '192.168.1.' . $i;
-                                $files = glob('/tmp/nmap-scan-output*');
-                                foreach ($files as $file) {
-                                    unlink($file);
-                                }
-                                try {
-                                    $nmap = new Nmap();
-                                    // Scan the current IP address
-                                    $hosts = $nmap->scan([$ip], [ 21, 22, 80 ]);
-                                    // Check if the host is active
-                                    if (!empty($hosts)) {
-                                        $addresses = $hosts[0]->getAddresses();
+// Vérifiez si les données POST sont présentes
+if (!empty($_POST['ipDebut']) && !empty($_POST['ipFin'])) {
+    $ipDebut = $_POST['ipDebut'];
+    $ipFin = $_POST['ipFin'];
 
-                                        foreach ($addresses as $address) {
-                                            echo "<li class=\"list-group-item\">
-                                                <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$address->getAddress()."\"></input>
-                                                <label class=\"form-check-label\">".$address->getAddress()."</label>
-                                            </li>";
+    // Divisez l'adresse IP par le caractère '.'
+    $partsDebut = explode('.', $ipDebut);
+    $partsFin = explode('.', $ipFin);
 
-                                        }
-                                        
-                                        $hostnames = $hosts[0]->getHostnames();
+    // Obtenez la dernière partie de l'adresse IP
+    $lastPartDeb = end($partsDebut);
+    $lastPartFin = end($partsFin);
 
-                                        foreach ($hostnames as $hostname) {
-                                            echo "Hostname: " . $hostname->getName() . "<br>";
-                                        }
-                                    }
-                                } catch (Exception $e) {
-                                    // Handle the exception (optional)
-                                    // For now, we are just ignoring it
-                                    echo 'inactive ip' . "<br>";
-                                }
+    $diff = $lastPartFin - $lastPartDeb + 1;
+
+    // Déterminez le nombre de processus à utiliser
+    $processes = min($diff, 100); // Utilisez un maximum de 100 processus
+
+    if ($diff >= 0) {
+        try {
+            // Créer un tableau pour stocker les identifiants de processus
+            $pids = [];
+
+            // Créer les processus pour chaque adresse IP
+            for ($i = $lastPartDeb; $i <= $lastPartFin; $i++) {
+                $pid = pcntl_fork();
+
+                if ($pid == -1) {
+                    // Gestion de l'erreur de création du processus
+                    die('Erreur lors de la création du processus');
+                } elseif ($pid) {
+                    // Processus parent
+                    $pids[] = $pid;
+                } else {
+                    // Processus enfant
+                    $ip = '192.168.1.' . $i;
+                    $hosts = Nmap::create()->scan([$ip], [80, 443]);
+
+                    // Vérifiez si des hôtes ont été trouvés pour cette adresse IP
+                    if (!empty($hosts)) {
+                        foreach ($hosts as $host) {
+                            $addresses = $host->getAddresses(); // Obtenez les adresses pour cet hôte
+                            $hostname = $host->getHostnames(); // Obtenez les noms d'hôte pour cet hôte
+                            foreach ($addresses as $address) {
+                                echo "<li class=\"list-group-item\">
+                                    <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$address->getAddress()."\"></input>
+                                    <label class=\"form-check-label\">".$address->getAddress()."</label>
+                                </li>";
                             }
                         }
-                    }?>
+                    }
+
+                    // Sortir du processus enfant pour éviter la duplication
+                    exit();
+                }
+            }
+
+            // Attendre la fin de tous les processus enfants
+            foreach ($pids as $pid) {
+                pcntl_waitpid($pid, $status);
+            }
+        } catch (Exception $e) {
+            // Gérer l'exception ici
+            echo 'Erreur: ' . $e->getMessage();
+        }
+    } else {
+        // Traiter le cas où la plage d'adresses IP est invalide
+        echo 'La plage d\'adresses IP est invalide.';
+    }
+}
+?>
+
+
+
+
+
+                    
                     </ul>
                     </div>
                 </div>
