@@ -106,12 +106,12 @@
                         }?>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary" name="btnValue" value="afficher">Afficher le fichier</button>
-                    <button type="submit" class="btn btn-primary" name="btnValue" value="supprimer" onclick="return confirmDelete();">Supprimer le fichier</button>
+                    <button type="submit" class="btn btn-primary" name="btnValue" value="afficher" id="afficher">Afficher le fichier</button>
+                    <button type="submit" class="btn btn-primary" name="btnValue" value="supprimer" id="supprimer" onclick="return confirmDelete();">Supprimer le fichier</button>
                 </div>
                 <div class="col-4 mb-3 ml-5">
                     <?php if(!empty($csvName)){ ?>
-                        <h4>Fichier : <?php echo $csvName ?> | Config : <?php $nomconfig?></h4>
+                        <h4>Config : <?php echo $configName;?> | Fichier : <?php echo $csvName; ?>?></h4>
                         <table class="tableau" id="myTable">
                         <thead>
                             <?php 
@@ -149,11 +149,27 @@
             </div>
         </form>
         <script>
-            function confirmDelete() {
-                return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
-            }
-            
-        </script>
+    function confirmDelete() {
+        return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
+    }
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        var btnAfficher = document.getElementById("afficher");
+        var btnSuppr = document.getElementById("supprimer");
+        var fichier = document.getElementById('selectFile').value;
+        
+        btnAfficher.disabled = true;
+        btnSuppr.disabled = true;
+        
+        if (fichier !== "") {
+                btnAfficher.disabled = false;
+                btnSuppr.disabled = false;
+            } 
+
+        
+    });
+</script>
+
     </main>
     
 </body>
