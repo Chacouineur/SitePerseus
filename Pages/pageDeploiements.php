@@ -90,7 +90,7 @@
                             continue;
                         }
                         
-                        $ips = $matches[1];
+                        $ips[] = $matches[1];
                         //$mac = $matches[2];
                         //$desc = $matches[3];
                         
