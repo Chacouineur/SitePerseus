@@ -120,10 +120,10 @@
                                 try {
                                     $nmap = new Nmap();
                                     // Scan the current IP address
-                                    $hosts = $nmap->scan([$ip], [ 21, 22, 80 ]);
+                                    $hosts = $nmap->scan([$ip], [22]);
                                     // Check if the host is active
                                     if (!empty($hosts)) {
-                                        $addresses = $hosts[0]->getAddresses();
+                                        $addresses = $hosts[0]->getIpv4Addresses();
 
                                         foreach ($addresses as $address) {
                                             echo "<li class=\"list-group-item\">
