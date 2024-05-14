@@ -11,22 +11,27 @@ $configurations = __DIR__ . "/configurations.csv";
 switch($btnValue){
     case "ajoutCorresp":
         $nomConfig = $_SESSION['nomConfig'];
+        echo 1;
         // Ouvrir le fichier configurations.csv en lecture
         if (($handleConfig = fopen($configurations, 'r')) !== false) {
             $found = false;
-
+            echo 2;
             // Parcourir chaque ligne du fichier
             while (($line = fgetcsv($handleConfig, 1000, ";")) !== false) {
+                echo 3;
                 // Vérifier si la ligne correspond à $nomConfig
                 if ($line[0] === $nomConfig) {
+                    echo 4;
                     $found = true;
                     // Vérifier si la troisième colonne ne contient pas de #
                     if (strpos($line[2], '#')===false && $found===true) {
+                        echo 5;
                         $nom = explode('|',$line[2]);
                         $dossierConfig = __DIR__."/Configurations/$nomConfig";
                         $dossierCommonCSVFiles = $dossierConfig."/commonCSVFiles";
                         $dossierStateCSV = $dossierCommonCSVFiles."/stateCSV";
                         if(!file_exists($dossierConfig)){
+                            echo 6;
                             mkdir($dossierConfig,0777, true);
                     
                             mkdir($dossierCommonCSVFiles,0777, true);
@@ -52,6 +57,7 @@ switch($btnValue){
                             fclose($handle);
 
                             for($i=1;$i<=$line[1];$i++){
+                                echo 7;
                                 $dossierPhysicalCSV = $dossierConfig."/physicalCSV_CN$i";
                                 mkdir($dossierPhysicalCSV,0777, true);
                     
@@ -65,6 +71,7 @@ switch($btnValue){
                                 $content[0] = ["Carte","Capteur","Etat initial","Min value","Max value"];
                                 fputcsv($handle, $content[0],';');
                                 for ($j = 1; $j < 13; $j++) {
+                                    echo 8;
                                     $content[$j] = [$nom[$i - 1],"sensorCH$j","#","#","#"];
                                     fputcsv($handle, $content[$j],';');
                                 }
@@ -84,7 +91,7 @@ switch($btnValue){
                                     fputcsv($handle, $content[$j],';');
                                 }
                                 fclose($handle);
-                                
+                                echo 9;
                             }
                         }else{
                             header('Location: Pages/pageAjoutConfig.php?erreur');
