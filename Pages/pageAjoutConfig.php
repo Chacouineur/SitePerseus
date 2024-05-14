@@ -83,19 +83,22 @@
             <button type="submit" class="btn btn-primary" name="btnValue" id="btnAddCorrespondance" value="ajoutCorresp">Ajouter Configuration</button>
         </form>
         <?php 
-        if (isset($_GET['erreur'])) {
-            echo "<div class=\"alert alert-danger\" role=\"alert\">Vous n'avez pas rempli tous les champs ou vous n'avez pas mis tous les noms des cartes dans le tableau !</div>";
+        switch(true) {
+            case isset($_GET['erreur']):
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Vous n'avez pas rempli tous les champs ou vous n'avez pas mis tous les noms des cartes dans le tableau !</div>";
+                break;
+            case isset($_GET['nom_existe']):
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Une configuration ayant le même nom existe déjà !</div>";
+                break;
+            case isset($_GET['reussiteCreerTab']):
+                echo "<div class=\"alert alert-success\" role=\"alert\">Tableau des noms des cartes créé, veuillez selectionner et entrer le nom de chaque carte. </div>";
+                break;
+            case isset($_GET['reussite']):
+                echo "<div class=\"alert alert-success\" role=\"alert\">Configuration créée !</div>";
+                break;
+            default:
+                break;
         }
-        else if (isset($_GET['nom_existe'])) {
-            echo "<div class=\"alert alert-danger\" role=\"alert\">Une configuration ayant le même nom existe déjà !</div>";
-        }
-        else if (isset($_GET['reussiteCreerTab'])) {
-            echo "<div class=\"alert alert-success\" role=\"alert\">Tableau des noms des cartes créé, veuillez selectionner et entrer le nom de chaque carte. </div>";
-        }
-        else if(isset($_GET['reussite'])) {
-            echo "<div class=\"alert alert-success\" role=\"alert\">Configuration créée !</div>";
-        }
-        else
         if(!empty($nomConfig) && !empty($csvData)){?>
             <h4>Nom de la configuration : <?php echo $nomConfig ?></h4>
             <div id="tableContainer">

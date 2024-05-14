@@ -43,7 +43,7 @@ if ((file_exists($path)||is_dir($path)) && !empty($btnValue)) {
             $lines = file($path, FILE_IGNORE_NEW_LINES);
             // Vérifier si la fonction file() a réussi à lire le fichier
             if ($lines === false) {
-                exit("Impossible de lire le fichier CSV.");
+                exit("Impossible de lire le fichier CSV d'états.");
             }
 
             // Initialiser un tableau pour stocker les données du CSV
@@ -77,6 +77,7 @@ if ((file_exists($path)||is_dir($path)) && !empty($btnValue)) {
 
                 // Vérifier si la lecture du fichier a réussi
                 if ($lines === false) {
+                    header('Location: Pages/pageSuppCSV.php?erreurFichierLiaison');
                     exit("Impossible de lire le fichier liaisonEGEtat.csv.");
                 }
 
@@ -99,10 +100,10 @@ if ((file_exists($path)||is_dir($path)) && !empty($btnValue)) {
                 file_put_contents($liaisonFileName, implode("\n", $updatedLines)."\n");
                 $_SESSION['csvEG']=getCSVFiles($_SESSION['configName']);
                 session_write_close();
-                header('Location: Pages/pageSuppCSV.php');
+                header('Location: Pages/pageSuppCSV.php?reussiteSuppr');
                 exit();
             } else {
-                echo "Erreur lors de la suppression du fichier.";
+                header('Location: Pages/pageSuppCSV.php?erreurSuppr');
             }
             break;
         case 'config':

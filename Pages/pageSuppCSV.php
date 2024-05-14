@@ -108,6 +108,24 @@
                     </div>
                     <button type="submit" class="btn btn-primary" name="btnValue" value="afficher" id="afficher">Afficher le fichier</button>
                     <button type="submit" class="btn btn-primary" name="btnValue" value="supprimer" id="supprimer" onclick="return confirmDelete();">Supprimer le fichier</button>
+                    <?php
+                        switch(true) {
+                            case isset($_GET['erreurSuppr']):
+                                echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la suppression du fichier !</div>";
+                                break;
+                            case isset($_GET['erreurFichierLiaison']):
+                                echo "<div class=\"alert alert-danger\" role=\"alert\">Impossible de lire le fichier liaisonEGEtat.csv !</div>";
+                                break;
+                            case isset($_GET['erreurFichierEtat']):
+                                echo "<div class=\"alert alert-danger\" role=\"alert\">Impossible de lire le fichier CSV d'états !</div>";
+                                break;
+                            case isset($_GET['reussiteSuppr']):
+                                echo "<div class=\"alert alert-success\" role=\"alert\">Fichier d'états supprimé.</div>";
+                                break;
+                            default:
+                                break;
+                        }
+                    ?>
                 </div>
                 <div class="col-4 mb-3 ml-5">
                     <?php if(!empty($csvName)){ ?>
