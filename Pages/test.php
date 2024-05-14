@@ -1,5 +1,5 @@
 <?php
-
+echo "test";
 // Must be run as root
 $arp_scan = shell_exec('arp-scan --interface=eth0 --localnet');
 
