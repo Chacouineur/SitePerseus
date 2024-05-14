@@ -25,7 +25,11 @@
     }else{
         $csvEGs=[];
     }
-  
+    if(isset($_SESSION['configName'])){
+        $configName = $_SESSION['configName'];
+    }else{
+        $configName=[];
+    }
     
 ?>
 <body>
@@ -77,7 +81,7 @@
                                 <?php
                                 if (!empty($folders)) {
                                     foreach ($folders as $config) {
-                                        $selected = ($config == $nomConfig) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
+                                        $selected = ($config == $configName) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
                                         echo "<option value=\"$config\" $selected>$config</option>";
                                     }
                                 }else{
@@ -107,7 +111,7 @@
                 </div>
                 <div class="col-4 mb-3 ml-5">
                     <?php if(!empty($csvName)){ ?>
-                        <h4>Fichier : <?php echo $csvName ?> | Config : <?php $config</h4>
+                        <h4>Fichier : <?php echo $csvName ?> | Config : <?php $nomconfig?></h4>
                         <table class="tableau" id="myTable">
                         <thead>
                             <?php 
@@ -148,38 +152,7 @@
             function confirmDelete() {
                 return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
             }
-            document.addEventListener('DOMContentLoaded', function () {
-                var configSelect = document.getElementById('config');
-                var filesSelect = document.getElementById('selectFile');
-
-                configSelect.addEventListener('change', function() {
-                    var folder = this.value;
-                    filesSelect.innerHTML = ''; // Vider le select avant de charger les nouveaux fichiers
-
-                    fetch('../rechercheCSV.php?folder=' + encodeURIComponent(folder))
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(files => {
-                            console.log(files); // Voir les fichiers retournés
-                            filesSelect.innerHTML = ''; // Vider le select avant de charger les nouveaux fichiers
-                            if (files.length > 0) {
-                                files.forEach(file => {
-                                    var option = new Option(file, file);
-                                    filesSelect.add(option);
-                                });
-                            } else {
-                                filesSelect.add(new Option('Aucun fichier disponible', ''));
-                            }
-                        })
-                        .catch(error => console.error('Erreur lors de la récupération des fichiers:', error));
-
-                });
-            });
-
+            
         </script>
     </main>
     

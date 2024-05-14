@@ -97,6 +97,7 @@ if ((file_exists($path)||is_dir($path)) && !empty($btnValue)) {
 
                 // Écrire le contenu mis à jour dans le fichier liaisonEGEtat.csv
                 file_put_contents($liaisonFileName, implode("\n", $updatedLines)."\n");
+                $_SESSION['csvEG']=getCSVFiles($_SESSION['configName']);
                 session_write_close();
                 header('Location: Pages/pageSuppCSV.php');
                 exit();
@@ -108,7 +109,7 @@ if ((file_exists($path)||is_dir($path)) && !empty($btnValue)) {
             $_SESSION['csvEG']=getCSVFiles($config);
             $_SESSION['configName'] = $config;
             session_write_close();
-            //header('Location: Pages/pageSuppCSV.php');
+            header('Location: Pages/pageSuppCSV.php');
             exit();
             break;
         default:
