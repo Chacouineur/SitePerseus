@@ -74,6 +74,35 @@
                     <ul class="list-group">
                     
                     <?php 
+                    // Must be run as root
+                    $arp_scan = shell_exec('arp-scan --interface=eth0 --localnet');
+
+                    $arp_scan = explode("\n", $arp_scan);
+
+                    $matches;
+                    $ips = array();
+
+                    foreach($arp_scan as $scan) {
+                        
+                        $matches = array();
+                        
+                        if(preg_match('/^([0-9\.]+)[[:space:]]+([0-9a-f:]+)[[:space:]]+(.+)$/', $scan, $matches) !== 1) {
+                            continue;
+                        }
+                        
+                        $ips = $matches[1];
+                        //$mac = $matches[2];
+                        //$desc = $matches[3];
+                        
+                        //echo "Found device with mac address $mac ($desc) and ip $ip\n";
+                    }
+                    foreach($ips as $ip) {
+                        echo "<li class=\"list-group-item\">
+                        <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$ip."\"></input>
+                        <label class=\"form-check-label\">".$ip."</label>
+                        </li>";
+                    }
+                    /*
                     require __DIR__ . '/../vendor/autoload.php';
 
                     use Nmap\Address;
@@ -130,7 +159,6 @@
                                                 <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$address->getAddress()."\"></input>
                                                 <label class=\"form-check-label\">".$address->getAddress()."</label>
                                             </li>";
-
                                         }
                                         
                                         $hostnames = $hosts[0]->getHostnames();
@@ -146,7 +174,8 @@
                                 }
                             }
                         }
-                    }?>
+                    }
+                    */?>
                     </ul>
                     </div>
                 </div>
