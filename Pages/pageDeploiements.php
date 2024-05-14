@@ -46,8 +46,8 @@
 
     </header>
     <main>
+        <!--
         <form method="post" class="mx-auto p-5 rounded" id="mappingForm">
-            
             <label for="code" class="form-label">Adresses IP :</label>
             <div class="input-group" id="ipRange">
                 
@@ -59,6 +59,7 @@
 
             <button type="submit" class="btn btn-primary" id="btnAddCorrespondance">Mapping</button>
         </form>
+        -->
         <form method="post" class="mx-auto p-5 rounded" id="deploiement">
             
             <label for="selectedLabels" class="form-label">Cartes :</label>
@@ -81,6 +82,7 @@
 
                     $matches;
                     $ips = array();
+                    $descs = array();
 
                     foreach($arp_scan as $scan) {
                         
@@ -92,14 +94,14 @@
                         
                         $ips[] = $matches[1];
                         //$mac = $matches[2];
-                        //$desc = $matches[3];
+                        $descs[] = $matches[3];
                         
                         //echo "Found device with mac address $mac ($desc) and ip $ip\n";
                     }
-                    foreach($ips as $ip) {
+                    foreach($ips as $index => $ip) {
                         echo "<li class=\"list-group-item\">
-                        <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$ip."\"></input>
-                        <label class=\"form-check-label\">".$ip."</label>
+                        <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$ip."|".$descs[$index]."\"></input>
+                        <label class=\"form-check-label\">".$ip."|".$descs[$index]."</label>
                         </li>";
                     }
                     /*
