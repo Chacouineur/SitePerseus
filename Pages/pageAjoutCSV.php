@@ -72,7 +72,7 @@
         <form method="post" action="../AjoutCorresp.php" class="mx-auto p-5 rounded" >
             <div class="mb-3" id="config">
                 <label for="config" class="form-label">Configuration :</label>
-                <select class="form-select" name="config" id="selectFile" placeholder="Selectionnez une configuration"required>
+                <select class="form-select" name="config" id="config" placeholder="Selectionnez une configuration"required>
                     <?php
                     if (!empty($folders)) {
                         foreach ($folders as $config) {

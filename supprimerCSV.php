@@ -1,15 +1,46 @@
 <?php
-$filePath = __DIR__."/commonCSVFiles/stateCSV/".$_POST['FileName'];
+
 $fileName = $_POST['FileName'];
 $btnValue = $_POST['btnValue']; 
+$config = $_POST['config'];
 session_start();
+if($btnValue !== "config"){
+    $path = __DIR__."/Configurations/".$_SESSION['configName']."/commonCSVFiles/stateCSV/".$_POST['FileName'];
+}else{
+    $path = __DIR__."/Configurations/".$config."/commonCSVFiles/stateCSV/";
+
+}
+
+function getCSVFiles($folder) {
+    // Chemin du répertoire contenant les fichiers CSV
+    $directoryPath = __DIR__."/Configurations/".$folder."/commonCSVFiles/stateCSV/";
+
+    // Initialiser un tableau pour stocker les noms de fichiers CSV
+    $csvFiles = [];
+
+    // Ouvrir le répertoire
+    if ($handle = opendir($directoryPath)) {
+        // Parcourir chaque fichier dans le répertoire
+        while (false !== ($entry = readdir($handle))) {
+            // Vérifier si le fichier est un fichier CSV et différent de liaisonEGEtat.csv
+            if ($entry != "." && $entry != ".." && strtolower(pathinfo($entry, PATHINFO_EXTENSION)) == 'csv') {
+                // Ajouter le fichier à la liste
+                $csvFiles[] = $entry;
+            }
+        }
+        // Fermer le gestionnaire de répertoire
+        closedir($handle);
+    }
+
+    return $csvFiles;
+}
 
 // Vérifiez si le fichier existe avant de tenter de le supprimer
-if (file_exists($filePath) && !empty($btnValue)) {
+if ((file_exists($path)||is_dir($path)) && !empty($btnValue)) {
     switch($btnValue){
         case 'afficher':
             $_SESSION['csvName'] = $fileName;
-            $lines = file($filePath, FILE_IGNORE_NEW_LINES);
+            $lines = file($path, FILE_IGNORE_NEW_LINES);
             // Vérifier si la fonction file() a réussi à lire le fichier
             if ($lines === false) {
                 exit("Impossible de lire le fichier CSV.");
@@ -34,12 +65,12 @@ if (file_exists($filePath) && !empty($btnValue)) {
             exit();
             break;
         case 'supprimer':
-            if($filePath == __DIR__."/commonCSVFiles/stateCSV/".$fileName){
+            if($path == __DIR__."/Configurations/".$_SESSION['configName']."/commonCSVFiles/stateCSV/".$fileName){
                 unset($_SESSION['csvName']);
             }
-            if (unlink($filePath)) {
+            if (unlink($path)) {
                 // Chemin du fichier liaisonEGEtat.csv
-                $liaisonFileName = __DIR__.'/commonCSVFiles/liaisonEGEtat.csv';
+                $liaisonFileName = __DIR__."/Configurations/".$_SESSION['configName']."/commonCSVFiles/liaisonEGEtat.csv";
 
                 // Lire le contenu du fichier dans un tableau
                 $lines = file($liaisonFileName, FILE_IGNORE_NEW_LINES);
@@ -72,6 +103,13 @@ if (file_exists($filePath) && !empty($btnValue)) {
             } else {
                 echo "Erreur lors de la suppression du fichier.";
             }
+            break;
+        case 'config':
+            $_SESSION['csvEG']=getCSVFiles($config);
+            $_SESSION['configName'] = $config;
+            session_write_close();
+            //header('Location: Pages/pageSuppCSV.php');
+            exit();
             break;
         default:
             break;

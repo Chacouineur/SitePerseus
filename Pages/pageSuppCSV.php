@@ -2,11 +2,12 @@
     $titre = "Page Suppression CSV";
     $page = "../pages.css";
     require '../header.inc.php';
+    include '../rechercheConfig.php';
     include '../rechercheCSV.php';
     session_start();
     unset($_SESSION['csvFileName']);
     unset($_SESSION['dataConfig']);
-    unset($_SESSION['nomCOnfig']);
+    unset($_SESSION['nomConfig']);
     if(isset($_SESSION['csvName'])){
         $csvName = $_SESSION['csvName']; 
     } else {
@@ -19,6 +20,12 @@
         // Initialisez $csvFileName comme un tableau vide si la session n'a pas encore été définie
         $csvData = [];
     }
+    if(isset($_SESSION['csvEG'])){
+        $csvEGs = $_SESSION['csvEG'];
+    }else{
+        $csvEGs=[];
+    }
+  
     
 ?>
 <body>
@@ -63,25 +70,44 @@
         <form method="post" action="../supprimerCSV.php" class="mx-auto p-5 rounded" id="ligne">
             <div class="row">
                 <div class="col-4 mb-3 mr-5" id="formSelect">
-                    <label for="selectFile" class="form-label">Fichier CSV :</label>
-                    <select class="form-select" name="FileName" id="selectFile" placeholder="Selectionnez un fichier"required>
-                        <?php
-                        if (!empty($csvFiles)) {
-                            foreach ($csvFiles as $file) {
-                                $selected = ($file == $csvName) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
-                                echo "<option value=\"$file\" $selected>$file</option>";
+                    <div class="mb-3">
+                        <label for="config" class="form-label">Configuration :</label>
+                        <div class="input-group mb-3">
+                            <select class="form-select" name="config" id="config" placeholder="Selectionnez une configuration"required>
+                                <?php
+                                if (!empty($folders)) {
+                                    foreach ($folders as $config) {
+                                        $selected = ($config == $nomConfig) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
+                                        echo "<option value=\"$config\" $selected>$config</option>";
+                                    }
+                                }else{
+                                    echo "<option value=\"\">Veuillez creer une configuration dans « Ajouter Config » </option>";
+                                }
+                                ?>
+                            </select>
+                            <button class="btn btn-primary" type="submit" name="btnValue" id="btnConfig" value="config">Selectionner Config</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="selectFile" class="form-label">Fichier CSV :</label>
+                        <select class="form-select" name="FileName" id="selectFile" placeholder="Selectionnez un fichier">
+                        <?php echo $config;
+                        if (!empty($csvEGs)) {
+                            foreach ($csvEGs as $csvEG) {
+                                $selected = ($csvEG == $csvName) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
+                                echo "<option value=\"$csvEG\" $selected>$csvEG</option>";
                             }
                         }else{
-                            echo "<option value=\"\">Veuillez creer un fichier dans « Ajouter Fichier » </option>";
-                        }
-                        ?>
-                    </select>
+                            echo "<option value=\"\">Veuillez creer un fichier Etat dans « Ajouter Fichier » </option>";
+                        }?>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary" name="btnValue" value="afficher">Afficher le fichier</button>
                     <button type="submit" class="btn btn-primary" name="btnValue" value="supprimer" onclick="return confirmDelete();">Supprimer le fichier</button>
                 </div>
                 <div class="col-4 mb-3 ml-5">
                     <?php if(!empty($csvName)){ ?>
-                        <h4>Fichier : <?php echo $csvName ?></h4>
+                        <h4>Fichier : <?php echo $csvName ?> | Config : <?php $config</h4>
                         <table class="tableau" id="myTable">
                         <thead>
                             <?php 
@@ -122,6 +148,38 @@
             function confirmDelete() {
                 return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
             }
+            document.addEventListener('DOMContentLoaded', function () {
+                var configSelect = document.getElementById('config');
+                var filesSelect = document.getElementById('selectFile');
+
+                configSelect.addEventListener('change', function() {
+                    var folder = this.value;
+                    filesSelect.innerHTML = ''; // Vider le select avant de charger les nouveaux fichiers
+
+                    fetch('../rechercheCSV.php?folder=' + encodeURIComponent(folder))
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(files => {
+                            console.log(files); // Voir les fichiers retournés
+                            filesSelect.innerHTML = ''; // Vider le select avant de charger les nouveaux fichiers
+                            if (files.length > 0) {
+                                files.forEach(file => {
+                                    var option = new Option(file, file);
+                                    filesSelect.add(option);
+                                });
+                            } else {
+                                filesSelect.add(new Option('Aucun fichier disponible', ''));
+                            }
+                        })
+                        .catch(error => console.error('Erreur lors de la récupération des fichiers:', error));
+
+                });
+            });
+
         </script>
     </main>
     
