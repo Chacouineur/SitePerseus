@@ -111,7 +111,7 @@
                 </div>
                 <div class="col-4 mb-3 ml-5">
                     <?php if(!empty($csvName)){ ?>
-                        <h4>Config : <?php echo $configName;?> | Fichier : <?php echo $csvName; ?>?></h4>
+                        <h4>Config : <?php echo $configName;?> | Fichier : <?php echo $csvName; ?></h4>
                         <table class="tableau" id="myTable">
                         <thead>
                             <?php 
