@@ -1,8 +1,10 @@
+<p>test p</p>
+
 <?php
 echo "test";
 // Must be run as root
 $arp_scan = shell_exec('arp-scan --interface=eth0 --localnet');
-
+echo $arp_scan;
 $arp_scan = explode("\n", $arp_scan);
 
 $matches;
