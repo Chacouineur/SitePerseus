@@ -1,26 +1,62 @@
 <?php
-$fileName = $_POST['FileName'];
-$btnValue = $_POST['btnValue']; 
-if(file_exists(__DIR__."/commonCSVFiles/stateCSV/".$fileName)){
+include 'rechercheCSV.php';
+session_start();
+$btnValue = $_POST['btnValue'];
+$config = $_POST['config']; 
+
+$boards = !empty($_SESSION['boards']) ? $_SESSION['boards'] : [];
+$configName = !empty($_SESSION['configName']) ? $_SESSION['configName'] : [];
+
+
+if(file_exists(__DIR__."/Configurations/".$configName."/commonCSVFiles/stateCSV/".$fileName)){
     $filePath = __DIR__."/commonCSVFiles/stateCSV/".$fileName;
 }
-elseif (file_exists(__DIR__."/commonCSVFiles/".$fileName)) {
+elseif(file_exists(__DIR__."/commonCSVFiles/".$fileName)) {
     $filePath =__DIR__."/commonCSVFiles/".$fileName;
 }
-elseif(file_exists(__DIR__."/physicalCSV/sensorsCSV/".$fileName)){
+elseif(file_exists(getCSVSensors($fileName,$boards,$config))){
     $filePath = __DIR__."/physicalCSV/sensorsCSV/".$fileName;
 }
-elseif(file_exists(__DIR__."/physicalCSV/valvesCSV/".$fileName)){
+elseif(file_exists(getCSVValves($fileName,$boards,$config))){
     $filePath = __DIR__."/physicalCSV/valvesCSV/".$fileName;
 }else{
     $filePath = '';
 }
-session_start();
 
 // Vérifiez si le fichier existe avant de tenter de le supprimer
-if (file_exists($filePath) && !empty($btnValue)) {
+if (!empty($btnValue)) {
     switch($btnValue){
+        case 'config':
+            $statesFiles =getCSVState($config);
+            $_SESSION['statesFile']=$statesFiles;
+            
+            $boards = getBoard($config);
+            $_SESSION['boards']=$boards;
+
+            $_SESSION['configName']=$config;
+
+            session_write_close();
+            header('Location: Pages/pageModifCSV.php');
+            exit();
+            break;
         case 'afficher':
+            $fileEG = $_POST['FileEG'];
+            $fileActiv = $_POST['FileActiv'];
+            $fileSensor = $_POST['FileSensor'];
+            $fileValve = $_POST['FileValve'];
+            if(!empty($fileEG)){
+                $filePath = __DIR__."/Configurations/".$configName."/commonCSVFiles/stateCSV/".$fileEG;
+                $_SESSION['fileName'] = $fileEG;
+            }elseif(!empty($fileActiv)){
+                $filePath = getCSVActivation($configName);
+                $_SESSION['fileName'] = $fileActiv;
+            }elseif(!empty($fileSensor)){
+                $filePath = getCSVSensors($fileSensor,$boards,$configName);
+                $_SESSION['fileName'] = $fileSensor;
+            }elseif(!empty($fileValve)){
+                $filePath = getCSVValves($fileValve,$boards,$configName);
+                $_SESSION['fileName'] = $fileValve;
+            }
             $_SESSION['fileName'] = $fileName;
             $lines = file($filePath, FILE_IGNORE_NEW_LINES);
             // Vérifier si la fonction file() a réussi à lire le fichier
@@ -47,7 +83,8 @@ if (file_exists($filePath) && !empty($btnValue)) {
             exit();
             break;
         case 'modifier':
-            
+            $valvesPath = getCSVValves($card,$board,$config);
+            $sensorsPath = getCSVSensors($card,$board,$config); 
             break;
         default:
             break;

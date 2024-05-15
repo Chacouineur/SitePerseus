@@ -1,30 +1,54 @@
 <?php
 
-function getCSVFiles($folder) {
-    // Chemin du répertoire contenant les fichiers CSV
-    $directoryPath = "../Configurations/".$folder."/commonCSVFiles/stateCSV/";
-
-    // Initialiser un tableau pour stocker les noms de fichiers CSV
+function getCSVState($folder) {
+    $directoryPath = __DIR__."/Configurations/".$folder."/commonCSVFiles/stateCSV/";
     $csvFiles = [];
-
-    // Ouvrir le répertoire
     if ($handle = opendir($directoryPath)) {
-        // Parcourir chaque fichier dans le répertoire
         while (false !== ($entry = readdir($handle))) {
-            // Vérifier si le fichier est un fichier CSV et différent de liaisonEGEtat.csv
             if ($entry != "." && $entry != ".." && strtolower(pathinfo($entry, PATHINFO_EXTENSION)) == 'csv') {
-                // Ajouter le fichier à la liste
                 $csvFiles[] = $entry;
             }
         }
-        // Fermer le gestionnaire de répertoire
         closedir($handle);
     }
-
     return $csvFiles;
 }
 
+function getBoard($folder) {
+    $path = "configurations.csv";
+    $boards =[];
+    $handle = fopen($path,"r");
+    while (($line = fgetcsv($handle, 1000, ";")) !== false) {
+        if ($line[0] === $folder) {
+            $boards = $line[2];
+        }
+    }
+    $board = explode('|',$boards);
+    fclose($handle);
+    return $board;
+}
 
+function getCSVSensors($card,$board,$folder){
+    for($i=0;$i<count($board);$i++){
+        if($card === $board[$i]){
+            $filePath = __DIR__."/Configurations/".$folder."/physicalCSV_CN".($i+1)."/sensorsCSV/physicalCONFIG_sensors.csv";
+        }
+    }
+    return $filePath;
+}
 
+function getCSVValves($card,$board,$folder){
+    for($i=0;$i<count($board);$i++){
+        if($card === $board[$i]){
+            $filePath = __DIR__."/Configurations/".$folder."/physicalCSV_CN".($i+1)."/valvesCSV/physicalCONFIG_valves.csv";
+        }
+    }
+    return $filePath;
+}
+
+function getCSVActivation($folder){
+    $filePath = __DIR__."/Configurations/".$folder."/commonCSVFiles/activation.csv";
+    return $filePath;
+}
 
 ?>
