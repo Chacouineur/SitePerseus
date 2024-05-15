@@ -8,21 +8,6 @@ $boards = !empty($_SESSION['boards']) ? $_SESSION['boards'] : [];
 $configName = !empty($_SESSION['configName']) ? $_SESSION['configName'] : [];
 
 
-if(file_exists(__DIR__."/Configurations/".$configName."/commonCSVFiles/stateCSV/".$fileName)){
-    $filePath = __DIR__."/commonCSVFiles/stateCSV/".$fileName;
-}
-elseif(file_exists(__DIR__."/commonCSVFiles/".$fileName)) {
-    $filePath =__DIR__."/commonCSVFiles/".$fileName;
-}
-elseif(file_exists(getCSVSensors($fileName,$boards,$config))){
-    $filePath = __DIR__."/physicalCSV/sensorsCSV/".$fileName;
-}
-elseif(file_exists(getCSVValves($fileName,$boards,$config))){
-    $filePath = __DIR__."/physicalCSV/valvesCSV/".$fileName;
-}else{
-    $filePath = '';
-}
-
 // Vérifiez si le fichier existe avant de tenter de le supprimer
 if (!empty($btnValue)) {
     switch($btnValue){
