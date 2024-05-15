@@ -7,7 +7,7 @@ $nomCarte = $_POST["nomCarte"];
 $btnValue = $_POST["btnValue"];
 $ligneIndex = $_POST['ligneIndex'];
 $configurations = __DIR__ . "/configurations.csv";
-
+echo $nomConfig;
 switch($btnValue){
     case "ajoutCorresp":
         $nomConfig = $_SESSION['nomConfig'];
