@@ -9,6 +9,8 @@
     unset($_SESSION['nomConfig']);
     $stock = !empty($_SESSION['stock']) ? $_SESSION['stock'] : [];
     $ips = !empty($_SESSION['ips']) ? $_SESSION['ips'] : [];
+    $btnValue = $_POST['btnValue']; 
+
     $configurations = __DIR__ . "/Configuration/configurations.csv";
 
 ?>
@@ -53,10 +55,8 @@
     </header>
     <main>
         <?php
-        if (PHP_OS_FAMILY === 'Windows') {
-            // Display the form only if the OS is Windows
-            echo '
-            <form method="post" class="mx-auto p-5 rounded" id="mappingForm">
+        if (PHP_OS_FAMILY === 'Windows') {?>
+            <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="mappingForm">
                 <label for="code" class="form-label">Adresses IP :</label>
                 <div class="input-group" id="ipRange">
                     
@@ -65,36 +65,54 @@
                     <span class="input-group-text">à</span>
                     <input type="text" class="form-control" name="ipFin" id="fin" aria-describedby="nomHelp" placeholder="192.168.1.*" required>
                 </div>
-                <button type="submit" class="btn btn-primary" id="btnAddCorrespondance">Mapping</button>
-            </form>';
-        }
+                <button type="submit" class="btn btn-primary" name="btnValue" value="analyserRes" id="btnAddCorrespondance">Analyser le réseau local</button>
+
+                <div class="mb-3" id="config">
+                        <label for="config" class="form-label">Configuration :</label>
+                        <div class="input-group mb-3">
+                            <select class="form-select" name="config" id="config" placeholder="Selectionnez une configuration"required>
+                                <?php
+                                if (!empty($folders)) {
+                                    foreach ($folders as $config) {
+                                        $selected = ($config == $configName) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
+                                        echo "<option value=\"$config\" $selected>$config</option>";
+                                    }
+                                }else{
+                                    echo "<option value=\"\">Veuillez creer une configuration dans « Ajouter Config » </option>";
+                                }
+                                ?>
+                                </select>
+                            <button class="btn btn-primary" type="submit" name="btnValue" id="btnConfig" value="config">Selectionner Config</button>
+                        </div>
+                    </div>
+            </form>
+        <?php }
         else {
-            echo '
+            ?>
             <form method="post" class="mx-auto p-5 rounded" id="mappingForm">
                 <label for="code" class="form-label">Appuyez sur ce bouton pour récupérer les IPs connectées sur le réseau local :</label>
-                <button type="submit" class="btn btn-primary" name="btnAnalyser">Analyser le réseau local</button>
-            </form>';
-        }
-        ?>
-        <form method="post" class="mx-auto p-5 rounded" id="deploiement">
-            <div class="mb-3" id="config">
-            <label for="config" class="form-label">Configuration :</label>
-                <div class="input-group mb-3">
-                    <select class="form-select" name="config" id="config" placeholder="Selectionnez une configuration"required>
-                        <?php
-                        if (!empty($folders)) {
-                            foreach ($folders as $config) {
-                                $selected = ($config == $configName) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
-                                echo "<option value=\"$config\" $selected>$config</option>";
+                <button type="submit" class="btn btn-primary" name="btnValue" value="analyserRes">Analyser le réseau local</button>
+                <div class="mb-3" id="config">
+                    <label for="config" class="form-label">Configuration :</label>
+                    <div class="input-group mb-3">
+                        <select class="form-select" name="config" id="config" placeholder="Selectionnez une configuration"required>
+                            <?php
+                            if (!empty($folders)) {
+                                foreach ($folders as $config) {
+                                    $selected = ($config == $configName) ? 'selected' : '';   // Si le fichier correspond à $csvName, marquez-le comme sélectionné
+                                    echo "<option value=\"$config\" $selected>$config</option>";
+                                }
+                            }else{
+                                echo "<option value=\"\">Veuillez creer une configuration dans « Ajouter Config » </option>";
                             }
-                        }else{
-                            echo "<option value=\"\">Veuillez creer une configuration dans « Ajouter Config » </option>";
-                        }
-                        ?>
-                    </select>
-                    <button class="btn btn-primary" type="submit" name="btnValue" id="btnConfig" value="config">Selectionner Config</button>
+                            ?>
+                        </select>
+                        <button class="btn btn-primary" type="submit" name="btnValue" id="btnConfig" value="config">Selectionner Config</button>
+                    </div>
                 </div>
-            </div>
+            </form>
+        <?php } ?>
+        <form method="post" class="mx-auto p-5 rounded" id="deploiement">
             <label for="selectedLabels" class="form-label">Cartes :</label>
             <div class="input-group">
                 <div class="multiselect">
@@ -107,146 +125,6 @@
                     <div id="checkboxes">
                     <ul class="list-group">
                     
-                    <?php     
-                    require __DIR__ . '/../vendor/autoload.php';
-
-                    use Nmap\Address;
-                    use Nmap\Host;
-                    use Nmap\Nmap;
-                    use Nmap\Port;
-                    use Nmap\Hostname;
-                    use Nmap\XmlOutputParser;       
-
-                    // Custom error handler function
-                    function customErrorHandler($errno, $errstr, $errfile, $errline) {
-                        // Check if the error is a fatal error
-                        if ($errno & (E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)) {
-                            // Log the error or handle it as needed
-                            // For now, we are just returning true to ignore the error
-                            return true;
-                        }
-                        
-                        // Let PHP's default error handler handle other errors
-                        return false;
-                    }     
-
-                    set_error_handler('customErrorHandler');
-
-                    if (PHP_OS_FAMILY === 'Windows') {
-                        if(!empty($_POST['ipDebut'])&& !empty($_POST['ipFin'])){
-                            $ipDebut = $_POST['ipDebut'];
-                            $ipFin = $_POST['ipFin'];
-                        
-                            // Divisez l'adresse IP par le caractère '.'
-                            $partsDebut = explode('.', $ipDebut);
-                            $partsFin = explode('.', $ipFin);
-                        
-                            // Obtenez la dernière partie de l'adresse IP
-                            $lastPartDeb = end($partsDebut);
-                            $lastPartFin = end($partsFin);
-                        
-                            if($lastPartDeb<=$lastPartFin){
-                                // Register the custom error handler
-                                set_error_handler('customErrorHandler');
-                        
-                                for ($i = $lastPartDeb; $i <= $lastPartFin; $i++) {
-                                    $ip = '192.168.10.' . $i;
-                                    $files = glob('/tmp/nmap-scan-output*');
-                                    foreach ($files as $file) {
-                                        unlink($file);
-                                    }
-                                    try {
-                                        $nmap = new Nmap();
-                                        // Scan the current IP address
-                                        $hosts = $nmap->scan([$ip], [22]);
-                                        // Check if the host is active
-                                        if (!empty($hosts)) {
-                                            $addresses = $hosts[0]->getIpv4Addresses();
-    
-                                            foreach ($addresses as $address) {
-                                                echo "<li class=\"list-group-item\">
-                                                    <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$address->getAddress()."\"></input>
-                                                    <label class=\"form-check-label\">".$address->getAddress()."</label>
-                                                </li>";
-                                            }
-                                            
-                                            $hostnames = $hosts[0]->getHostnames();
-    
-                                            foreach ($hostnames as $hostname) {
-                                                echo "Hostname: " . $hostname->getName() . "<br>";
-                                            }
-                                        }
-                                    } catch (Exception $e) {
-                                        // Handle the exception (optional)
-                                        // For now, we are just ignoring it
-                                        echo 'inactive ip' . "<br>";
-                                    }
-                                }
-                            }
-                        }
-                    } else {    
-                        if(isset($_POST['btnAnalyser'])){
-                            unset($_SESSION['stock']);
-                            unset($_SESSION['ips']);
-                            // Must be run as root
-                            $arp_scan = shell_exec('arp-scan --interface=eth0 --localnet');
-        
-                            $arp_scan = explode("\n", $arp_scan);
-        
-                            $ips = [];
-                            $descs = [];
-        
-                            $files = glob('/tmp/nmap-scan-output*');
-                            foreach ($files as $file) {
-                                unlink($file);
-                            }
-                        
-                            foreach($arp_scan as $scan) {
-                                
-                                $matches = [];
-                                
-                                if(preg_match('/^([0-9\.]+)[[:space:]]+([0-9a-f:]+)[[:space:]]+(.+)$/', $scan, $matches) !== 1) {
-                                    continue;
-                                }
-                                
-                                $ips[] = $matches[1];
-                                $descs[] = $matches[3];
-                            }
-        
-                            // Debug: Output IPs and descriptions
-                            if (empty($ips)) {
-                                echo 'No IPs found in arp-scan output.';
-                                exit;
-                            }
-                            $stock[]=[];
-                            foreach($ips as $index => $ip) {
-                                try {
-                                    $nmap = new Nmap();
-        
-                                    // Scan the current IP address
-                                    $hosts = $nmap->scan([$ip], [22]);  
-                                    $hostname = count($hosts) > 0 && count($hosts[0]->getHostnames()) > 0 ? $hosts[0]->getHostnames()[0]->getName() : 'No hostname';
-
-                                    $stock[] = $ip."|".$descs[$index]."|".$hostname;
-
-                                } catch (Exception $e) {
-                                    // Handle the exception (optional)
-                                    // For now, we are just ignoring it
-                                    echo 'inactive ip: ' . $ip . "<br>";
-                                    echo $e->getMessage() . "<br>";
-                                }
-                            }
-                            $_SESSION['stock'] = $stock;
-                            $_SESSION['ips'] = $ips;
-                        }
-                        foreach($ips as $index => $ip) {
-                            echo "<li class=\"list-group-item\">
-                            <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"$ip\"></input>
-                            <label class=\"form-check-label\">".$stock[$index+1]."</label>
-                            </li>";
-                        }
-                    }
-                    ?>
                     </ul>
                     </div>
                 </div>
@@ -273,6 +151,7 @@
         <table class="tableau table table-hover" id="myTable">
                 <thead>
                     <tr>
+                        <th scope="col">Numéro de carte</th>
                         <th scope="col">Carte</th>
                         <th scope="col">IP locale sélectionnée</th>
                         <th scope="col">Utilisateur SSH</th>
