@@ -7,7 +7,7 @@
     include '../rechercheConfig.php';
     unset($_SESSION['csvName']);
     unset($_SESSION['dataConfig']);
-    unset($_SESSION['nomCOnfig']);
+    unset($_SESSION['nomConfig']);
 
     // Vérifier si la variable de session 'csvFileName' est définie
     if(isset($_SESSION['csvFileName']) && isset($_SESSION['configName'])){
