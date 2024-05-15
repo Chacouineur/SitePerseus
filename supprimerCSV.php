@@ -1,5 +1,5 @@
 <?php
-
+include 'rechercheCSV.php';
 $fileName = $_POST['FileName'];
 $btnValue = $_POST['btnValue']; 
 $config = $_POST['config'];
@@ -9,30 +9,6 @@ if($btnValue !== "config"){
 }else{
     $path = __DIR__."/Configurations/".$config."/commonCSVFiles/stateCSV/";
 
-}
-
-function getCSVFiles($folder) {
-    // Chemin du répertoire contenant les fichiers CSV
-    $directoryPath = __DIR__."/Configurations/".$folder."/commonCSVFiles/stateCSV/";
-
-    // Initialiser un tableau pour stocker les noms de fichiers CSV
-    $csvFiles = [];
-
-    // Ouvrir le répertoire
-    if ($handle = opendir($directoryPath)) {
-        // Parcourir chaque fichier dans le répertoire
-        while (false !== ($entry = readdir($handle))) {
-            // Vérifier si le fichier est un fichier CSV et différent de liaisonEGEtat.csv
-            if ($entry != "." && $entry != ".." && strtolower(pathinfo($entry, PATHINFO_EXTENSION)) == 'csv') {
-                // Ajouter le fichier à la liste
-                $csvFiles[] = $entry;
-            }
-        }
-        // Fermer le gestionnaire de répertoire
-        closedir($handle);
-    }
-
-    return $csvFiles;
 }
 
 // Vérifiez si le fichier existe avant de tenter de le supprimer
@@ -98,7 +74,7 @@ if ((file_exists($path)||is_dir($path)) && !empty($btnValue)) {
 
                 // Écrire le contenu mis à jour dans le fichier liaisonEGEtat.csv
                 file_put_contents($liaisonFileName, implode("\n", $updatedLines)."\n");
-                $_SESSION['csvEG']=getCSVFiles($_SESSION['configName']);
+                $_SESSION['csvEG']=getCSVState($_SESSION['configName']);
                 session_write_close();
                 header('Location: Pages/pageSuppCSV.php?reussiteSuppr');
                 exit();
@@ -107,7 +83,7 @@ if ((file_exists($path)||is_dir($path)) && !empty($btnValue)) {
             }
             break;
         case 'config':
-            $_SESSION['csvEG']=getCSVFiles($config);
+            $_SESSION['csvEG']=getCSVState($config);
             $_SESSION['configName'] = $config;
             session_write_close();
             header('Location: Pages/pageSuppCSV.php');

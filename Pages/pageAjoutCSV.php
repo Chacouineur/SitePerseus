@@ -171,6 +171,7 @@
                     ?>
                 </tbody>
             </table>
+           
             <script>
                 var expanded = false;
                 function showCheckBoxes(){
