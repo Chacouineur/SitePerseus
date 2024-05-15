@@ -46,20 +46,23 @@
 
     </header>
     <main>
-        <!--
-        <form method="post" class="mx-auto p-5 rounded" id="mappingForm">
-            <label for="code" class="form-label">Adresses IP :</label>
-            <div class="input-group" id="ipRange">
-                
-                <span class="input-group-text">De</span>
-                <input type="text" class="form-control" name="ipDebut" id="debut" aria-describedby="codeHelp" placeholder="192.168.1.*" required>
-                <span class="input-group-text">à</span>
-                <input type="text" class="form-control" name="ipFin" id="fin" aria-describedby="nomHelp" placeholder="192.168.1.*" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary" id="btnAddCorrespondance">Mapping</button>
-        </form>
-        -->
+        <?php
+        if (PHP_OS_FAMILY === 'Windows') {
+            // Display the form only if the OS is Windows
+            echo '
+            <form method="post" class="mx-auto p-5 rounded" id="mappingForm">
+                <label for="code" class="form-label">Adresses IP :</label>
+                <div class="input-group" id="ipRange">
+                    
+                    <span class="input-group-text">De</span>
+                    <input type="text" class="form-control" name="ipDebut" id="debut" aria-describedby="codeHelp" placeholder="192.168.1.*" required>
+                    <span class="input-group-text">à</span>
+                    <input type="text" class="form-control" name="ipFin" id="fin" aria-describedby="nomHelp" placeholder="192.168.1.*" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btnAddCorrespondance">Mapping</button>
+            </form>';
+        }
+        ?>
         <form method="post" class="mx-auto p-5 rounded" id="deploiement">
             
             <label for="selectedLabels" class="form-label">Cartes :</label>
@@ -74,37 +77,7 @@
                     <div id="checkboxes">
                     <ul class="list-group">
                     
-                    <?php 
-                    // Must be run as root
-                    $arp_scan = shell_exec('arp-scan --interface=eth0 --localnet');
-
-                    $arp_scan = explode("\n", $arp_scan);
-
-                    $matches;
-                    $ips = array();
-                    $descs = array();
-
-                    foreach($arp_scan as $scan) {
-                        
-                        $matches = array();
-                        
-                        if(preg_match('/^([0-9\.]+)[[:space:]]+([0-9a-f:]+)[[:space:]]+(.+)$/', $scan, $matches) !== 1) {
-                            continue;
-                        }
-                        
-                        $ips[] = $matches[1];
-                        //$mac = $matches[2];
-                        $descs[] = $matches[3];
-                        
-                        //echo "Found device with mac address $mac ($desc) and ip $ip\n";
-                    }
-                    foreach($ips as $index => $ip) {
-                        echo "<li class=\"list-group-item\">
-                        <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$ip."|".$descs[$index]."\"></input>
-                        <label class=\"form-check-label\">".$ip."|".$descs[$index]."</label>
-                        </li>";
-                    }
-                    /*
+                    <?php     
                     require __DIR__ . '/../vendor/autoload.php';
 
                     use Nmap\Address;
@@ -112,7 +85,7 @@
                     use Nmap\Nmap;
                     use Nmap\Port;
                     use Nmap\Hostname;
-                    use Nmap\XmlOutputParser;
+                    use Nmap\XmlOutputParser;       
 
                     // Custom error handler function
                     function customErrorHandler($errno, $errstr, $errfile, $errline) {
@@ -125,59 +98,116 @@
                         
                         // Let PHP's default error handler handle other errors
                         return false;
-                    }
-                    if(!empty($_POST['ipDebut'])&& !empty($_POST['ipFin'])){
-                        $ipDebut = $_POST['ipDebut'];
-                        $ipFin = $_POST['ipFin'];
-                    
-                        // Divisez l'adresse IP par le caractère '.'
-                        $partsDebut = explode('.', $ipDebut);
-                        $partsFin = explode('.', $ipFin);
-                    
-                        // Obtenez la dernière partie de l'adresse IP
-                        $lastPartDeb = end($partsDebut);
-                        $lastPartFin = end($partsFin);
-                    
-                        if($lastPartDeb<=$lastPartFin){
-                            // Register the custom error handler
-                            set_error_handler('customErrorHandler');
-                    
-                            for ($i = $lastPartDeb; $i <= $lastPartFin; $i++) {
-                                $ip = '192.168.10.' . $i;
-                                $files = glob('/tmp/nmap-scan-output*');
-                                foreach ($files as $file) {
-                                    unlink($file);
-                                }
-                                try {
-                                    $nmap = new Nmap();
-                                    // Scan the current IP address
-                                    $hosts = $nmap->scan([$ip], [22]);
-                                    // Check if the host is active
-                                    if (!empty($hosts)) {
-                                        $addresses = $hosts[0]->getIpv4Addresses();
+                    }     
 
-                                        foreach ($addresses as $address) {
-                                            echo "<li class=\"list-group-item\">
-                                                <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$address->getAddress()."\"></input>
-                                                <label class=\"form-check-label\">".$address->getAddress()."</label>
-                                            </li>";
-                                        }
-                                        
-                                        $hostnames = $hosts[0]->getHostnames();
+                    set_error_handler('customErrorHandler');
 
-                                        foreach ($hostnames as $hostname) {
-                                            echo "Hostname: " . $hostname->getName() . "<br>";
-                                        }
+                    if (PHP_OS_FAMILY === 'Windows') {
+                        if(!empty($_POST['ipDebut'])&& !empty($_POST['ipFin'])){
+                            $ipDebut = $_POST['ipDebut'];
+                            $ipFin = $_POST['ipFin'];
+                        
+                            // Divisez l'adresse IP par le caractère '.'
+                            $partsDebut = explode('.', $ipDebut);
+                            $partsFin = explode('.', $ipFin);
+                        
+                            // Obtenez la dernière partie de l'adresse IP
+                            $lastPartDeb = end($partsDebut);
+                            $lastPartFin = end($partsFin);
+                        
+                            if($lastPartDeb<=$lastPartFin){
+                                // Register the custom error handler
+                                set_error_handler('customErrorHandler');
+                        
+                                for ($i = $lastPartDeb; $i <= $lastPartFin; $i++) {
+                                    $ip = '192.168.10.' . $i;
+                                    $files = glob('/tmp/nmap-scan-output*');
+                                    foreach ($files as $file) {
+                                        unlink($file);
                                     }
-                                } catch (Exception $e) {
-                                    // Handle the exception (optional)
-                                    // For now, we are just ignoring it
-                                    echo 'inactive ip' . "<br>";
+                                    try {
+                                        $nmap = new Nmap();
+                                        // Scan the current IP address
+                                        $hosts = $nmap->scan([$ip], [22]);
+                                        // Check if the host is active
+                                        if (!empty($hosts)) {
+                                            $addresses = $hosts[0]->getIpv4Addresses();
+    
+                                            foreach ($addresses as $address) {
+                                                echo "<li class=\"list-group-item\">
+                                                    <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"".$address->getAddress()."\"></input>
+                                                    <label class=\"form-check-label\">".$address->getAddress()."</label>
+                                                </li>";
+                                            }
+                                            
+                                            $hostnames = $hosts[0]->getHostnames();
+    
+                                            foreach ($hostnames as $hostname) {
+                                                echo "Hostname: " . $hostname->getName() . "<br>";
+                                            }
+                                        }
+                                    } catch (Exception $e) {
+                                        // Handle the exception (optional)
+                                        // For now, we are just ignoring it
+                                        echo 'inactive ip' . "<br>";
+                                    }
                                 }
                             }
                         }
+                    } else {    
+                        // Must be run as root
+                        $arp_scan = shell_exec('arp-scan --interface=eth0 --localnet');
+    
+                        $arp_scan = explode("\n", $arp_scan);
+    
+                        $ips = [];
+                        $descs = [];
+    
+                        $files = glob('/tmp/nmap-scan-output*');
+                        foreach ($files as $file) {
+                            unlink($file);
+                        }
+                       
+                        foreach($arp_scan as $scan) {
+                            
+                            $matches = [];
+                            
+                            if(preg_match('/^([0-9\.]+)[[:space:]]+([0-9a-f:]+)[[:space:]]+(.+)$/', $scan, $matches) !== 1) {
+                                continue;
+                            }
+                            
+                            $ips[] = $matches[1];
+                            $descs[] = $matches[3];
+                        }
+    
+                        // Debug: Output IPs and descriptions
+                        if (empty($ips)) {
+                            echo 'No IPs found in arp-scan output.';
+                            exit;
+                        }
+    
+                        foreach($ips as $index => $ip) {
+                            try {
+                                $nmap = new Nmap();
+    
+                                // Scan the current IP address
+                                $hosts = $nmap->scan([$ip], [22]);  
+                                $hostname = count($hosts) > 0 && count($hosts[0]->getHostnames()) > 0 ? $hosts[0]->getHostnames()[0]->getName() : 'No hostname';
+    
+                                echo "<li class=\"list-group-item\">
+                                <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\".$ip.\"></input>
+                                <label class=\"form-check-label\">".$ip."|".$descs[$index]."|".$hostname."</label>
+                                </li>";
+                            } catch (Exception $e) {
+                                // Handle the exception (optional)
+                                // For now, we are just ignoring it
+                                echo 'inactive ip: ' . $ip . "<br>";
+                                echo $e->getMessage() . "<br>";
+                            }
+                        }
                     }
-                    */?>
+                    
+                    ?>
                     </ul>
                     </div>
                 </div>
