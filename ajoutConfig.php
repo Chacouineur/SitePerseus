@@ -28,12 +28,36 @@ switch($btnValue){
                             mkdir($dossierConfig,0777, true);
                     
                             mkdir($dossierCommonCSVFiles,0777, true);
-                            $dataActiv = ["Carte","Vannes/Etat","Activation"];
-                            $activationCSV = $dossierCommonCSVFiles."/activation.csv";
+
+                            $dataActiv = [];
+
+                            $activationCSV = $dossierCommonCSVFiles . "/activation.csv";
                             $handle = fopen($activationCSV, 'w');
-                            fputcsv($handle, $dataActiv,';');
+
+                            $dataActiv = ["Carte", "Vannes/Etat", "Activation"];
+                            fputcsv($handle, $dataActiv, ';');
+
+                            $offset = ["OFFSET", "#", "#"];
+                            fputcsv($handle, $offset, ';');
+
+                            for ($i = 0; $i < $line[1]; $i++) {
+                                $nomCarte = $nom[$i];
+                                
+                                for ($j = 1; $j <= 12; $j++) {
+                                    $dataActiv = [$nomCarte, "sensor$j", "#"];
+                                    fputcsv($handle, $dataActiv, ';');
+                                }
+
+                                for ($j = 1; $j <= 12; $j++) {
+                                    $dataActiv = [$nomCarte, "valve$j", "#"];
+                                    fputcsv($handle, $dataActiv, ';');
+                                }
+    
+                                fputcsv($handle, $offset, ';');
+                            }
+
                             fclose($handle);
-                    
+                             
                             $dataEG = ["Code EG","Nom fichier CSV"];
                             $liaisonEGEtat = $dossierCommonCSVFiles."/liaisonEGEtat.csv";
                             $handle = fopen($liaisonEGEtat, 'w');
@@ -126,7 +150,6 @@ switch($btnValue){
                     $handle = fopen($configurations, 'a');
                     if (fputcsv($handle, [$nomConfig, $nbCartes, $vide], ';')) {
                         $_SESSION['nomConfig'] = $nomConfig;
-                        echo $_SESSION['nomConfig'];
                     }
                     fclose($handle);
                 }

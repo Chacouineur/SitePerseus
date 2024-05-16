@@ -1,9 +1,12 @@
 <?php
 function afficherData($csvFileName,$nomConfig){
     // Lire le contenu du fichier CSV dans un tableau
-
-    $lines = file("../Configurations/$nomConfig/commonCSVFiles/stateCSV/".$csvFileName, FILE_IGNORE_NEW_LINES);
-
+    $currentDir = __DIR__ ;
+    if(strpos($currentDir, 'Pages')===true){
+        $lines = file($currentDir . "/../Configurations/$nomConfig/commonCSVFiles/stateCSV/".$csvFileName, FILE_IGNORE_NEW_LINES);
+    }else{
+        $lines = file($currentDir . "/Configurations/$nomConfig/commonCSVFiles/stateCSV/".$csvFileName, FILE_IGNORE_NEW_LINES);
+    }
     // Vérifier si la fonction file() a réussi à lire le fichier
     if ($lines === false) {
         exit("Impossible de lire le fichier CSV.");
@@ -21,7 +24,7 @@ function afficherData($csvFileName,$nomConfig){
         $csvData[] = $data;
     }
 
-    // Stocker les données dans la session
-    $_SESSION['csvData'] = $csvData;
+    return $csvData;
+    
 }
 ?>
