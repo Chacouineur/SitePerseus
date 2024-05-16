@@ -25,7 +25,6 @@ if (!empty($csvFilePath) && !empty($_POST['btnValue'])) {
         $concatenatedString = "#";
     } else {
         $concatenatedString = implode('|', $depVannes);
-        echo ".$concatenatedString.";
     }    
     
     // Ouvrir le fichier CSV en mode écriture

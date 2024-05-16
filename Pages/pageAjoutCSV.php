@@ -13,7 +13,8 @@
     if(isset($_SESSION['csvFileName']) && isset($_SESSION['configName'])){
         $csvFileName = $_SESSION['csvFileName'];
         $nomConfig = $_SESSION['configName'];
-        afficherData($csvFileName,$nomConfig); 
+        $csvData =afficherData($csvFileName,$nomConfig); 
+        $_SESSION['csvData'] = $csvData;
     } else {
         // Initialisez $csvFileName comme un tableau vide si la session n'a pas encore été définie
         $csvFileName = [];
