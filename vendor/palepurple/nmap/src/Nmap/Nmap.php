@@ -134,7 +134,6 @@ class Nmap
      */
     public function scan(array $targets, array $ports = array())
     {
-
         $command = $this->buildCommand($targets, $ports);
 
 

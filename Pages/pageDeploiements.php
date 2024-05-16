@@ -61,9 +61,9 @@
                 <div class="input-group" id="ipRange">
                     
                     <span class="input-group-text">De</span>
-                    <input type="text" class="form-control" name="ipDebut" id="debut" aria-describedby="codeHelp" placeholder="192.168.1.*" required>
+                    <input type="text" class="form-control" name="ipDebut" id="debut" aria-describedby="codeHelp" placeholder="192.168.1.*">
                     <span class="input-group-text">à</span>
-                    <input type="text" class="form-control" name="ipFin" id="fin" aria-describedby="nomHelp" placeholder="192.168.1.*" required>
+                    <input type="text" class="form-control" name="ipFin" id="fin" aria-describedby="nomHelp" placeholder="192.168.1.*">
                 </div>
                 <button type="submit" class="btn btn-primary" name="btnValue" value="analyserRes" id="btnAddCorrespondance">Analyser le réseau local</button>
 
@@ -89,7 +89,7 @@
         <?php }
         else {
             ?>
-            <form method="post" class="mx-auto p-5 rounded" id="mappingForm">
+            <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="mappingForm">
                 <label for="code" class="form-label">Appuyez sur ce bouton pour récupérer les IPs connectées sur le réseau local :</label>
                 <button type="submit" class="btn btn-primary" name="btnValue" value="analyserRes">Analyser le réseau local</button>
                 <div class="mb-3" id="config">
@@ -124,7 +124,14 @@
                     </div>
                     <div id="checkboxes">
                     <ul class="list-group">
-                    
+                    <?php
+                                foreach($ips as $index => $ip) {
+                                    echo "<li class=\"list-group-item\">
+                                    <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"$ip\"></input>
+                                    <label class=\"form-check-label\">".$stock[$index]."</label>
+                                    </li>";
+                                }
+                    ?>
                     </ul>
                     </div>
                 </div>
