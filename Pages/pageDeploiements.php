@@ -113,30 +113,32 @@
             </form>
         <?php } ?>
         <form method="post" class="mx-auto p-5 rounded" id="deploiement">
-            <label for="selectedLabels" class="form-label">Cartes :</label>
-            <div class="input-group">
-                <div class="multiselect">
-                    <div class="selectBox" onclick="showCheckBoxes()">
-                        <select class="form-select" aria-label="Default select example" id="">
-                            <option>Selectionne Carte(s)</option>
-                        </select>
-                        <div class="overSelect"></div>
-                    </div>
-                    <div id="checkboxes">
-                    <ul class="list-group">
-                    <?php
+            <div class="row">
+                <div class="col-auto">
+                    <label for="selectedLabels" class="form-label col-auto">Carte ip par carte :</label>
+                    <select class="form-select" aria-label="Default select example" id="">
+                        <option>Selectionne Carte(s)</option>
+                            <?php
                                 foreach($ips as $index => $ip) {
-                                    echo "<li class=\"list-group-item\">
-                                    <input type=\"checkbox\" class=\"form-check-input me-1\" name=\"checkboxes[]\" value=\"$ip\"></input>
-                                    <label class=\"form-check-label\">".$stock[$index]."</label>
-                                    </li>";
+                                    echo "<option value=\"$ip\">$stock[$index]</option>";
                                 }
-                    ?>
-                    </ul>
-                    </div>
+                            ?>
+                    </select>
                 </div>
-            </div>
-        
+                <div class="col-auto">
+                    <label for="exampleInputVannesEtat" class="form-label">Utilisateur SSH :</label>
+                    <input type="text" class="form-control" name="utilisateur" id="exampleUtilisateur" aria-describedby="codeHelp" placeholder="Par défaut : pi4" >
+                </div>
+                <div class="col-auto">
+                    <label for="exampleInputValeur" class="form-label">Mot de passe SSH :</label>
+                    <input type="number" class="form-control" name="motDePasse" id="exampleMotDePasse" aria-describedby="codeHelp" placeholder="Par défaut : pi" >
+                </div>
+                <div class="col-auto">
+                    <label for="exampleInputValeur" class="form-label">Port SSH :</label>
+                    <input type="number" class="form-control" name="port" id="examplePort" aria-describedby="codeHelp" placeholder="Par défaut : 22" >
+                </div>
+            </div>            
+            <button type="submit" class="btn btn-primary" name="btnValue" value="modif" disabled>Modifier Ligne</button>
         </form>
         
         <script>
