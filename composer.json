@@ -1,5 +1,5 @@
 {
     "require": {
-        "palepurple/nmap": "^1.2"
+        "phpseclib/phpseclib": "~3.0"
     }
 }

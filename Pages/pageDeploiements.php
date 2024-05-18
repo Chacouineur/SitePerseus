@@ -5,22 +5,14 @@
     include '../rechercheConfig.php';
     session_start();    
     unset($_SESSION['csvName']);
+    unset($_SESSION['csvData']);
     unset($_SESSION['dataConfig']);
-    unset($_SESSION['nomConfig']);
     $stock = !empty($_SESSION['stock']) ? $_SESSION['stock'] : [];
     $ips = !empty($_SESSION['ips']) ? $_SESSION['ips'] : [];
-    $btnValue = $_POST['btnValue']; 
-    if(isset($_SESSION['csvData'])){
-        $csvData = $_SESSION['csvData'];
-    } else {
-        // Initialisez $csvFileName comme un tableau vide si la session n'a pas encore été définie
-        $csvData = [];
-    }
-    if(isset($_SESSION['configName'])){
-        $configName = $_SESSION['configName'];
-    }else{
-        $configName=[];
-    }
+    $csvData = !empty($_SESSION['csvDataDeploiement']) ? $_SESSION['csvDataDeploiement'] : [];
+    $configName = !empty($_SESSION['configName']) ? $_SESSION['configName'] : [];
+    
+    $btnValue = $_POST['btnValue'];
 
     $configurations = __DIR__ . "/Configuration/configurations.csv";
 
@@ -65,54 +57,34 @@
 
     </header>
     <main>
+        
+        <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="mappingForm">
         <?php
-        if (PHP_OS_FAMILY === 'Windows') {?>
-            <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="mappingForm">
-                <div class="mb-3">
-                    <label for="config" class="form-label">Configuration :</label>
-                    <div class="input-group mb-3">
-                        <select class="form-select" name="config" id="config" placeholder="Selectionnez une configuration"required>
-                            <?php
-                            if (!empty($folders)) {
-                                foreach ($folders as $config) {
-                                    $selected = ($config == $configName) ? 'selected' : '';   // Si le fichier correspond à $csvName, marquez-le comme sélectionné
-                                    echo "<option value=\"$config\" $selected>$config</option>";
-                                }
-                            }else{
-                                echo "<option value=\"\">Veuillez creer une configuration dans « Ajouter Config » </option>";
-                            }
-                            ?>
-                        </select>
-                        <button class="btn btn-primary" type="submit" name="btnValue" id="btnConfig" value="btnConfig">Selectionner Config</button>
-                    </div>
-                </div>
-            </form>
-        <?php }
-        else {
-            ?>
-            <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="mappingForm">
+        if (PHP_OS_FAMILY === 'Windows') {}
+        else { ?>
                 <label for="code" class="form-label">Appuyez sur ce bouton pour récupérer les IPs connectées sur le réseau local :</label>
                 <button type="submit" class="btn btn-primary" name="btnValue" value="analyserRes">Analyser le réseau local</button>
-                <div class="mb-3">
-                    <label for="config" class="form-label">Configuration :</label>
-                    <div class="input-group mb-3">
-                        <select class="form-select" name="config" id="config" placeholder="Selectionnez une configuration"required>
-                            <?php
-                            if (!empty($folders)) {
-                                foreach ($folders as $config) {
-                                    $selected = ($config == $configName) ? 'selected' : '';   // Si le fichier correspond à $csvName, marquez-le comme sélectionné
-                                    echo "<option value=\"$config\" $selected>$config</option>";
-                                }
-                            }else{
-                                echo "<option value=\"\">Veuillez creer une configuration dans « Ajouter Config » </option>";
-                            }
-                            ?>
-                        </select>
-                        <button class="btn btn-primary" type="submit" name="btnValue" id="btnConfig" value="btnConfig">Selectionner Config</button>
-                    </div>
-                </div>
-            </form>
         <?php } ?>
+            <div class="mb-3">
+                <label for="config" class="form-label">Configuration :</label>
+                <div class="input-group mb-3">
+                    <select class="form-select" name="config" id="config" placeholder="Selectionnez une configuration"required>
+                        <?php
+                        if (!empty($folders)) {
+                            foreach ($folders as $config) {
+                                $selected = ($config == $configName) ? 'selected' : '';   // Si le fichier correspond à $csvName, marquez-le comme sélectionné
+                                echo "<option value=\"$config\" $selected>$config</option>";
+                            }
+                        }else{
+                            echo "<option value=\"\">Veuillez creer une configuration dans « Ajouter Config » </option>";
+                        }
+                        ?>
+                    </select>
+                    <button class="btn btn-primary" type="submit" name="btnValue" id="btnConfig" value="btnConfig">Selectionner Config</button>
+                </div>
+            </div>
+        </form>
+
         <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="deploiement">
             <div class="row">
                 <div class="col-auto">
@@ -135,45 +107,45 @@
                 </div>
                 <div class="col-auto">
                     <label for="exampleInputValeur" class="form-label">Mot de passe SSH :</label>
-                    <input type="number" class="form-control" name="motDePasse" id="mdp" aria-describedby="codeHelp" placeholder="Par défaut : pi" >
+                    <input type="text" class="form-control" name="motDePasse" id="mdp" aria-describedby="codeHelp" placeholder="Par défaut : pi" >
                 </div>
                 <div class="col-auto">
                     <label for="exampleInputValeur" class="form-label">Port SSH :</label>
-                    <input type="number" class="form-control" name="port" id="port" aria-describedby="codeHelp" placeholder="Par défaut : 22" >
+                    <input type="text" class="form-control" name="port" id="port" aria-describedby="codeHelp" placeholder="Par défaut : 22" >
                 </div>
             </div>            
             <input type="hidden" class="form-control" placeholder="ligneIndex" name="ligneIndex" id="ligneIndex">
             <button type="submit" class="btn btn-primary" name="btnValue" value="modif" id="modif" disabled>Modifier Ligne</button>
         </form>
-        
-        <table class="tableau table table-hover" id="myTable">
-                <thead>
-                    <tr>
-                        <th scope="col">Numéro de carte</th>
-                        <th scope="col">Carte</th>
-                        <th scope="col">IP locale sélectionnée</th>
-                        <th scope="col">Utilisateur SSH</th>
-                        <th scope="col">Mot de passe SSH</th>
-                        <th scope="col">Port SSH</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    // Vérifiez si $csvData est défini avant d'utiliser la boucle foreach
-                    if(isset($csvData)) {
-                        // Boucle à travers $csvData à partir de la deuxième ligne
-                        for($i = 0; $i < count($csvData); $i++) {
-                            echo "<tr>";
-                            foreach ($csvData[$i] as $cell) {
-                                echo "<td>$cell</td>";
+        <div id="tableContainer">
+            <table class="tableau table table-hover" id="myTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Numéro de carte</th>
+                            <th scope="col">Carte</th>
+                            <th scope="col">IP locale sélectionnée</th>
+                            <th scope="col">Utilisateur SSH</th>
+                            <th scope="col">Mot de passe SSH</th>
+                            <th scope="col">Port SSH</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Vérifiez si $csvData est défini avant d'utiliser la boucle foreach
+                        if(isset($csvData)) {
+                            // Boucle à travers $csvData à partir de la deuxième ligne
+                            for($i = 0; $i < count($csvData); $i++) {
+                                echo "<tr>";
+                                foreach ($csvData[$i] as $cell) {
+                                    echo "<td>$cell</td>";
+                                }
+                                echo "</tr>";
                             }
-                            echo "</tr>";
                         }
-                    }
-                    ?>
-                </tbody>
-        </table>
-
+                        ?>
+                    </tbody>
+            </table>
+        </div>
         <script>
         var ligneIndex = document.getElementById('ligneIndex');
         var btnModif = document.getElementById('modif');
@@ -242,19 +214,19 @@
         });
     </script>
 
-    <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="deploiement">
+    <form method="post" class="mx-auto p-5 rounded" action="../SSHcommands.php" id="deploiement">
         <label for="selectedLabels" class="form-label">Choix des éléments à déployer :</label>
         <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
+            <input type="checkbox" class="btn-check" id="btncheck1" name="oplStack" autocomplete="off">
             <label class="btn btn-outline-success" for="btncheck1">OpenPOWERLINK stack</label>
 
-            <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
+            <input type="checkbox" class="btn-check" id="btncheck2" name="appCAC" autocomplete="off">
             <label class="btn btn-outline-success" for="btncheck2">Application CAC</label>
 
-            <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
+            <input type="checkbox" class="btn-check" id="btncheck3" name="CSVphysiques" autocomplete="off">
             <label class="btn btn-outline-success" for="btncheck3">Fichiers CSV physiques</label>
 
-            <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off">
+            <input type="checkbox" class="btn-check" id="btncheck4" name="CSVcommuns" autocomplete="off">
             <label class="btn btn-outline-success" for="btncheck4">Fichiers CSV communs</label>
         </div>
         <button type="submit" class="btn btn-success" name="btnValue" value="deployer" id="deployer" disabled>Déployer</button>
