@@ -1,14 +1,5 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
-
-use Nmap\Address;
-use Nmap\Host;
-use Nmap\Nmap;
-use Nmap\Port;
-use Nmap\Hostname;
-use Nmap\XmlOutputParser;       
-
 $btnValue = $_POST['btnValue']; 
 $nomConfig = $_POST['config'];
 $ligneIndex = $_POST['ligneIndex'];
@@ -27,72 +18,8 @@ switch($btnValue) {
         unset($_SESSION['ips']);
         $ips = [];
         $stock = [];
-        
-        
+
         if (PHP_OS_FAMILY === 'Windows') {
-            $nmap = new Nmap();
-            //$nmap->disableReverseDNS();
-            // Custom error handler function
-            function customErrorHandler($errno, $errstr, $errfile, $errline) {
-                // Check if the error is a fatal error
-                if ($errno & (E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)) {
-                    // Log the error or handle it as needed
-                    // For now, we are just returning true to ignore the error
-                    return true;
-                }
-                
-                // Let PHP's default error handler handle other errors
-                return false;
-            }     
-            
-            set_error_handler('customErrorHandler');
-
-            if(!empty($_POST['ipDebut'])&& !empty($_POST['ipFin'])){
-                $ipDebut = $_POST['ipDebut'];
-                $ipFin = $_POST['ipFin'];
-            
-                // Divisez l'adresse IP par le caractère '.'
-                $partsDebut = explode('.', $ipDebut);
-                $partsFin = explode('.', $ipFin);
-
-                // Vérifiez que les trois premières parties sont identiques
-                if ($partsDebut[0] !== $partsFin[0] || $partsDebut[1] !== $partsFin[1] || $partsDebut[2] !== $partsFin[2]) {
-                    echo "Les trois premières parties des adresses IP de début et de fin doivent être identiques.";
-                    header('Location: Pages/pageDeploiements.php?erreurIpRange');
-                    exit;
-                }
-            
-                // Obtenez la dernière partie de l'adresse IP
-                $lastPartDeb = $partsDebut[3];
-                $lastPartFin = $partsFin[3];
-            
-                if($lastPartDeb<=$lastPartFin){
-                    // Register the custom error handler
-                    set_error_handler('customErrorHandler');
-            
-                    for ($i = $lastPartDeb; $i <= $lastPartFin; $i++) {
-                        $ip = $partsDebut[0] . '.' . $partsDebut[1] . '.' . $partsDebut[2] . '.' . $i;
-                        $files = glob('/tmp/nmap-scan-output*');
-                        foreach ($files as $file) {
-                            unlink($file);
-                        }
-                        try {
-                            // Scan the current IP address
-                            $hosts = $nmap->scan([$ip], [22]);
-                            // Check if the host is active
-                            if (!empty($hosts)) {
-                                $hostname = count($hosts) > 0 && count($hosts[0]->getHostnames()) > 0 ? $hosts[0]->getHostnames()[0]->getName() : 'No hostname';
-                                $ips[] = $ip;
-                                $stock[] = $ip.' | '.$hostname;
-                            }
-                        } catch (Exception $e) {
-                            // Handle the exception (optional)
-                            // For now, we are just ignoring it
-                            echo 'inactive ip' . "<br>";
-                        }
-                    }
-                }
-            }
         } 
         else {
             // Must be run as root

@@ -3,10 +3,8 @@ function afficherData($csvFileName,$nomConfig){
     // Lire le contenu du fichier CSV dans un tableau
     $currentDir = __DIR__ ;
     if(strpos($currentDir, 'Pages')===true){
-        echo 1;
         $lines = file($currentDir . "/../Configurations/$nomConfig/commonCSVFiles/stateCSV/".$csvFileName, FILE_IGNORE_NEW_LINES);
     }else{
-        echo 2;
         $lines = file($currentDir . "/Configurations/$nomConfig/commonCSVFiles/stateCSV/".$csvFileName, FILE_IGNORE_NEW_LINES);
     }
     // Vérifier si la fonction file() a réussi à lire le fichier

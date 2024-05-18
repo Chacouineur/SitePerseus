@@ -153,7 +153,7 @@
                 rows.forEach(row => {
                     row.classList.remove("table-active");
                     btnModif.disabled = true;
-                    nomCartes.disabled =true;
+                    nomCartes.disabled = true;
 
                 });
 
@@ -161,7 +161,7 @@
                 if (!isActive) {
                     selectedRow.classList.add("table-active"); // Ajouter la classe "table-active" à la ligne sélectionnée
                     btnModif.disabled = false;
-                    nomCartes.disabled =false;
+                    nomCartes.disabled = false;
 
                 }
 

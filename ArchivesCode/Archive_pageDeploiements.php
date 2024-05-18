@@ -68,24 +68,34 @@
         <?php
         if (PHP_OS_FAMILY === 'Windows') {?>
             <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="mappingForm">
-                <div class="mb-3">
-                    <label for="config" class="form-label">Configuration :</label>
-                    <div class="input-group mb-3">
-                        <select class="form-select" name="config" id="config" placeholder="Selectionnez une configuration"required>
-                            <?php
-                            if (!empty($folders)) {
-                                foreach ($folders as $config) {
-                                    $selected = ($config == $configName) ? 'selected' : '';   // Si le fichier correspond à $csvName, marquez-le comme sélectionné
-                                    echo "<option value=\"$config\" $selected>$config</option>";
-                                }
-                            }else{
-                                echo "<option value=\"\">Veuillez creer une configuration dans « Ajouter Config » </option>";
-                            }
-                            ?>
-                        </select>
-                        <button class="btn btn-primary" type="submit" name="btnValue" id="btnConfig" value="btnConfig">Selectionner Config</button>
-                    </div>
+                <label for="code" class="form-label">Adresses IP :</label>
+                <div class="input-group" id="ipRange">
+                    
+                    <span class="input-group-text">De</span>
+                    <input type="text" class="form-control" name="ipDebut" id="debut" aria-describedby="codeHelp" placeholder="192.168.1.*">
+                    <span class="input-group-text">à</span>
+                    <input type="text" class="form-control" name="ipFin" id="fin" aria-describedby="nomHelp" placeholder="192.168.1.*">
                 </div>
+                <button type="submit" class="btn btn-primary" name="btnValue" value="analyserRes" id="btnAddCorrespondance">Analyser le réseau local</button>
+
+                <div class="mb-3" id="config">
+                        <label for="config" class="form-label">Configuration :</label>
+                        <div class="input-group mb-3">
+                            <select class="form-select" name="config" id="config" placeholder="Selectionnez une configuration"required>
+                                <?php
+                                if (!empty($folders)) {
+                                    foreach ($folders as $config) {
+                                        $selected = ($config == $configName) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
+                                        echo "<option value=\"$config\" $selected>$config</option>";
+                                    }
+                                }else{
+                                    echo "<option value=\"\">Veuillez creer une configuration dans « Ajouter Config » </option>";
+                                }
+                                ?>
+                                </select>
+                            <button class="btn btn-primary" type="submit" name="btnValue" id="btnConfig" value="btnConfig">Selectionner Config</button>
+                        </div>
+                    </div>
             </form>
         <?php }
         else {
@@ -241,25 +251,6 @@
             }
         });
     </script>
-
-    <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="deploiement">
-        <label for="selectedLabels" class="form-label">Choix des éléments à déployer :</label>
-        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-            <label class="btn btn-outline-success" for="btncheck1">OpenPOWERLINK stack</label>
-
-            <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
-            <label class="btn btn-outline-success" for="btncheck2">Application CAC</label>
-
-            <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
-            <label class="btn btn-outline-success" for="btncheck3">Fichiers CSV physiques</label>
-
-            <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off">
-            <label class="btn btn-outline-success" for="btncheck4">Fichiers CSV communs</label>
-        </div>
-        <button type="submit" class="btn btn-success" name="btnValue" value="deployer" id="deployer" disabled>Déployer</button>
-    </form>
-
     </main>
 </body>
 <?php session_write_close(); ?>
