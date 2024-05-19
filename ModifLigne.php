@@ -44,7 +44,7 @@ if (!empty($csvFilePath) && !empty($_POST['btnValue'])) {
                 // Ne modifie pas la ligne
             } else {
                 // Ignorer la modification du champ "Carte"
-                $ligne = [$csvData[$numLigne][0], $vannesEtat, $valeur, $timeDep, $concatenatedString];
+                $ligne = [$carte, $vannesEtat, $valeur, $timeDep, $concatenatedString];
                 $csvData[$numLigne] = $ligne;
                 $csvData[0] = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
                 $csvData[1] = ["OFFSET", "EG", "#", "#", "#"];
