@@ -33,10 +33,10 @@ function getCSVSensors($card,$board,$folder){
     for($i=0;$i<count($board);$i++){
         if($card === $board[$i]){
             if(strpos($currentDir, 'Pages')===true){
-                $filePath = __DIR__."/../Configurations/".$folder."/physicalCSV_CN".($i+1)."/sensorsCSV/physicalCONFIG_sensors.csv";
+                $filePath = __DIR__."/../Configurations/".$folder."/physicalCSV_CN".($i+1)."/physicalCONFIG/physicalCONFIG_sensors.csv";
             }
             else{
-                $filePath = __DIR__."/Configurations/".$folder."/physicalCSV_CN".($i+1)."/sensorsCSV/physicalCONFIG_sensors.csv";
+                $filePath = __DIR__."/Configurations/".$folder."/physicalCSV_CN".($i+1)."/physicalCONFIG/physicalCONFIG_sensors.csv";
             }
             
         }
@@ -49,10 +49,10 @@ function getCSVValves($card,$board,$folder){
     for($i=0;$i<count($board);$i++){
         if($card === $board[$i]){
             if(strpos($currentDir, 'Pages')===true){
-                $filePath = __DIR__."/../Configurations/".$folder."/physicalCSV_CN".($i+1)."/valvesCSV/physicalCONFIG_valves.csv";
+                $filePath = __DIR__."/../Configurations/".$folder."/physicalCSV_CN".($i+1)."/physicalCONFIG/physicalCONFIG_valves.csv";
             }
             else{
-                $filePath = __DIR__."/Configurations/".$folder."/physicalCSV_CN".($i+1)."/valvesCSV/physicalCONFIG_valves.csv";
+                $filePath = __DIR__."/Configurations/".$folder."/physicalCSV_CN".($i+1)."/physicalCONFIG/physicalCONFIG_valves.csv";
             }
             
         }

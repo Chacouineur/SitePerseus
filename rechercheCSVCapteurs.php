@@ -1,6 +1,6 @@
 <?php
 // Chemin du répertoire contenant les fichiers CSV
-$directoryPath = "../physicalCSV/sensorsCSV";
+$directoryPath = "../physicalCSV";
 
 // Initialiser un tableau pour stocker les noms de fichiers CSV
 $csvSensorsFiles = [];

@@ -11,6 +11,7 @@ function createZipFromDirectory($sourceDir, $zipFilePath)
 
     // Ensure the source directory has a trailing slash
     $sourceDir = rtrim($sourceDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    $baseDir = basename($sourceDir);
 
     // Recursive function to add files to the zip
     $files = new RecursiveIteratorIterator(
@@ -23,7 +24,7 @@ function createZipFromDirectory($sourceDir, $zipFilePath)
         if (!$file->isDir()) {
             // Get the real and relative path for the current file
             $filePath = $file->getRealPath();
-            $relativePath = substr($filePath, strlen($sourceDir));
+            $relativePath = $baseDir . DIRECTORY_SEPARATOR . substr($filePath, strlen($sourceDir));
 
             // Replace backslashes with forward slashes for ZIP format
             $relativePath = str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
@@ -39,7 +40,7 @@ function createZipFromDirectory($sourceDir, $zipFilePath)
 
 try {
     // Define the source directory and the output zip file path
-    $sourceDir = __DIR__ . '/Configurations'; // Change this to your source directory
+    $sourceDir = __DIR__ . '/Configurations/fr/physicalCSV_CN1/nodeId.h'; // Change this to your source directory
     $zipFilePath = __DIR__ . '/compressed.zip'; // Change this to your desired output zip file path
 
     // Create the ZIP file

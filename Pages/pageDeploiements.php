@@ -141,6 +141,21 @@
                     case isset($_GET['erreurChampsNonRemplis']):
                         echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, tous les champs ne sont pas remplis !</div>";
                         break;
+                    case isset($_GET['erreurExtractionOPLStack']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du stack OpenPOWERLINK sur l'une des cartes !</div>";
+                        break;
+                    case isset($_GET['erreurExtractionAppCAC']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction de l'application des CAC sur l'une des cartes !</div>";
+                        break;
+                    case isset($_GET['erreurCopieNodeId']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier 'nodeId.h' sur l'une des cartes !</div>";
+                        break;
+                    case isset($_GET['erreurExtractionCSVPhysiques']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction des CSV physiques sur l'une des cartes !</div>";
+                        break;
+                    case isset($_GET['erreurExtractionCSVCommuns']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction des CSV communs sur l'une des cartes !</div>";
+                        break;
                     case isset($_GET['reseauAnalyse']):
                         echo "<div class=\"alert alert-success\" role=\"alert\">Réseau analysé, les IPs peuvent être séléctionnées.</div>";
                         break;
@@ -149,6 +164,9 @@
                         break;
                     case isset($_GET['reussiteModif']):
                         echo "<div class=\"alert alert-success\" role=\"alert\">Ligne modifiée.</div>";
+                        break;
+                    case isset($_GET['deploiementReussi']):
+                        echo "<div class=\"alert alert-success\" role=\"alert\">Déploiement sur toutes les cartes réussi.</div>";
                         break;
                     default:
                         break;

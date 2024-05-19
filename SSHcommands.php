@@ -21,165 +21,136 @@ if (!empty($_SESSION['nomConfig'])) {
 }
 
 $configDir = __DIR__ . "/Configurations/" . $configName . "/";
-
-
-echo 'oplStack ' . $oplStack . '<br>';
 if(!empty($csvData))
 {
-    foreach($csvData as $data)
+    foreach($csvData as $index => $data)
     {
-        echo '$data[2]' . $data[2] . '<br>';
-        echo '$data[2]' . $data[3] . '<br>';
-        echo '$data[2]' . $data[4] . '<br>';
         $sshConn = new SSH2($data[2]); // $data[2] --> ip
         if (!$sshConn->login($data[3], $data[4])) { // $data[3] --> utilisateur, $data[4] --> mot de passe
             header('Location: Pages/pageDeploiements.php?erreurSSHConn');
             exit;
         }
-        $sshConns[] = $sshConn;
         $sftpConn = new SFTP($data[2]);
         if (!$sftpConn->login($data[3], $data[4])) {
             header('Location: Pages/pageDeploiements.php?erreurSFTPConn');
             exit;
         }
-        $sftpConns[] = $sftpConn;
+    
+        if(!empty($sshConn) && !empty($sftpConn))
+        {
+            $sftpConn->disableDatePreservation();
+
+            if($oplStack === 'on')
+            {
+                $dirToCompress = '';
+                $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/openPOWERLINK_V2_CAC.zip';
+                $remoteCompressedFilePath = '/home/'.$data[3].'/openPOWERLINK_V2_CAC.zip';
+                $remoteDecompressedDest = './';
+                $remoteDirPath = $remoteDecompressedDest . 'openPOWERLINK_V2_CAC';
+                $errGet = 'Location: Pages/pageDeploiements.php?erreurExtractionOPLStack';
+                
+                compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                        $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,$errGet);
+
+                echo 'oplStack ' . $oplStack . ' réussi<br>';
+            }
+            
+            if($appCAC === 'on')
+            {
+                // Correct path for the local file
+                $dirToCompress = '';
+                $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/CAC_CN.zip';
+                $remoteCompressedFilePath = '/home/'.$data[3].'/CAC_CN.zip';
+                $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/';
+                $remoteDirPath = $remoteDecompressedDest . 'CAC_CN';
+                $errGet = 'Location: Pages/pageDeploiements.php?erreurExtractionAppCAC';
+                
+                compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                        $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,$errGet);
+
+                // Correct path for the local file
+                $dirToCompress = '';
+                $localCompressedFilePath = $configDir . '/physicalCSV_CN'.($index+1).'/nodeId.h';
+                $remoteCompressedFilePath = '/home/'.$data[3].'/nodeId.h';
+                $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/CAC_CN/include/';
+                $remoteDirPath = $remoteDecompressedDest . 'nodeId.h';
+                $errGet = 'Location: Pages/pageDeploiements.php?erreurCopieNodeId';
+                
+                compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                        $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,$errGet);
+
+                echo 'appCAC ' . $appCAC . ' réussi<br>';
+            }
+            
+            if($CSVphysiques === 'on')
+            {
+                // Correct path for the local file
+                $dirToCompress = $configDir . '/physicalCSV_CN'.($index+1).'/physicalCONFIG';
+                $localCompressedFilePath = $dirToCompress . '.zip';
+                $remoteCompressedFilePath = '/home/'.$data[3].'/physicalCONFIG.zip';
+                $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/CAC_CN/include/';
+                $remoteDirPath = $remoteDecompressedDest . 'physicalCONFIG';
+                $errGet = 'Location: Pages/pageDeploiements.php?erreurExtractionCSVPhysiques';
+                
+                echo 10 . '<br>';
+                compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                        $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,$errGet);
+
+                echo 'CSVphysiques ' . $CSVphysiques . ' réussi<br>';
+            }
+            
+            if($CSVcommuns === 'on')
+            {
+                // Correct path for the local file
+                $dirToCompress = $configDir . '/commonCSVFiles';
+                $localCompressedFilePath = $dirToCompress . '.zip';
+                $remoteCompressedFilePath = '/home/'.$data[3].'/commonCSVFiles.zip';
+                $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/common/';
+                $remoteDirPath = $remoteDecompressedDest . 'commonCSVFiles';
+                $errGet = 'Location: Pages/pageDeploiements.php?erreurExtractionCSVCommuns';
+
+                compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                        $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,$errGet);
+
+                echo 'CSVcommuns ' . $CSVcommuns . ' réussi<br>';
+            }
+        }
+    }  
+}
+header('Location: Pages/pageDeploiements.php?deploiementReussi');
+
+
+function compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,$errGet)
+{
+    if(!empty($dirToCompress)) {
+        createZipFromDirectory($dirToCompress, $localCompressedFilePath);
     }
     
-    if(!empty($sshConns) && !empty($sftpConns))
+    // Ensure the local file exists
+    if (!file_exists($localCompressedFilePath)) {
+        throw new \Exception('Local file does not exist: ' . $localCompressedFilePath);
+    }
+
+    // Attempt to upload the file
+    if (!$sftpConn->put($remoteCompressedFilePath, $localCompressedFilePath, SFTP::SOURCE_LOCAL_FILE)) {
+        throw new \Exception('Failed to upload file to ' . $remoteCompressedFilePath);
+    }
+
+    $ret = $sshConn->exec('rm -R ' . $remoteDirPath);
+    if(hasExtension($localCompressedFilePath, ".h")) {
+        $sshConn->exec('cp ' . $remoteCompressedFilePath . ' ' . $remoteDecompressedDest);
+    }
+    else {
+        $sshConn->exec('unzip -q -o ' . $remoteCompressedFilePath . ' -d ' . $remoteDecompressedDest);
+    }
+    $ret = $sshConn->exec('echo $?');
+    $ret = trim($ret);
+    if($ret !== '0')
     {
-        foreach($sftpConns as $sftpConn)
-        {
-            $sftpConn->disableDatePreservation();        
-        }
-
-        if($oplStack === 'on')
-        {
-            // Correct path for the local file
-            $localFilePath = __DIR__ . '/FichiersDeploiement/openPOWERLINK_V2_CAC.zip';
-            $remoteFilePath = '/home/pi4/openPOWERLINK_V2_CAC.zip';
-            foreach($sftpConns as $sftpConn)
-            {
-                // Ensure the local file exists
-                if (!file_exists($localFilePath)) {
-                    throw new \Exception('Local file does not exist: ' . $localFilePath);
-                }
-
-                // Attempt to upload the file
-                if (!$sftpConn->put($remoteFilePath, $localFilePath, SFTP::SOURCE_LOCAL_FILE)) {
-                    throw new \Exception('Failed to upload file to ' . $remoteFilePath);
-                }
-            }
-
-            foreach($sshConns as $sshConn)
-            {
-                $sshConn->exec('unzip -q -o ' . $remoteFilePath);
-                $ret = $sshConn->exec('echo $?');
-                if($ret !== 0)
-                {
-                    header('Location: Pages/pageDeploiements.php?erreurExtractionOPLStack');
-                    exit;
-                }
-            }
-            echo 'oplStack ' . $oplStack . '<br>';
-        }
-        
-        if($appCAC === 'on')
-        {
-            // Correct path for the local file
-            $localFilePath = __DIR__ . '/FichiersDeploiement/CAC_CN.zip';
-            $remoteFilePath = '/home/pi4/CAC_CN.zip';
-            $remoteFinalDestination = '/home/pi4/openPOWERLINK_V2_CAC/apps/';
-            foreach($sftpConns as $sftpConn)
-            {
-                // Ensure the local file exists
-                if (!file_exists($localFilePath)) {
-                    throw new \Exception('Local file does not exist: ' . $localFilePath);
-                }
-
-                // Attempt to upload the file
-                if (!$sftpConn->put($remoteFilePath, $localFilePath, SFTP::SOURCE_LOCAL_FILE)) {
-                    throw new \Exception('Failed to upload file to ' . $remoteFilePath);
-                }
-            }
-
-            foreach($sshConns as $sshConn)
-            {
-                $sshConn->exec('unzip -q -o ' . $remoteFilePath . ' -d ' . $remoteFinalDestination);
-                $ret = $sshConn->exec('echo $?');
-                if($ret !== 0)
-                {
-                    header('Location: Pages/pageDeploiements.php?erreurExtractionAppCAC');
-                    exit;
-                }
-            }
-            echo 'appCAC ' . $appCAC . '<br>';
-        }
-        
-        if($CSVphysiques === 'on')
-        {
-            // Correct path for the local file
-            $localFilePath = __DIR__ . '/FichiersDeploiement/physicalCONFIG.zip';
-            $remoteFilePath = '/home/pi4/physicalCONFIG.zip';
-            $remoteFinalDestination = '/home/pi4/openPOWERLINK_V2_CAC/apps/CAC_CN/include/';
-            foreach($sftpConns as $sftpConn)
-            {
-                // Ensure the local file exists
-                if (!file_exists($localFilePath)) {
-                    throw new \Exception('Local file does not exist: ' . $localFilePath);
-                }
-
-                // Attempt to upload the file
-                if (!$sftpConn->put($remoteFilePath, $localFilePath, SFTP::SOURCE_LOCAL_FILE)) {
-                    throw new \Exception('Failed to upload file to ' . $remoteFilePath);
-                }
-            }
-
-            foreach($sshConns as $sshConn)
-            {
-                $sshConn->exec('unzip -q -o ' . $remoteFilePath . ' -d ' . $remoteFinalDestination);
-                $ret = $sshConn->exec('echo $?');
-                if($ret !== 0)
-                {
-                    header('Location: Pages/pageDeploiements.php?erreurExtractionCSVPhysiques');
-                    exit;
-                }
-            }
-            echo 'CSVphysiques ' . $CSVphysiques . '<br>';
-        }
-        
-        if($CSVcommuns === 'on')
-        {
-            // Correct path for the local file
-            $localFilePath = __DIR__ . '/FichiersDeploiement/commonCSVFiles.zip';
-            $remoteFilePath = '/home/pi4/commonCSVFiles.zip';
-            $remoteFinalDestination = '/home/pi4/openPOWERLINK_V2_CAC/apps/common/';
-            foreach($sftpConns as $sftpConn)
-            {
-                // Ensure the local file exists
-                if (!file_exists($localFilePath)) {
-                    throw new \Exception('Local file does not exist: ' . $localFilePath);
-                }
-
-                // Attempt to upload the file
-                if (!$sftpConn->put($remoteFilePath, $localFilePath, SFTP::SOURCE_LOCAL_FILE)) {
-                    throw new \Exception('Failed to upload file to ' . $remoteFilePath);
-                }
-            }
-
-            foreach($sshConns as $sshConn)
-            {
-                $sshConn->exec('unzip -q -o ' . $remoteFilePath . ' -d ' . $remoteFinalDestination);
-                $ret = $sshConn->exec('echo $?');
-                if($ret !== 0)
-                {
-                    header('Location: Pages/pageDeploiements.php?erreurExtractionCSVCommuns');
-                    exit;
-                }
-            }
-            echo 'CSVcommuns ' . $CSVcommuns . '<br>';
-        }
+        header($errGet);
+        exit;
     }
-    
 }
 
 function createZipFromDirectory($sourceDir, $zipFilePath)
@@ -189,12 +160,12 @@ function createZipFromDirectory($sourceDir, $zipFilePath)
 
     // Try to open the zip file
     if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-        header('Location: Pages/pageDeploiements.php?erreurZipCreation');
-        exit;
+        throw new Exception("Could not create ZIP file: $zipFilePath");
     }
 
     // Ensure the source directory has a trailing slash
-    $sourceDir = rtrim($sourceDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    $sourceDir = realpath($sourceDir) . DIRECTORY_SEPARATOR;
+    $baseDir = basename($sourceDir);
 
     // Recursive function to add files to the zip
     $files = new RecursiveIteratorIterator(
@@ -207,7 +178,7 @@ function createZipFromDirectory($sourceDir, $zipFilePath)
         if (!$file->isDir()) {
             // Get the real and relative path for the current file
             $filePath = $file->getRealPath();
-            $relativePath = substr($filePath, strlen($sourceDir));
+            $relativePath = $baseDir . DIRECTORY_SEPARATOR . substr($filePath, strlen($sourceDir));
 
             // Replace backslashes with forward slashes for ZIP format
             $relativePath = str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
@@ -219,6 +190,15 @@ function createZipFromDirectory($sourceDir, $zipFilePath)
 
     // Close the zip file
     $zip->close();
+}
+
+function hasExtension($filename, $extension)
+{
+    // Extract the file extension
+    $fileExtension = pathinfo($filename, PATHINFO_EXTENSION);
+
+    // Compare the extracted extension with the desired extension
+    return strtolower($fileExtension) === strtolower(ltrim($extension, '.'));
 }
 
 
