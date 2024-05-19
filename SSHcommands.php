@@ -189,7 +189,8 @@ function createZipFromDirectory($sourceDir, $zipFilePath)
 
     // Try to open the zip file
     if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-        throw new Exception("Could not create ZIP file: $zipFilePath");
+        header('Location: Pages/pageDeploiements.php?erreurZipCreation');
+        exit;
     }
 
     // Ensure the source directory has a trailing slash
