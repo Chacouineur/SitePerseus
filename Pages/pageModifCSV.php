@@ -182,7 +182,7 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="type" class="form-label">Type :</label>
-                                    <select class="form-select" name="type" id="type" >
+                                    <select class="form-select" name="type" id="type" disabled>
                                         <option value="#">Non defini</option>
                                         <option value="1">MCP3008</option>
                                         <option value="2">Modbus</option>
@@ -190,15 +190,15 @@
                                 </div>
                                 <div class="col">
                                     <label for="modbusRemoteSlaveAdress" class="form-label">Modbus remote slave address :</label>
-                                    <input type="text" class="form-control" name="modbusRemoteSlaveAdress" id="modbusRemoteSlaveAdress" placeholder="Ex: " >
+                                    <input type="text" class="form-control" name="modbusRemoteSlaveAdress" id="modbusRemoteSlaveAdress" placeholder="Ex: " disabled >
                                 </div>
                                 <div class="col">
                                     <label for="modbusStartAdress" class="form-label">Modbus start address :</label>
-                                    <input type="text" class="form-control" name="modbusStartAdress" id="modbusStartAdress" placeholder="Ex: 3" >
+                                    <input type="text" class="form-control" name="modbusStartAdress" id="modbusStartAdress" placeholder="Ex: 3" disabled>
                                 </div>
                                 <div class="col">
                                     <label for="modbusBaudRate" class="form-label">Modbus baud rate :</label>
-                                    <select class="form-select" name="modbusBaudRate" id="modbusBaudRate" >
+                                    <select class="form-select" name="modbusBaudRate" id="modbusBaudRate" disabled>
                                         <option value="#">Non defini</option>
                                         <option value="1200">1200</option>
                                         <option value="2400">2400</option>
@@ -215,7 +215,7 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="modbusParity" class="form-label">Modbus parity :</label>
-                                    <select class="form-select" name="modbusParity" id="modbusParity" >
+                                    <select class="form-select" name="modbusParity" id="modbusParity" disabled>
                                         <option value="#">Non defini</option>
                                         <option value="N">None</option>
                                         <option value="E">Even</option>
@@ -224,7 +224,7 @@
                                 </div>  
                                 <div class="col">
                                     <label for="modbusDataBits" class="form-label">Modbus Data bits :</label>
-                                    <select class="form-select" name="modbusDataBits" id="modbusDataBits" >
+                                    <select class="form-select" name="modbusDataBits" id="modbusDataBits" disabled>
                                         <option value="#">Non defini</option>
                                         <option value="5">5</option>
                                         <option value="6">6</option>
@@ -234,7 +234,7 @@
                                 </div>  
                                 <div class="col">
                                     <label for="modbusStopBits" class="form-label">Modbus Stop bit :</label>
-                                    <select class="form-select" name="modbusStopBits" id="modbusStopBits" >
+                                    <select class="form-select" name="modbusStopBits" id="modbusStopBits" disabled>
                                         <option value="#">Non defini</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -252,19 +252,19 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="exampleInputCarte" class="form-label">Carte :</label>
-                                    <input type="text" class="form-control" name="carte" id="exampleInputCarte" placeholder="CACMO/CACOE/etc" >
+                                    <input type="text" class="form-control" name="carte" id="exampleInputCarte" placeholder="CACMO/CACOE/etc" disabled>
                                 </div>
                                 <div class="col">
                                     <label for="exampleInputVannesEtat" class="form-label">Vannes/Etat :</label>
-                                    <input type="text" class="form-control" name="vannesEtat" id="exampleInputVannesEtat" placeholder="VCE/VBCE/EG/VPr0/etc"  >
+                                    <input type="text" class="form-control" name="vannesEtat" id="exampleInputVannesEtat" placeholder="VCE/VBCE/EG/VPr0/etc"  disabled>
                                 </div>
                                 <div class="col">
                                     <label for="EtatInit" class="form-label">Etat initial :</label>
-                                    <input type="number" class="form-control" name="EtatInit" id="EtatInit" placeholder="Valeur Etat Init" >
+                                    <input type="number" class="form-control" name="EtatInit" id="EtatInit" placeholder="Valeur Etat Init" disabled>
                                 </div>
                                 <div class="col">
                                     <label for="portGPIO" class="form-label">PORT GPIO :</label>
-                                    <input type="number" class="form-control" name="portGPIO" id="portGPIO" placeholder="Valeur port GPIO" >
+                                    <input type="number" class="form-control" name="portGPIO" id="portGPIO" placeholder="Valeur port GPIO" disabled>
                                 </div>
                             </div>
                             <input type="hidden" id="ligneIndex" name="ligneIndex">
@@ -278,20 +278,20 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="exampleInputCarte" class="form-label">Carte :</label>
-                                    <input type="text" class="form-control" name="carte" id="exampleInputCarte" placeholder="CACMO/CACOE/etc" >
+                                    <input type="text" class="form-control" name="carte" id="exampleInputCarte" placeholder="CACMO/CACOE/etc" disabled>
                                 </div>
                                 <div class="col">
                                     <label for="exampleInputVannesEtat" class="form-label">Vannes/Etat :</label>
-                                    <input type="text" class="form-control" name="vannesEtat" id="exampleInputVannesEtat" placeholder="VCE/VBCE/EG/VPr0/etc"  >
+                                    <input type="text" class="form-control" name="vannesEtat" id="exampleInputVannesEtat" placeholder="VCE/VBCE/EG/VPr0/etc" disabled >
                                 </div>
                                 <div class="col">
                                     <label for="exampleRadios1" and for="exampleRadios2" class="form-label">Activation :</label>
                                     <div class="form-check ml-3">
-                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios0" value="0" checked >
+                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios0" value="0" checked disabled>
                                         <label class="form-check-label" for="exampleRadios1" >Desactiver</label >
                                     </div>
                                     <div class="form-check ml-3">
-                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="1" >
+                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="1" disabled>
                                         <label class="form-check-label" for="exampleRadios2">Activer</label>
                                     </div>
                                 </div>
@@ -307,19 +307,19 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="exampleInputCarte" class="form-label">Carte :</label>
-                                    <input type="text" class="form-control" name="carte" id="exampleInputCarte" aria-describedby="codeHelp" placeholder="CACMO/CACOE/etc" readonly required >
+                                    <input type="text" class="form-control" name="carte" id="exampleInputCarte" aria-describedby="codeHelp" placeholder="CACMO/CACOE/etc" readonly disabled required >
                                 </div>
                                 <div class="col">
                                     <label for="exampleInputVannesEtat" class="form-label">Vannes/Etat :</label>
-                                    <input type="text" class="form-control" name="vannesEtat" id="exampleInputVannesEtat" aria-describedby="codeHelp" placeholder="VCE/VBCE/EG/VPr0/etc" >
+                                    <input type="text" class="form-control" name="vannesEtat" id="exampleInputVannesEtat" aria-describedby="codeHelp" placeholder="VCE/VBCE/EG/VPr0/etc" disabled>
                                 </div>
                                 <div class="col">
                                     <label for="exampleInputValeur" class="form-label">Valeur :</label>
-                                    <input type="number" class="form-control" name="valeur" id="exampleInputValeur" aria-describedby="codeHelp" placeholder="0 ou 1" min="0" max="1" >
+                                    <input type="number" class="form-control" name="valeur" id="exampleInputValeur" aria-describedby="codeHelp" placeholder="0 ou 1" min="0" max="1" disabled>
                                 </div>
                                 <div class="col">
                                     <label for="exampleInputTimeDep" class="form-label">Timer dépendance :</label>
-                                    <input type="number" step="0.1" min="0.1" class="form-control" name="timeDep" id="exampleInputTimeDep" aria-describedby="codeHelp" placeholder="Valeur timer" >
+                                    <input type="number" step="0.1" min="0.1" class="form-control" name="timeDep" id="exampleInputTimeDep" aria-describedby="codeHelp" placeholder="Valeur timer" disabled>
                                 </div>
                                 <div class="col">
                                     <label for="selectedLabels" class="form-label">Dépendance vannes:</label>
@@ -331,8 +331,8 @@
                                                 </select>
                                                 <div class="overSelect"></div>
                                             </div>
-                                            <div id="checkboxes">
-                                            <ul class="list-group">
+                                            <div id="checkboxes" >
+                                            <ul class="list-group" disabled>
                                             </ul>
                                             </div>
                                         </div>
@@ -459,12 +459,12 @@
                                         }else if(csvFileName==='valves'){
                                             var carte = document.getElementById('exampleInputCarte');
                                             var vannesEtat = document.getElementById('exampleInputVannesEtat');
-                                            var EtatInit = document.getElementById('EtatInit');
+                                            var etatInit = document.getElementById('EtatInit');
                                             var portGPIO = document.getElementById('portGPIO');
 
                                             carte.value = cells[0].textContent;
                                             vannesEtat.value = cells[1].textContent;
-                                            EtatInit.value = cells[2].textContent;
+                                            etatInit.value = cells[2].textContent;
                                             portGPIO.value = cells[3].textContent;
                                         }
                                         
@@ -478,8 +478,9 @@
                                         rows.forEach(row => {
                                             if (rowIndex === Array.prototype.indexOf.call(row.parentNode.children, row)) {
                                                 if (!row.classList.contains("table-active")) {
+                                                    row.classList.add("table-active");
+
                                                     if(csvFileName.includes('stateCSV')){
-                                                        row.classList.add("table-active");
                                                         carte.disabled = false;
                                                         vannesEtat.disabled = false;
                                                         valeur.disabled = false;
@@ -501,7 +502,7 @@
                                                     }else if(csvFileName==='valves'){
                                                         carte.disabled = false;
                                                         vannesEtat.disabled = false;
-                                                        EtatInit.disabled = false;
+                                                        etatInit.disabled = false;
                                                         portGPIO.disabled = false;
                                                     }
 
@@ -563,11 +564,31 @@
                                                 } else {
                                                     row.classList.remove("table-active"); // Supprimer la classe "table-active" pour la désurbrillance
                                                     modifierBtn.disabled = true; // Désactiver les boutons
-                                                    carte.disabled = true;
-                                                    vannesEtat.disabled = true;
-                                                    valeur.disabled = true;
-                                                    timerDep.disabled = true;
-                                                    checkboxes.disabled = true;
+                                                    if(csvFileName.includes('stateCSV')){
+                                                        carte.disabled = true;
+                                                        vannesEtat.disabled = true;
+                                                        valeur.disabled = true;
+                                                        timerDep.disabled = true;
+                                                        checkboxes.disabled = true;
+                                                    }else if(csvFileName==='activation'){
+                                                        carte.disabled = true;
+                                                        vannesEtat.disabled = true;
+                                                        radioBtn0.disabled = true;
+                                                        radioBtn1.disabled = true;
+                                                    }else if(csvFileName==='sensors'){
+                                                        type.disabled = true;
+                                                        modbusRemoteSlaveAdress.disabled = true;
+                                                        modbusStartAdress.disabled = true;
+                                                        modbusBaudRate.disabled = true;
+                                                        modbusParity.disabled = true;
+                                                        modbusDataBits.disabled = true;
+                                                        modbusStopBits.disabled = true;
+                                                    }else if(csvFileName==='valves'){
+                                                        carte.disabled = true;
+                                                        vannesEtat.disabled = true;
+                                                        etatInit.disabled = true;
+                                                        portGPIO.disabled = true;
+                                                    }
                                                   
                                                 }
                                             } else {
