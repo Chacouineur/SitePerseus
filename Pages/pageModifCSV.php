@@ -14,7 +14,6 @@
     
     $fileName = isset($_SESSION['fileName']) ? $_SESSION['fileName'] : [];
     $fileType = isset($_SESSION['fileType']) ? $_SESSION['fileType'] : [];
-    echo $fileType;
     $csvData = isset($_SESSION['csvData2']) ? $_SESSION['csvData2'] : [];
     $configName = isset($_SESSION['configName']) ? $_SESSION['configName'] : [];
     $stateFiles = isset($_SESSION['statesFile']) ? $_SESSION['statesFile'] : [];
