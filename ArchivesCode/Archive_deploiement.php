@@ -1,4 +1,12 @@
 <?php
+require __DIR__ . '/vendor/autoload.php';
+
+use Nmap\Address;
+use Nmap\Host;
+use Nmap\Nmap;
+use Nmap\Port;
+use Nmap\Hostname;
+use Nmap\XmlOutputParser;       
 
 $btnValue = $_POST['btnValue']; 
 $nomConfig = $_POST['config'];

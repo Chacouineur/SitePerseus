@@ -108,18 +108,18 @@ switch($btnValue){
                                 fclose($handle);
                             }
                         }else{
-                            header('Location: Pages/pageAjoutConfig.php?erreur');
+                            header('Location: Pages/pageAjoutConfig.php?erreurDossierConfigExiste');
                             exit();
                         }
                     }else{
-                        header('Location: Pages/pageAjoutConfig.php?erreur');
+                        header('Location: Pages/pageAjoutConfig.php?erreurNomsCartes');
                         exit();
                     }
                 }
             }
             fclose($handleConfig);
         }
-        header('Location: Pages/pageAjoutConfig.php?reussite');
+        header('Location: Pages/pageAjoutConfig.php?reussiteCreerConfig');
         break;
 
     case "creerTab":
@@ -144,7 +144,7 @@ switch($btnValue){
                 }
                 fclose($handle);
                 if ($found) {
-                    header('Location: Pages/pageAjoutConfig.php?erreur');
+                    header('Location: Pages/pageAjoutConfig.php?erreurConfigExiste');
                     exit;
                 } else {
                     $handle = fopen($configurations, 'a');
@@ -163,6 +163,10 @@ switch($btnValue){
             }
             $_SESSION['dataConfig']= $csvData;
             
+        }
+        else {
+            header('Location: Pages/pageAjoutConfig.php?erreurChampsNonRenseignes');
+            exit();
         }
         header('Location: Pages/pageAjoutConfig.php?reussiteCreerTab');
         break;
@@ -189,7 +193,7 @@ switch($btnValue){
                 $nbCartes = $currentConfig[1];
                 $noms = explode('|', $currentConfig[2]);
                 if (in_array($nomCarte, $noms)) {
-                    header('Location: Pages/pageAjoutConfig.php?erreur=nom_existe');
+                    header('Location: Pages/pageAjoutConfig.php?erreurNomExiste');
                     exit();
                 }
                 else{
@@ -205,7 +209,8 @@ switch($btnValue){
                         }
                         fclose($handle);
                     } else {
-                        die("Impossible d'ouvrir le fichier $configurations pour écriture.");
+                        header('Location: Pages/pageDeploiements.php?erreurConfigurationCSVecriture');
+                        exit;
                     }
                     $csvData =[];
                     // Créer les nouvelles lignes pour chaque carte
@@ -219,13 +224,13 @@ switch($btnValue){
                 }
                 
             } else {
-                header('Location: Pages/pageAjoutConfig.php?erreur=not_found');
+                header('Location: Pages/pageAjoutConfig.php?erreurNonTrouve');
                 exit();
             }
            
 
         }else{
-            header('Location: Pages/pageAjoutConfig.php?erreur=line_not_clicked');
+            header('Location: Pages/pageAjoutConfig.php?erreurLigneNonCliquee');
             exit();
         }
         header('Location: Pages/pageAjoutConfig.php?reussiteModif');

@@ -89,17 +89,22 @@
             <div class="row">
                 <div class="col-auto">
                     <label for="selectedLabels" class="form-label col-auto">Carte ip par carte :</label>
+                    <?php
+                    if (PHP_OS_FAMILY === 'Windows') { ?>
+                        <input type="text" class="form-control" name="ip" id="ip" aria-describedby="codeHelp" placeholder="Entrez manuellement l'ip sinon" >
+                    <?php }
+                    else { ?>
                     <div class="input-group mb-3">
-                        <select class="form-select" aria-label="Default select example" id="">
-                            <option>Selectionne Carte(s)</option>
-                                <?php
-                                    foreach($ips as $index => $ip) {
-                                        echo "<option value=\"$ip\">$stock[$index]</option>";
-                                    }
-                                ?>
+                        <select class="form-select" aria-label="Default select example" id="ipSelect">
+                            <?php
+                                foreach($ips as $index => $ip) {
+                                    echo "<option value=\"$ip\">$stock[$index]</option>";
+                                }
+                            ?>
                         </select>
                         <input type="text" class="form-control" name="ip" id="ip" aria-describedby="codeHelp" placeholder="Entrez manuellement l'ip sinon" >
                     </div>
+                    <?php } ?>
                 </div>
                 <div class="col-auto">
                     <label for="exampleInputVannesEtat" class="form-label">Utilisateur SSH :</label>
@@ -116,6 +121,39 @@
             </div>            
             <input type="hidden" class="form-control" placeholder="ligneIndex" name="ligneIndex" id="ligneIndex">
             <button type="submit" class="btn btn-primary" name="btnValue" value="modif" id="modif" disabled>Modifier Ligne</button>
+            <?php
+                switch(true) {
+                    case isset($_GET['erreurPasDeConfigSel']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, pas de configuration sélectionnée !</div>";
+                        break;
+                    case isset($_GET['erreurNoIpFound']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, pas d'IP trouvées sur le réseau local !</div>";
+                        break;
+                    case isset($_GET['erreurFichierConfigurationCSVmanquant']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier CSV 'configurations.csv' n'existe pas !</div>";
+                        break;
+                    case isset($_GET['erreurConfigurationCSV']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier CSV 'configurations.csv' n'est pas conforme, éléments illisibles !</div>";
+                        break;
+                    case isset($_GET['erreurDeploiementCSVecriture']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier CSV 'deploiement.csv' de la configuration n'est pas accessible en écriture !</div>";
+                        break;
+                    case isset($_GET['erreurChampsNonRemplis']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, tous les champs ne sont pas remplis !</div>";
+                        break;
+                    case isset($_GET['reseauAnalyse']):
+                        echo "<div class=\"alert alert-success\" role=\"alert\">Réseau analysé, les IPs peuvent être séléctionnées.</div>";
+                        break;
+                    case isset($_GET['tableauRempli']):
+                        echo "<div class=\"alert alert-success\" role=\"alert\">Tableau du déploiement affiché.</div>";
+                        break;
+                    case isset($_GET['reussiteModif']):
+                        echo "<div class=\"alert alert-success\" role=\"alert\">Ligne modifiée.</div>";
+                        break;
+                    default:
+                        break;
+                }
+            ?>
         </form>
         <div id="tableContainer">
             <table class="tableau table table-hover" id="myTable">
@@ -146,9 +184,29 @@
                     </tbody>
             </table>
         </div>
+
+        <form method="post" class="mx-auto p-5 rounded" action="../SSHcommands.php" id="deploiement">
+            <label for="selectedLabels" class="form-label">Choix des éléments à déployer :</label>
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <input type="checkbox" class="btn-check" id="btncheck1" name="oplStack" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck1">OpenPOWERLINK stack</label>
+
+                <input type="checkbox" class="btn-check" id="btncheck2" name="appCAC" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck2">Application CAC</label>
+
+                <input type="checkbox" class="btn-check" id="btncheck3" name="CSVphysiques" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck3">Fichiers CSV physiques</label>
+
+                <input type="checkbox" class="btn-check" id="btncheck4" name="CSVcommuns" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck4">Fichiers CSV communs</label>
+            </div>
+            <button type="submit" class="btn btn-success" name="btnValue" value="deployer" id="deployer" disabled>Déployer</button>
+        </form>
+
         <script>
         var ligneIndex = document.getElementById('ligneIndex');
         var btnModif = document.getElementById('modif');
+        var ipSelect = document.getElementById('ipSelect');
         var ip = document.getElementById('ip');
         var user = document.getElementById('user');
         var mdp = document.getElementById('mdp');
@@ -167,6 +225,10 @@
             if (target.nodeName === 'TD') {
                 const selectedRow = target.parentNode;
                 const rowIndex = Array.from(selectedRow.parentNode.children).indexOf(selectedRow);
+                
+                if (ipSelect) {
+                    ipSelect.value = 0;
+                }
 
                 ip.value = selectedRow.children[2].textContent;
                 user.value = selectedRow.children[3].textContent;
@@ -185,7 +247,6 @@
                     user.disabled = true;
                     mdp.disabled = true;
                     port.disabled = true;
-
                 });
 
                 // Si la ligne n'est pas déjà active, l'activer, sinon la désactiver
@@ -212,26 +273,43 @@
                 
             }
         });
+        if (ipSelect) {
+            document.getElementById('ipSelect').addEventListener('change', function() {
+            var selectedValue = this.value;
+            document.getElementById('ip').value = selectedValue;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const table = document.getElementById('myTable');
+            const deployButton = document.getElementById('deployer');
+            const modifButton = document.getElementById('modif');
+
+            function checkTableCells() {
+                const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+                let allCellsFilled = true;
+
+                Array.from(rows).forEach(row => {
+                    const cells = row.getElementsByTagName('td');
+                    Array.from(cells).forEach(cell => {
+                        if (cell.textContent.trim() === '' || cell.textContent.trim() === '#') {
+                            allCellsFilled = false;
+                        }
+                    });
+                });
+
+                deployButton.disabled = !allCellsFilled;
+            }
+
+            // Initial check
+            checkTableCells();
+
+            // Re-check whenever the modifier button is clicked
+            modifButton.addEventListener('click', checkTableCells);
+            table.addEventListener('click', checkTableCells);
+        });
+
     </script>
-
-    <form method="post" class="mx-auto p-5 rounded" action="../SSHcommands.php" id="deploiement">
-        <label for="selectedLabels" class="form-label">Choix des éléments à déployer :</label>
-        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-            <input type="checkbox" class="btn-check" id="btncheck1" name="oplStack" autocomplete="off">
-            <label class="btn btn-outline-success" for="btncheck1">OpenPOWERLINK stack</label>
-
-            <input type="checkbox" class="btn-check" id="btncheck2" name="appCAC" autocomplete="off">
-            <label class="btn btn-outline-success" for="btncheck2">Application CAC</label>
-
-            <input type="checkbox" class="btn-check" id="btncheck3" name="CSVphysiques" autocomplete="off">
-            <label class="btn btn-outline-success" for="btncheck3">Fichiers CSV physiques</label>
-
-            <input type="checkbox" class="btn-check" id="btncheck4" name="CSVcommuns" autocomplete="off">
-            <label class="btn btn-outline-success" for="btncheck4">Fichiers CSV communs</label>
-        </div>
-        <button type="submit" class="btn btn-success" name="btnValue" value="deployer" id="deployer" disabled>Déployer</button>
-    </form>
-
     </main>
 </body>
 <?php session_write_close(); ?>

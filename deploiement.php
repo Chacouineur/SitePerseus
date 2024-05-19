@@ -1,14 +1,4 @@
 <?php
-
-require __DIR__ . '/vendor/autoload.php';
-
-use Nmap\Address;
-use Nmap\Host;
-use Nmap\Nmap;
-use Nmap\Port;
-use Nmap\Hostname;
-use Nmap\XmlOutputParser;       
-
 $btnValue = $_POST['btnValue']; 
 $nomConfig = $_POST['config'];
 $ligneIndex = $_POST['ligneIndex'];
@@ -25,6 +15,7 @@ if (!empty($_SESSION['nomConfig']) && $btnValue !== 'btnConfig') {
     $configName = $nomConfig;
 } else {
     header('Location: Pages/pageDeploiements.php?erreurPasDeConfigSel');
+    exit;
 }
 
 $deploiementCSV = __DIR__ . "/Configurations/" . $configName . "/deploiement.csv";
@@ -61,7 +52,7 @@ switch($btnValue) {
             // Debug: Output IPs and descriptions
             if (empty($ips)) {
                 echo 'No IPs found in arp-scan output.';
-                header('Location: Pages/pageDeploiements.php?noIpFound');
+                header('Location: Pages/pageDeploiements.php?erreurNoIpFound');
                 exit;
             }
             foreach($ips as $index => $ip) {
@@ -74,7 +65,7 @@ switch($btnValue) {
         $_SESSION['stock'] = $stock;
         $_SESSION['ips'] = $ips;
         session_write_close();
-        header('Location: Pages/pageDeploiements.php');
+        header('Location: Pages/pageDeploiements.php?reseauAnalyse');
         break;
     case 'btnConfig': 
         unset($_SESSION['nomConfig']);
@@ -97,6 +88,10 @@ switch($btnValue) {
             
             fclose($handle);
         }
+        else {
+            header('Location: Pages/pageDeploiements.php?erreurFichierConfigurationCSVmanquant');
+        }
+
         if(!empty($nomCartes) && !empty($nbCartes))
         {
             $nomsCNs = explode('|', $nomCartes); 
@@ -111,15 +106,18 @@ switch($btnValue) {
             }
             else {
                 $handle = fopen($deploiementCSV, 'r');
-                $header = fgetcsv($handle, 1000, ";");
+                fgetcsv($handle, 1000, ";");
                 while (($line = fgetcsv($handle, 1000, ";")) !== false) {
                     $csvData[] = [$line[1], $line[2], $line[3], $line[4], $line[5], $line[6]];
                 }
-                
             }
             $_SESSION['nbCartes'] = $nbCartes;
             $_SESSION['csvDataDeploiement'] = $csvData;
             fclose($handle);
+        }
+        else
+        {
+            header('Location: Pages/pageDeploiements.php?erreurConfigurationCSV');
         }
         $_SESSION['nomConfig'] = $nomConfig;
         $_SESSION['configName'] = $nomConfig;
@@ -149,24 +147,25 @@ switch($btnValue) {
                 }
                 fclose($handle);
             } else {
-                die("Impossible d'ouvrir le fichier $configurations pour écriture.");
+                header('Location: Pages/pageDeploiements.php?erreurDeploiementCSVecriture');
+                exit;
             }
 
             $csvData = [];
             // Créer les nouvelles lignes pour chaque carte
             $handle = fopen($deploiementCSV, 'r');
-            $header = fgetcsv($handle, 1000, ";");
+            fgetcsv($handle, 1000, ";");
             while (($line = fgetcsv($handle, 1000, ";")) !== false) {
                 $csvData[] = [$line[1], $line[2], $line[3], $line[4], $line[5], $line[6]];
             }
             $_SESSION['csvDataDeploiement']= $csvData;
         }
         else{
-            header('Location: Pages/pageDeploiements.php?erreur=line_not_clicked');
-            exit();
+            header('Location: Pages/pageDeploiements.php?erreurChampsNonRemplis');
+            exit;
         }
         header('Location: Pages/pageDeploiements.php?reussiteModif');
-        exit();
+        exit;
         break;
     default:
         break;

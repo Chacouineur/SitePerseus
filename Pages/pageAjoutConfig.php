@@ -84,16 +84,34 @@
         </form>
         <?php 
         switch(true) {
-            case isset($_GET['erreur']):
-                echo "<div class=\"alert alert-danger\" role=\"alert\">Vous n'avez pas rempli tous les champs ou vous n'avez pas mis tous les noms des cartes dans le tableau !</div>";
+            case isset($_GET['erreurNomsCartes']):
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, tous les noms des cartes n'ont pas été renseignés dans le tableau !</div>";
                 break;
-            case isset($_GET['nom_existe']):
-                echo "<div class=\"alert alert-danger\" role=\"alert\">Une configuration ayant le même nom existe déjà !</div>";
+            case isset($_GET['erreurNomExiste']):
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, une configuration ayant le même nom existe déjà !</div>";
+                break;
+            case isset($_GET['erreurConfigurationCSVecriture']):
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier CSV 'configurations.csv' n'est pas accessible en écriture !</div>";
+                break;
+            case isset($_GET['erreurDossierConfigExiste']):
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le dossier de la configuration entrée existe déjà !</div>";
+                break;
+            case isset($_GET['erreurConfigExiste']):
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, la configuration entrée existe déjà dans le fichier CSV 'configurations.csv' !</div>";
+                break;
+            case isset($_GET['erreurNonTrouve']):
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, configuration non trouvée dans le fichier CSV 'configurations.csv', modification impossible !</div>";
+                break;
+            case isset($_GET['erreurChampsNonRenseignes']):
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, champs nom de configuration et/ou nombre de cartes non renseignés !</div>";
+                break;
+            case isset($_GET['erreurLigneNonCliquee']):
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, aucune ligne du tableau cliquée, modification impossible !</div>";
                 break;
             case isset($_GET['reussiteCreerTab']):
                 echo "<div class=\"alert alert-success\" role=\"alert\">Tableau des noms des cartes créé, veuillez selectionner et entrer le nom de chaque carte. </div>";
                 break;
-            case isset($_GET['reussite']):
+            case isset($_GET['reussiteCreerConfig']):
                 echo "<div class=\"alert alert-success\" role=\"alert\">Configuration créée !</div>";
                 break;
             default:
