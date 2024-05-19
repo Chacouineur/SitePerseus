@@ -111,12 +111,6 @@ if (!empty($btnValue)) {
                     $csvData[$numLigne] = $ligne;
                     $csvData[0] = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
                     $csvData[1] = ["OFFSET", "EG", "#", "#", "#"];
-
-                    echo $csvData[$numLigne][0] . " | ";
-                    echo $vannesEtat . " | ";
-                    echo $valeur . " | ";
-                    echo $timeDep . " | ";
-                    echo $concatenatedString . " | ";
                     
                     $monFichier = fopen($filePath, "w");
                     if (!$monFichier) {
@@ -132,12 +126,16 @@ if (!empty($btnValue)) {
                     $csvData = afficherData($csvFileName, $configName);
                     $_SESSION['csvData2'] = $csvData;
                 }
+            }else{
+                die("Fichier introuvable!");
             }
             break;
         default:
             break;
     }
     session_write_close();
+    header('Location: Pages/pageModifCSV.php');
+    exit();
 } else {
     echo "Le fichier n'existe pas et/ou aucun bouton n'a été appuyé";
 }
