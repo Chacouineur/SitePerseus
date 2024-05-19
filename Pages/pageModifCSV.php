@@ -14,6 +14,7 @@
     
     $fileName = isset($_SESSION['fileName']) ? $_SESSION['fileName'] : [];
     $fileType = isset($_SESSION['fileType']) ? $_SESSION['fileType'] : [];
+    echo $fileType;
     $csvData = isset($_SESSION['csvData2']) ? $_SESSION['csvData2'] : [];
     $configName = isset($_SESSION['configName']) ? $_SESSION['configName'] : [];
     $stateFiles = isset($_SESSION['statesFile']) ? $_SESSION['statesFile'] : [];
@@ -24,7 +25,7 @@
     <header>
         <nav class="navbar navbar-expand-lg" id="nav">
             <div class="container-fluid">
-                <!-- Bouton de logo à gauche -->
+                
                 <a class="navbar-brand" href="../index.php">
                     <img src="../logo.png" alt="Logo" width="100" height="100" class="d-inline-block align-text-center">HOME
                 </a>
@@ -176,7 +177,7 @@
                 }else{
                     if ($fileType === "sensor") {?>
                         <h4>Le fichier ci dessous correspond a la carte : <?php echo "$fileName"; ?></h5>
-                        <form method="post" action="../ModifLigne.php" class="mb-5" id="secondForm">
+                        <form method="post" action="../modifierCSV.php" class="mb-5" id="secondForm">
                             <input type="hidden" name="carte" id="carte" >
                             <input type="hidden" name="capteur" id="capteur" >
                             <div class="row mb-3">
@@ -243,12 +244,12 @@
                             </div>
                             <input type="hidden" id="ligneIndex" name="ligneIndex">
                             <input type="hidden" id="csvFileName" name="csvFileName" value="sensors">
-                            <button type="submit" class="btn btn-primary" name="btnValue" id="btnModif" value="modif" disabled>Modifier Ligne</button>
+                            <button type="submit" class="btn btn-primary" name="btnValue" id="btnModif" value="modifSensor" disabled>Modifier Ligne</button>
                         </form>
                     <?php
                     } elseif ($fileType === "valve") { ?>
                         <h4>Le fichier ci dessous correspond a la carte : <?php echo "$fileName"; ?></h5>
-                        <form method="post" action="../ModifLigne.php" class="mb-5" id="secondForm">
+                        <form method="post" action="../modifierCSV.php" class="mb-5" id="secondForm">
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="exampleInputCarte" class="form-label">Carte :</label>
@@ -260,21 +261,21 @@
                                 </div>
                                 <div class="col">
                                     <label for="EtatInit" class="form-label">Etat initial :</label>
-                                    <input type="number" class="form-control" name="EtatInit" id="EtatInit" placeholder="Valeur Etat Init" disabled>
+                                    <input type="number" class="form-control" name="EtatInit" id="EtatInit" placeholder="Valeur Etat Init" min="0" max="1" disabled>
                                 </div>
                                 <div class="col">
                                     <label for="portGPIO" class="form-label">PORT GPIO :</label>
-                                    <input type="number" class="form-control" name="portGPIO" id="portGPIO" placeholder="Valeur port GPIO" disabled>
+                                    <input type="number" class="form-control" name="portGPIO" id="portGPIO" placeholder="Valeur port GPIO" min="0" disabled>
                                 </div>
                             </div>
                             <input type="hidden" id="ligneIndex" name="ligneIndex">
                             <input type="hidden" id="csvFileName" name="csvFileName" value="valves">
-                            <button type="submit" class="btn btn-primary" name="btnValue" id="btnModif" value="modif" disabled>Modifier Ligne</button>
+                            <button type="submit" class="btn btn-primary" name="btnValue" id="btnModif" value="modifValve" disabled>Modifier Ligne</button>
                         </form>
                     <?php
                     }elseif ($fileName === "activation.csv") { ?>
                         <h4>Le fichier ci dessous est : activation.csv</h5>
-                        <form method="post" action="../ModifLigne.php" class="mb-5" id="secondForm">
+                        <form method="post" action="../modifierCSV.php" class="mb-5" id="secondForm">
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="exampleInputCarte" class="form-label">Carte :</label>
@@ -298,7 +299,7 @@
                             </div>
                             <input type="hidden" id="ligneIndex" name="ligneIndex">
                             <input type="hidden" id="csvFileName" name="csvFileName" value="activation">
-                            <button type="submit" class="btn btn-primary" name="btnValue" id="btnModif" value="modif" >Modifier Ligne</button>
+                            <button type="submit" class="btn btn-primary" name="btnValue" id="btnModif" value="modifActiv" >Modifier Ligne</button>
                         </form>
                     <?php
                     } else { ?>
@@ -456,6 +457,7 @@
                                             modbusParity.value = cells[6].textContent;
                                             modbusDataBits.value = cells[7].textContent;
                                             modbusStopBits.value = cells[8].textContent;
+                                            console.log(modbusStopBits.value);
                                         }else if(csvFileName==='valves'){
                                             var carte = document.getElementById('exampleInputCarte');
                                             var vannesEtat = document.getElementById('exampleInputVannesEtat');

@@ -33,7 +33,6 @@ if (!empty($btnValue)) {
             exit();
             break;
         case 'afficher':
-            unset($_SESSION['fileName']);
             $fileEG = $_POST['FileEG'];
             $fileActiv = $_POST['FileActiv'];
             $fileSensor = $_POST['FileSensor'];
@@ -53,7 +52,6 @@ if (!empty($btnValue)) {
                 $_SESSION['fileName'] = $fileValve;
                 $_SESSION['fileType'] = 'valve';
             }
-
             $lines = file($filePath, FILE_IGNORE_NEW_LINES);
             if ($lines === false) {
                 exit("Impossible de lire le fichier CSV.");
@@ -97,17 +95,12 @@ if (!empty($btnValue)) {
                     $concatenatedString = implode('|', $depVannes);
                 }
 
-                $monFichier = fopen($filePath, "r+");
-                if (!$monFichier) {
-                    die("Impossible d'ouvrir le fichier");
-                }
-
                 if ($numLigne && ($numLigne - 1) % 13 == 0) {
                     if ($csvData[$numLigne - 1][0] === "OFFSET") {
                         $carte = $csvData[$numLigne + 1][0];
                     }
                 } else {
-                    $ligne = [$csvData[$numLigne][0], $vannesEtat, $valeur, $timeDep, $concatenatedString];
+                    $ligne = [$carte, $vannesEtat, $valeur, $timeDep, $concatenatedString];
                     $csvData[$numLigne] = $ligne;
                     $csvData[0] = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
                     $csvData[1] = ["OFFSET", "EG", "#", "#", "#"];
@@ -123,13 +116,141 @@ if (!empty($btnValue)) {
                         }
                     }
                     fclose($monFichier);
-                    $csvData = afficherData($csvFileName, $configName);
+                    $csvData = tabData($csvFileName, $configName);
                     $_SESSION['csvData2'] = $csvData;
                 }
             }else{
                 die("Fichier introuvable!");
             }
             break;
+            case "modifSensor":
+                $filePath = getCSVSensors($csvFileName, $boards, $configName);
+                
+                if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
+                    $carte = $_POST['carte'];
+                    $capteur = $_POST['capteur'];
+                    $type = $_POST['type'];
+                    $modbusRemoteSlaveAdress = $_POST['modbusRemoteSlaveAdress'];
+                    $modbusStartAdress = $_POST['modbusStartAdress'];
+                    $modbusBaudRate = $_POST['modbusBaudRate'];
+                    $modbusParity = $_POST['modbusParity'];
+                    $modbusDataBits = $_POST['modbusDataBits'];
+                    $modbusStopBits = $_POST['modbusStopBits'];
+                    $numLigne = $_POST['ligneIndex'];
+            
+                    $carte = empty($carte) ? '#' : $carte;
+                    $capteur = empty($capteur) ? '#' : $capteur;
+                    $type = empty($type) ? '#' : $type;
+                    $modbusRemoteSlaveAdress = $modbusRemoteSlaveAdress==='' ? '#' : $modbusRemoteSlaveAdress;
+                    $modbusStartAdress = $modbusStartAdress==='' ? '#' : $modbusStartAdress;
+                    $modbusBaudRate = empty($modbusBaudRate) ? '#' : $modbusBaudRate;
+                    $modbusParity = empty($modbusParity) ? '#' : $modbusParity;
+                    $modbusDataBits = empty($modbusDataBits) ? '#' : $modbusDataBits;
+                    $modbusStopBits = empty($modbusStopBits) ? '#' : $modbusStopBits;
+                    
+            
+                    $ligne = [$carte, $capteur, $type, $modbusRemoteSlaveAdress, $modbusStartAdress, $modbusBaudRate, $modbusParity, $modbusDataBits, $modbusStopBits];
+                    $csvData[$numLigne] = $ligne;                 
+                    $csvData[0] = ["Carte", "Capteur", "Type", "Modbus remote slave address", "Modbus start address", "Modbus baud rate", "Modbus parity", "Modbus Data bits", "Modbus Stop bit"];
+                    
+                    $monFichier = fopen($filePath, "r+");
+                    if (!$monFichier) {
+                        die("Impossible d'ouvrir le fichier $filePath pour écriture.");
+                    }
+            
+                    foreach ($csvData as $ligne) {
+                        // Nettoyage des sauts de ligne indésirables
+                        $ligne = array_map(function($field) {
+                            return str_replace(["\n", "\r"], '', $field);
+                        }, $ligne);
+            
+                        if (fputcsv($monFichier, $ligne, ';') === false) {
+                            die("Erreur lors de l'écriture dans le fichier $filePath.");
+                        }
+                    }
+                    fclose($monFichier);
+                    $csvData = tabDataPhysical($filePath);
+                    $_SESSION['csvData2'] = $csvData;
+                    $_SESSION['fileType'] = 'sensor';
+                }
+                break;
+            case 'modifValve':
+                $filePath = getCSVValves($csvFileName, $boards, $configName);
+                
+                if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
+                    $carte = $_POST['carte'];
+                    $vannesEtat = $_POST['vannesEtat'];
+                    $etatInit = $_POST['EtatInit'];
+                    $portGPIO = $_POST['portGPIO'];
+                    $numLigne = $_POST['ligneIndex'];
+            
+                    $carte = empty($carte) ? '#' : $carte;
+                    $vannesEtat = empty($vannesEtat) ? '#' : $vannesEtat;
+                    $etatInit = $etatInit==='' ? '#' : $etatInit;
+                    $portGPIO = $portGPIO==='' ? '#' : $portGPIO;
+            
+                    $ligne = [$carte, $vannesEtat, $etatInit, $portGPIO];
+                    $csvData[$numLigne] = $ligne;                 
+                    $csvData[0] = ["Carte","Vannes","Etat initial","PORT GPIO"];
+                    
+                    $monFichier = fopen($filePath, "r+");
+                    if (!$monFichier) {
+                        die("Impossible d'ouvrir le fichier $filePath pour écriture.");
+                    }
+            
+                    foreach ($csvData as $ligne) {
+                        // Nettoyage des sauts de ligne indésirables
+                        $ligne = array_map(function($field) {
+                            return str_replace(["\n", "\r"], '', $field);
+                        }, $ligne);
+            
+                        if (fputcsv($monFichier, $ligne, ';') === false) {
+                            die("Erreur lors de l'écriture dans le fichier $filePath.");
+                        }
+                    }
+                    fclose($monFichier);
+                    $csvData = tabDataPhysical($filePath);
+                    $_SESSION['csvData2'] = $csvData;
+                    $_SESSION['fileType'] = 'valve';
+                }
+                break;
+            case 'modifActiv':
+                
+                $filePath = getCSVActivation($configName);
+                $numLigne = $_POST['ligneIndex'];
+                if (!empty($csvFileName) && !empty($_POST['btnValue']) && $numLigne > 1) {
+                    $carte = $_POST['carte'];
+                    $vannesEtat = $_POST['vannesEtat'];
+                    $exampleRadios = $_POST['exampleRadios'];                    
+            
+                    $carte = empty($carte) ? '#' : $carte;
+                    $vannesEtat = empty($vannesEtat) ? '#' : $vannesEtat;
+                    $exampleRadios = $exampleRadios==='' ? '#' : $exampleRadios;
+            
+                    $ligne = [$carte, $vannesEtat, $exampleRadios];
+                    $csvData[$numLigne] = $ligne;                 
+                    $csvData[0] = ["Carte", "Vannes/Etat", "Activation"];
+                    
+                    $monFichier = fopen($filePath, "r+");
+                    if (!$monFichier) {
+                        die("Impossible d'ouvrir le fichier $filePath pour écriture.");
+                    }
+            
+                    foreach ($csvData as $ligne) {
+                        // Nettoyage des sauts de ligne indésirables
+                        $ligne = array_map(function($field) {
+                            return str_replace(["\n", "\r"], '', $field);
+                        }, $ligne);
+            
+                        if (fputcsv($monFichier, $ligne, ';') === false) {
+                            die("Erreur lors de l'écriture dans le fichier $filePath.");
+                        }
+                    }
+                    fclose($monFichier);
+                    $csvData = tabDataPhysical($filePath);
+                    $_SESSION['csvData2'] = $csvData;
+                }
+                break;
         default:
             break;
     }
