@@ -9,11 +9,17 @@
     unset($_SESSION['csvFileName']);
     unset($_SESSION['csvName']);
     unset($_SESSION['csvData']);
+    unset($_SESSION['stock']);
+    unset($_SESSION['ips']);
+    unset($_SESSION['csvDataDeploiement']);
+    unset($_SESSION['csvEG']);
+    unset($_SESSION['configName']);
+
     
     $fileName = isset($_SESSION['fileName']) ? $_SESSION['fileName'] : [];
     $fileType = isset($_SESSION['fileType']) ? $_SESSION['fileType'] : [];
     $csvData = isset($_SESSION['csvData2']) ? $_SESSION['csvData2'] : [];
-    $configName = isset($_SESSION['configName']) ? $_SESSION['configName'] : [];
+    $configName = isset($_SESSION['configName2']) ? $_SESSION['configName2'] : [];
     $stateFiles = isset($_SESSION['statesFile']) ? $_SESSION['statesFile'] : [];
     $boards = isset($_SESSION['boards']) ? $_SESSION['boards'] : [];
 
@@ -84,7 +90,7 @@
                     </div>
                 </form>
                 <?php 
-                if(isset($_SESSION['configName'])){?>
+                if(!empty($configName)){?>
                     <form method="post" action="../modifierCSV.php" class="ml-5 mr-5 mb-3" id="firstForm">
                         <div class="row">
                             <div class="col" id="formSelect">

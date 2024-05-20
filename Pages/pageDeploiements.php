@@ -6,6 +6,15 @@
     session_start();    
     unset($_SESSION['csvName']);
     unset($_SESSION['csvData']);
+    unset($_SESSION['csvFileName']);
+    unset($_SESSION['fileName']);
+    unset($_SESSION['fileType']);
+    unset($_SESSION['csvData2']);
+    unset($_SESSION['statesFile']);
+    unset($_SESSION['boards']);
+    unset($_SESSION['csvEG']);
+    unset($_SESSION['configName2']);
+
     $stock = !empty($_SESSION['stock']) ? $_SESSION['stock'] : [];
     $ips = !empty($_SESSION['ips']) ? $_SESSION['ips'] : [];
     $csvData = !empty($_SESSION['csvDataDeploiement']) ? $_SESSION['csvDataDeploiement'] : [];

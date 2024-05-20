@@ -4,6 +4,20 @@
     require '../header.inc.php';
     session_start();
     unset($_SESSION['csvName']);
+    unset($_SESSION['csvData']);
+    unset($_SESSION['csvFileName']);
+    unset($_SESSION['stock']);
+    unset($_SESSION['ips']);
+    unset($_SESSION['csvDataDeploiement']);
+    unset($_SESSION['configName']);
+    unset($_SESSION['fileName']);
+    unset($_SESSION['fileType']);
+    unset($_SESSION['csvData2']);
+    unset($_SESSION['statesFile']);
+    unset($_SESSION['boards']);
+    unset($_SESSION['csvEG']);
+    unset($_SESSION['configName2']);
+
     if(isset($_SESSION['dataConfig'])){
         $csvData = $_SESSION['dataConfig'] ;
     }else{

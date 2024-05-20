@@ -6,6 +6,16 @@
     include '../afficher.php';
     include '../rechercheConfig.php';
     unset($_SESSION['csvName']);
+    unset($_SESSION['stock']);
+    unset($_SESSION['ips']);
+    unset($_SESSION['csvDataDeploiement']);
+    unset($_SESSION['fileName']);
+    unset($_SESSION['fileType']);
+    unset($_SESSION['csvData2']);
+    unset($_SESSION['statesFile']);
+    unset($_SESSION['boards']);
+    unset($_SESSION['csvEG']);
+    unset($_SESSION['configName2']);
 
     // Vérifier si la variable de session 'csvFileName' est définie
     if(isset($_SESSION['csvFileName']) && isset($_SESSION['configName'])){

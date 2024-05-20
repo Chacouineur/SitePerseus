@@ -7,7 +7,7 @@ $btnValue = $_POST['btnValue'];
 $config = $_POST['config'];
 
 $boards = !empty($_SESSION['boards']) ? $_SESSION['boards'] : [];
-$configName = !empty($_SESSION['configName']) ? $_SESSION['configName'] : [];
+$configName = !empty($_SESSION['configName2']) ? $_SESSION['configName2'] : [];
 
 $csvFileName = !empty($_SESSION['fileName']) ? $_SESSION['fileName'] : [];
 
@@ -26,7 +26,7 @@ if (!empty($btnValue)) {
             $boards = getBoard($config);
             $_SESSION['boards'] = $boards;
 
-            $_SESSION['configName'] = $config;
+            $_SESSION['configName2'] = $config;
 
             session_write_close();
             header('Location: Pages/pageModifCSV.php');
