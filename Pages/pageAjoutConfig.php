@@ -34,20 +34,23 @@
                         <li class="nav-item ">
                             <a class="nav-link" href="pageAjoutConfig.php" style="font-weight: bold;">Ajouter Config</a>
                         </li>
-                        
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichier</a>
+                            <a class="nav-link" href="pageAjoutCSV.php" >Ajouter Fichiers Etats</a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageModifCSV.php" >Modifier Fichiers</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageSuppCSV.php" >Supprimer Fichiers Etats</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageSuppConfig.php" >Supprimer Config</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageDeploiements.php" >Déploiements</a>
                         </li>
                         
-                        <li class="nav-item ">
-                            <a class="nav-link" href="pageModifCSV.php">Modifier Fichier</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="pageSuppCSV.php">Supprimer Fichier</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="pageDeploiements.php">Déploiements</a>
-                        </li>
                         
                     </ul>
 
@@ -80,7 +83,7 @@
                 </div>
                 <input type="hidden" class="form-control" placeholder="ligneIndex" name="ligneIndex" id="ligneIndex">
             </div>
-            <button type="submit" class="btn btn-primary" name="btnValue" id="btnAddCorrespondance" value="ajoutCorresp">Ajouter Configuration</button>
+            <button type="submit" class="btn btn-primary" name="btnValue" id="btnAddConfig" value="ajoutConfig">Ajouter Configuration</button>
         </form>
         <?php 
         switch(true) {

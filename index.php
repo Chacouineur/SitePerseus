@@ -24,17 +24,20 @@
                             <a class="nav-link" href="Pages/pageAjoutConfig.php">Ajouter Config</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="Pages/pageAjoutCSV.php">Ajouter Fichier</a>
+                            <a class="nav-link" href="Pages/pageAjoutCSV.php" >Ajouter Fichiers Etats</a>
                         </li>
 
                         <li class="nav-item ">
-                            <a class="nav-link" href="Pages/pageModifCSV.php">Modifier Fichier</a>
+                            <a class="nav-link" href="Pages/pageModifCSV.php" >Modifier Fichiers</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="Pages/pageSuppCSV.php">Supprimer Fichier</a>
+                            <a class="nav-link" href="Pages/pageSuppCSV.php" >Supprimer Fichiers Etats</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="Pages/pageDeploiements.php">Déploiements</a>
+                            <a class="nav-link" href="Pages/pageSuppConfig.php" >Supprimer Config</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="Pages/pageDeploiements.php" >Déploiements</a>
                         </li>
                         
                     </ul>

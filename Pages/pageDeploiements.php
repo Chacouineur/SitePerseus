@@ -6,7 +6,6 @@
     session_start();    
     unset($_SESSION['csvName']);
     unset($_SESSION['csvData']);
-    unset($_SESSION['dataConfig']);
     $stock = !empty($_SESSION['stock']) ? $_SESSION['stock'] : [];
     $ips = !empty($_SESSION['ips']) ? $_SESSION['ips'] : [];
     $csvData = !empty($_SESSION['csvDataDeploiement']) ? $_SESSION['csvDataDeploiement'] : [];
@@ -36,14 +35,17 @@
                             <a class="nav-link" href="pageAjoutConfig.php">Ajouter Config</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichier</a>
+                            <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichiers Etats</a>
                         </li>
 
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageModifCSV.php">Modifier Fichier</a>
+                            <a class="nav-link" href="pageModifCSV.php" >Modifier Fichiers</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageSuppCSV.php">Supprimer Fichier</a>
+                            <a class="nav-link" href="pageSuppCSV.php" >Supprimer Fichiers Etats</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageSuppConfig.php" >Supprimer Config</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="pageDeploiements.php" style="font-weight: bold;">Déploiements</a>

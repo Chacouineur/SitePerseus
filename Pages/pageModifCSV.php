@@ -9,8 +9,6 @@
     unset($_SESSION['csvFileName']);
     unset($_SESSION['csvName']);
     unset($_SESSION['csvData']);
-    unset($_SESSION['dataConfig']);
-    unset($_SESSION['nomConfig']);
     
     $fileName = isset($_SESSION['fileName']) ? $_SESSION['fileName'] : [];
     $fileType = isset($_SESSION['fileType']) ? $_SESSION['fileType'] : [];
@@ -39,14 +37,17 @@
                             <a class="nav-link" href="pageAjoutConfig.php">Ajouter Config</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichier</a>
+                            <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichiers Etats</a>
                         </li>
 
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageModifCSV.php" style="font-weight: bold;">Modifier Fichier</a>
+                            <a class="nav-link" href="pageModifCSV.php" style="font-weight: bold;">Modifier Fichiers</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageSuppCSV.php">Supprimer Fichier</a>
+                            <a class="nav-link" href="pageSuppCSV.php" >Supprimer Fichiers Etats</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageSuppConfig.php" >Supprimer Config</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="pageDeploiements.php">Déploiements</a>

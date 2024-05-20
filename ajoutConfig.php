@@ -17,13 +17,12 @@ if (!empty($_SESSION['nbCartes']) && $btnValue !== 'creerTab') {
 }
 
 switch($btnValue){
-    case "ajoutCorresp":
+    case "ajoutConfig":
         $nomConfig = $_SESSION['nomConfig'];
         // Ouvrir le fichier configurations.csv en lecture
         if (($handleConfig = fopen($configurations, 'r')) !== false) {
             $found = false;
             
-            echo -4 . '<br>';
             // Parcourir chaque ligne du fichier
             while (($line = fgetcsv($handleConfig, 1000, ";")) !== false) {
                 // Vérifier si la ligne correspond à $nomConfig
@@ -48,7 +47,6 @@ switch($btnValue){
                             $dataActiv = ["Carte", "Vannes/Etat", "Activation"];
                             fputcsv($handle, $dataActiv, ';');
 
-                            echo -3 . '<br>';
                             $offset = ["OFFSET", "#", "#"];
                             fputcsv($handle, $offset, ';');
 
@@ -70,14 +68,12 @@ switch($btnValue){
 
                             fclose($handle);
                              
-                            echo -2 . '<br>';
                             $dataEG = ["Code EG","Nom fichier CSV"];
                             $liaisonEGEtat = $dossierCommonCSVFiles."/liaisonEGEtat.csv";
                             $handle = fopen($liaisonEGEtat, 'w');
                             fputcsv($handle, $dataEG,';');
                             fclose($handle);
                             
-                            echo -1 . '<br>';
                             $data2="*";
                             $gitIgnoreConfig = $dossierConfig . "/.gitignore";
                     
@@ -86,16 +82,13 @@ switch($btnValue){
                             $handle = fopen($gitIgnoreConfig,'w');
                             fwrite($handle, $data2);
                             fclose($handle);
-                            echo 1 . '<br>';
                             for($i=1;$i<=$line[1];$i++){
                                 $dossierPhysicalCSV = $dossierConfig."/physicalCSV_CN$i";
                                 mkdir($dossierPhysicalCSV,0777, true);
                                 mkdir($dossierPhysicalCSV."/physicalCONFIG",0777, true);
-                                echo 2 . '<br>';
                                 $filename = $dossierPhysicalCSV."/physicalCONFIG/physicalCONFIG_sensors.csv";
                                 $handle = fopen($filename,'w');
                                 $content = [];
-                                echo 3 . '<br>';
                                 $content[0] = ["Carte","Capteur","Type","Modbus remote slave address","Modbus start address","Modbus baud rate","Modbus parity","Modbus Data bits","Modbus Stop bit"];
                                 fputcsv($handle, $content[0],';');
                                 for ($j = 1; $j < 13; $j++) {
@@ -103,11 +96,9 @@ switch($btnValue){
                                     fputcsv($handle, $content[$j],';');
                                 }
                                 fclose($handle);
-                                echo 4 . '<br>';
                                 $filename = $dossierPhysicalCSV."/physicalCONFIG/physicalCONFIG_valves.csv";
                                 $handle = fopen($filename,'w');
                                 $content = [];
-                                echo 5 . '<br>';
                                 $content[0] = ["Carte","Vannes","Etat initial","PORT GPIO"];
                                 fputcsv($handle, $content[0],';');
                                 for ($j = 1; $j < 13; $j++) {
@@ -115,16 +106,13 @@ switch($btnValue){
                                     fputcsv($handle, $content[$j],';');
                                 }
                                 fclose($handle);
-                                echo 6 . '<br>';
                                 $data1="#define NODEID $i\n";
                                 $data2="#define NB_NODES $nbCartes";
                                 $filename = $dossierPhysicalCSV."/nodeId.h";
-                                echo 7 . '<br>';
                                 $handle = fopen($filename,'w');
                                 fwrite($handle, $data1);
                                 fwrite($handle, $data2);
                                 fclose($handle);
-                                echo 8 . '<br>';
                                 }
                         }else{
                             header('Location: Pages/pageAjoutConfig.php?erreurDossierConfigExiste');

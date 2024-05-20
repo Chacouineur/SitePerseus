@@ -6,8 +6,7 @@
     include '../rechercheCSV.php';
     session_start();
     unset($_SESSION['csvFileName']);
-    unset($_SESSION['dataConfig']);
-    unset($_SESSION['nomConfig']);
+    
     if(isset($_SESSION['csvName'])){
         $csvName = $_SESSION['csvName']; 
     } else {
@@ -51,19 +50,21 @@
                             <a class="nav-link" href="pageAjoutConfig.php">Ajouter Config</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichier</a>
+                            <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichiers Etats</a>
                         </li>
 
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageModifCSV.php">Modifier Fichier</a>
+                            <a class="nav-link" href="pageModifCSV.php">Modifier Fichiers</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageSuppCSV.php" style="font-weight: bold;">Supprimer Fichier</a>
+                            <a class="nav-link" href="pageSuppCSV.php" style="font-weight: bold;">Supprimer Fichiers Etats</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageSuppConfig.php" >Supprimer Config</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="pageDeploiements.php">Déploiements</a>
                         </li>
-                        
                     </ul>
 
                 </div>
@@ -95,7 +96,7 @@
                     <div class="mb-3">
                         <label for="selectFile" class="form-label">Fichier CSV :</label>
                         <select class="form-select" name="FileName" id="selectFile" placeholder="Selectionnez un fichier">
-                        <?php echo $config;
+                        <?php 
                         if (!empty($csvEGs)) {
                             foreach ($csvEGs as $csvEG) {
                                 $selected = ($csvEG == $csvName) ? 'selected' : '';  // Si le fichier correspond à $csvName, marquez-le comme sélectionné
@@ -167,26 +168,26 @@
             </div>
         </form>
         <script>
-    function confirmDelete() {
-        return confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?");
-    }
-    
-    document.addEventListener('DOMContentLoaded', function () {
-        var btnAfficher = document.getElementById("afficher");
-        var btnSuppr = document.getElementById("supprimer");
-        var fichier = document.getElementById('selectFile').value;
-        
-        btnAfficher.disabled = true;
-        btnSuppr.disabled = true;
-        
-        if (fichier !== "") {
-                btnAfficher.disabled = false;
-                btnSuppr.disabled = false;
-            } 
+            function confirmDelete() {
+                return confirm("Etes vous sur de vouloir supprimer cette configuration ?");
+            }
+            
+            document.addEventListener('DOMContentLoaded', function () {
+                var btnAfficher = document.getElementById("afficher");
+                var btnSuppr = document.getElementById("supprimer");
+                var fichier = document.getElementById('selectFile').value;
+                
+                btnAfficher.disabled = true;
+                btnSuppr.disabled = true;
+                
+                if (fichier !== "") {
+                        btnAfficher.disabled = false;
+                        btnSuppr.disabled = false;
+                    } 
 
-        
-    });
-</script>
+                
+            });
+        </script>
 
     </main>
     

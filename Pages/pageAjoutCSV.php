@@ -6,8 +6,6 @@
     include '../afficher.php';
     include '../rechercheConfig.php';
     unset($_SESSION['csvName']);
-    unset($_SESSION['dataConfig']);
-    unset($_SESSION['nomConfig']);
 
     // Vérifier si la variable de session 'csvFileName' est définie
     if(isset($_SESSION['csvFileName']) && isset($_SESSION['configName'])){
@@ -49,17 +47,20 @@
                             <a class="nav-link" href="pageAjoutConfig.php">Ajouter Config</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageAjoutCSV.php" style="font-weight: bold;">Ajouter Fichier</a>
+                            <a class="nav-link" href="pageAjoutCSV.php" style="font-weight: bold;">Ajouter Fichiers Etats</a>
                         </li>
 
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageModifCSV.php">Modifier Fichier</a>
+                            <a class="nav-link" href="pageModifCSV.php" >Modifier Fichiers</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageSuppCSV.php">Supprimer Fichier</a>
+                            <a class="nav-link" href="pageSuppCSV.php" >Supprimer Fichiers Etats</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageDeploiements.php">Déploiements</a>
+                            <a class="nav-link" href="pageSuppConfig.php" >Supprimer Config</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageDeploiements.php" >Déploiements</a>
                         </li>
                         
                     </ul>
