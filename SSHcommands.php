@@ -3,10 +3,13 @@ require __DIR__ . '/vendor/autoload.php';
 use phpseclib3\Net\SSH2;
 use phpseclib3\Net\SFTP;
 
-$oplStack = $_POST['oplStack']; 
-$appCAC = $_POST['appCAC']; 
-$CSVphysiques = $_POST['CSVphysiques']; 
-$CSVcommuns = $_POST['CSVcommuns'];
+$CNoplStack = $_POST['CNoplStack']; 
+$CNappParam = $_POST['CNappParam']; 
+$CNcsvPhysiques = $_POST['CNcsvPhysiques']; 
+$CNcsvCommuns = $_POST['CNcsvCommuns'];
+$MNoplStack = $_POST['MNoplStack']; 
+$MNappParam = $_POST['MNappParam']; 
+$MNcsvCommuns = $_POST['MNcsvCommuns'];
 if (PHP_OS_FAMILY === 'Windows') {
     $ipOBC = $_POST['ipOBC'];
     $userOBC = $_POST['userOBC'];
@@ -27,6 +30,7 @@ if (!empty($_SESSION['nomConfig'])) {
 }
 
 $configDir = __DIR__ . "/Configurations/" . $configName . "/";
+
 if(!empty($csvData))
 {
     if (PHP_OS_FAMILY === 'Windows') {
@@ -41,58 +45,150 @@ if(!empty($csvData))
             exit;
         }
 
-        $dirToCompress = '';
-        $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/output_'.$nbCartes.'CNs/mnobd.cdc';
-        $remoteCompressedFilePath = '/home/'.$userOBC.'/mnobd.cdc';
-        $remoteDecompressedDest = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/common/openCONFIGURATOR_projects/Demo_3CN/output/';
-        $remoteDirPath = $remoteDecompressedDest . 'mnobd.cdc';                
-        $errGet1 = 'Location: Pages/pageDeploiements.php?erreurMnobdCreerZip';
-        $errGet2 = 'Location: Pages/pageDeploiements.php?erreurmnobdZipIntrouvable';
-        $errGet3 = 'Location: Pages/pageDeploiements.php?erreurmnobdTeleversement';
-        $errGet4 = 'Location: Pages/pageDeploiements.php?erreurmnobdCopie';
-        
-        compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
-                                $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
-                                $errGet1,$errGet2,$errGet3,$errGet4);
+        if($MNoplStack === 'on')
+        {
+            $dirToCompress = '';
+            $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/v1.2-openPOWERLINK_V2_CAC_MN.zip';
+            $remoteCompressedFilePath = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC.zip';
+            $remoteDecompressedDest = './';
+            $remoteDirPath = $remoteDecompressedDest . 'openPOWERLINK_V2_CAC';
+            $errGet1 = 'Location: Pages/pageDeploiements.php?erreurOPLStackMNCreerZip';
+            $errGet2 = 'Location: Pages/pageDeploiements.php?erreurOPLStackMNZipIntrouvable';
+            $errGet3 = 'Location: Pages/pageDeploiements.php?erreurOPLStackMNTeleversement';
+            $errGet4 = 'Location: Pages/pageDeploiements.php?erreurOPLStackMNExtraction';
+            
+            compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                    $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
+                                    $errGet1,$errGet2,$errGet3,$errGet4);
 
-        $dirToCompress = '';
-        $localCompressedFilePath = $configDir . '/nbNodes.h';
-        $remoteCompressedFilePath = '/home/'.$userOBC.'/nbNodes.h';
-        $remoteDecompressedDest = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/OBC_MN/include/';
-        $remoteDirPath = $remoteDecompressedDest . 'nodeId.h';                
-        $errGet1 = 'Location: Pages/pageDeploiements.php?erreurNbNodesCreerZip';
-        $errGet2 = 'Location: Pages/pageDeploiements.php?erreurNbNodesZipIntrouvable';
-        $errGet3 = 'Location: Pages/pageDeploiements.php?erreurNbNodesTeleversement';
-        $errGet4 = 'Location: Pages/pageDeploiements.php?erreurNbNodesCopie';
-        
-        compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
-                                $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
-                                $errGet1,$errGet2,$errGet3,$errGet4);
-                
+            echo 'oplStackMN ' . $CSVcommuns . ' réussi<br>';
+        }
+
+        if($MNappParam === 'on')
+        {
+            $dirToCompress = '';
+            $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/output_'.$nbCartes.'CNs/mnobd.cdc';
+            $remoteCompressedFilePath = '/home/'.$userOBC.'/mnobd.cdc';
+            $remoteDecompressedDest = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/common/openCONFIGURATOR_projects/Demo_3CN/output/';
+            $remoteDirPath = $remoteDecompressedDest . 'mnobd.cdc';                
+            $errGet1 = 'Location: Pages/pageDeploiements.php?erreurMnobdCreerZip';
+            $errGet2 = 'Location: Pages/pageDeploiements.php?erreurmnobdZipIntrouvable';
+            $errGet3 = 'Location: Pages/pageDeploiements.php?erreurmnobdTeleversement';
+            $errGet4 = 'Location: Pages/pageDeploiements.php?erreurmnobdCopie';
+            
+            compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                    $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
+                                    $errGet1,$errGet2,$errGet3,$errGet4);
+    
+            $dirToCompress = '';
+            $localCompressedFilePath = $configDir . '/nbNodes.h';
+            $remoteCompressedFilePath = '/home/'.$userOBC.'/nbNodes.h';
+            $remoteDecompressedDest = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/OBC_MN/include/';
+            $remoteDirPath = $remoteDecompressedDest . 'nodeId.h';                
+            $errGet1 = 'Location: Pages/pageDeploiements.php?erreurNbNodesCreerZip';
+            $errGet2 = 'Location: Pages/pageDeploiements.php?erreurNbNodesZipIntrouvable';
+            $errGet3 = 'Location: Pages/pageDeploiements.php?erreurNbNodesTeleversement';
+            $errGet4 = 'Location: Pages/pageDeploiements.php?erreurNbNodesCopie';
+            
+            compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                    $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
+                                    $errGet1,$errGet2,$errGet3,$errGet4);
+
+            $bashScriptPath = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/compileAppScript.sh';
+            $errGet = 'Location: Pages/pageDeploiements.php?erreurCompileMN';
+            compileOplApp($sshConn, $bashScriptPath, $errGet);
+
+            echo 'appParamMN ' . $CSVcommuns . ' réussi<br>';
+        }
+
+        if($MNcsvCommuns === 'on')
+        {
+            // Correct path for the local file
+            $dirToCompress = $configDir . '/commonCSVFiles';
+            $localCompressedFilePath = $dirToCompress . '.zip';
+            $remoteCompressedFilePath = '/home/'.$userOBC.'/commonCSVFiles.zip';
+            $remoteDecompressedDest = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/common/';
+            $remoteDirPath = $remoteDecompressedDest . 'commonCSVFiles';
+            $errGet1 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsMNCreerZip';
+            $errGet2 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsMNZipIntrouvable';
+            $errGet3 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsMNTeleversement';
+            $errGet4 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsMNExtraction';
+
+            compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                    $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
+                                    $errGet1,$errGet2,$errGet3,$errGet4);
+
+            echo 'CSVcommunsMN ' . $CSVcommuns . ' réussi<br>';
+        }
     }
     else {
-        //Copie des fichiers local OBC MN et compilation
-        $fichierMnobd = __DIR__ . '/FichiersDeploiement/output_'.$nbCartes.'CNs/mnobd.cdc';
         $userOBC = system('whoami', $ret);
-        if(!$OBCuser)
+        if(!$userOBC)
         {
             header('Location: Pages/pageDeploiements.php?erreurWhoami');
             exit;
         }
-        
-        $destMnobd = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/common/openCONFIGURATOR_projects/Demo_3CN/output/mnobd.cdc';
-        if(!system('cp '.$fichierMnobd.' '.$destMnobd, $ret))
+
+        if($MNoplStack === 'on')
         {
-            header('Location: Pages/pageDeploiements.php?erreurCopieMnobd');
-            exit;
+            $dirToCompress = '';
+            $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/v1.2-openPOWERLINK_V2_CAC_MN.zip';
+            $remoteDecompressedDest = '/home/'.$userOBC.'/';
+            $remoteDirPath = $remoteDecompressedDest . 'openPOWERLINK_V2_CAC';
+            $ret = system('rm -R ' . $remoteDirPath);
+            $ret = system('unzip -q -o ' . $localCompressedFilePath . ' -d ' . $remoteDecompressedDest);
+            $ret = system('echo $?');
+            $ret = trim($ret);
+            if($ret !== '0')
+            {
+                header('Location: Pages/pageDeploiements.php?erreurExtractOplStackMN');
+                exit;
+            }
         }
 
-        $fichierNbNodes = $configDir."nbNodes.h";
-        $destNbNodes = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/OBC_MN/include/nbNodes.h';
-        if(!system('cp '.$fichierNbNodes.' '.$destNbNodes, $ret))
+        //Copie des fichiers local OBC MN et compilation
+        if($MNappParam === 'on')
         {
-            header('Location: Pages/pageDeploiements.php?erreurCopieNbNodes');
-            exit;
+            $fichierMnobd = __DIR__ . '/FichiersDeploiement/output_'.$nbCartes.'CNs/mnobd.cdc';
+
+            $destMnobd = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/common/openCONFIGURATOR_projects/Demo_3CN/output/mnobd.cdc';
+            system('rm -R ' . $destMnobd);
+            if(!system('cp '.$fichierMnobd.' '.$destMnobd, $ret))
+            {
+                header('Location: Pages/pageDeploiements.php?erreurCopieMnobd');
+                exit;
+            }
+
+            $fichierNbNodes = $configDir."nbNodes.h";
+            $destNbNodes = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/OBC_MN/include/nbNodes.h';
+            system('rm -R ' . $destNbNodes);
+            if(!system('cp '.$fichierNbNodes.' '.$destNbNodes, $ret))
+            {
+                header('Location: Pages/pageDeploiements.php?erreurCopieNbNodes');
+                exit;
+            }
+
+            $bashScriptPath = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/compileAppScript.sh';
+            system('bash ' . $bashScriptPath, $ret);
+            if($ret !== 0)
+            {
+                header('Location: Pages/pageDeploiements.php?erreurCompileMN');
+                exit;
+            }
+        }
+
+        if($CNcsvCommuns === 'on')
+        {
+            // Correct path for the local file
+            $dircsvCommun = $configDir . '/commonCSVFiles';
+            $remoteDecompressedDest = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/common/';
+            $remoteDirPath = $remoteDecompressedDest . 'commonCSVFiles';
+            system('rm -R ' . $remoteDirPath);
+            if(!system('cp -r '.$dircsvCommun.' '.$remoteDecompressedDest, $ret))
+            {
+                header('Location: Pages/pageDeploiements.php?erreurCopieCSVCommuns');
+                exit;
+            }
         }
     }
 
@@ -113,12 +209,12 @@ if(!empty($csvData))
         {
             $sftpConn->disableDatePreservation();
 
-            if($oplStack === 'on')
+            if($CNoplStack === 'on')
             {
                 $dirToCompress = '';
-                $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/openPOWERLINK_V2_CAC.zip';
+                $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/v1.2-openPOWERLINK_V2_CAC_CN.zip';
                 $remoteCompressedFilePath = '/home/'.$data[3].'/openPOWERLINK_V2_CAC.zip';
-                $remoteDecompressedDest = './';
+                $remoteDecompressedDest = '/home/'.$data[3].'/';
                 $remoteDirPath = $remoteDecompressedDest . 'openPOWERLINK_V2_CAC';
                 $errGet1 = 'Location: Pages/pageDeploiements.php?erreurOPLStackCreerZip';
                 $errGet2 = 'Location: Pages/pageDeploiements.php?erreurOPLStackZipIntrouvable';
@@ -132,23 +228,8 @@ if(!empty($csvData))
                 echo 'oplStack ' . $oplStack . ' réussi<br>';
             }
             
-            if($appCAC === 'on')
+            if($CNappParam === 'on')
             {
-                // Correct path for the local file
-                $dirToCompress = '';
-                $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/CAC_CN.zip';
-                $remoteCompressedFilePath = '/home/'.$data[3].'/CAC_CN.zip';
-                $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/';
-                $remoteDirPath = $remoteDecompressedDest . 'CAC_CN';
-                $errGet1 = 'Location: Pages/pageDeploiements.php?erreurAppCACCreerZip';
-                $errGet2 = 'Location: Pages/pageDeploiements.php?erreurAppCACZipIntrouvable';
-                $errGet3 = 'Location: Pages/pageDeploiements.php?erreurAppCACTeleversement';
-                $errGet4 = 'Location: Pages/pageDeploiements.php?erreurAppCACExtraction';
-                
-                compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
-                                        $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
-                                        $errGet1,$errGet2,$errGet3,$errGet4);
-
                 // Correct path for the local file
                 $dirToCompress = '';
                 $localCompressedFilePath = $configDir . '/physicalCSV_CN'.($index+1).'/nodeId.h';
@@ -167,7 +248,7 @@ if(!empty($csvData))
                 echo 'appCAC ' . $appCAC . ' réussi<br>';
             }
             
-            if($CSVphysiques === 'on')
+            if($CNcsvPhysiques === 'on')
             {
                 // Correct path for the local file
                 $dirToCompress = $configDir . '/physicalCSV_CN'.($index+1).'/physicalCONFIG';
@@ -180,15 +261,18 @@ if(!empty($csvData))
                 $errGet3 = 'Location: Pages/pageDeploiements.php?erreurCSVphysiquesTeleversement';
                 $errGet4 = 'Location: Pages/pageDeploiements.php?erreurCSVphysiquesExtraction';
                 
-                echo 10 . '<br>';
                 compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
                                         $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
                                         $errGet1,$errGet2,$errGet3,$errGet4);
 
+                $bashScriptPath = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/compileAppScript.sh';
+                $errGet = 'Location: Pages/pageDeploiements.php?erreurCompileCN';
+                compileOplApp($sshConn, $bashScriptPath, $errGet);
+
                 echo 'CSVphysiques ' . $CSVphysiques . ' réussi<br>';
             }
             
-            if($CSVcommuns === 'on')
+            if($CNcsvCommuns === 'on')
             {
                 // Correct path for the local file
                 $dirToCompress = $configDir . '/commonCSVFiles';
@@ -245,6 +329,20 @@ function compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompr
     if($ret !== '0')
     {
         header($errGet4);
+        exit;
+    }
+}
+
+function compileOplApp($sshConn, $bashScriptPath,$errGet)
+{
+    $ret = $sshConn->exec('bash ' . $bashScriptPath);
+    echo 'ret : ' . $ret . '<br>';
+    $ret = $sshConn->exec('echo $?');
+    $ret = trim($ret);
+    echo 'ret : ' . $ret . '<br>';
+    if($ret !== '0')
+    {
+        header($errGet);
         exit;
     }
 }

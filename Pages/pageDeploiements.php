@@ -286,7 +286,7 @@
         <form method="post" class="mx-auto p-5 rounded" action="../SSHcommands.php" id="deploiement">
             <?php
             if (PHP_OS_FAMILY === 'Windows') { ?>
-                <label for="selectedLabels" class="form-label">Entrez les informations de connexion au MN (l'OBC) :</label>
+                <label for="selectedLabels" class="form-label row">Entrez les informations de connexion au MN (l'OBC) :</label>
                 <label for="selectedLabels" class="form-label">Entrez l'IP du MN :</label>
                 <input type="text" class="form-control" name="ipOBC" id="ipOBC" aria-describedby="codeHelp" placeholder="Entrez manuellement l'ip du MN" required>
                 <label for="selectedLabels" class="form-label">Entrez l'utilisateur SSH du MN :</label>
@@ -296,17 +296,26 @@
             <?php } ?>
             <label for="selectedLabels" class="form-label">Choix des éléments à déployer :</label>
             <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                <input type="checkbox" class="btn-check" id="btncheck1" name="oplStack" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck1">OpenPOWERLINK stack</label>
+                <input type="checkbox" class="btn-check" id="btncheck1" name="CNoplStack" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck1">CN - OpenPOWERLINK stack</label>
 
-                <input type="checkbox" class="btn-check" id="btncheck2" name="appCAC" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck2">Application CAC</label>
+                <input type="checkbox" class="btn-check" id="btncheck2" name="CNappParam" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck2">CN - Paramètres d'application</label>
 
-                <input type="checkbox" class="btn-check" id="btncheck3" name="CSVphysiques" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck3">Fichiers CSV physiques</label>
+                <input type="checkbox" class="btn-check" id="btncheck3" name="CNcsvPhysiques" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck3">CN - Fichiers CSV physiques</label>
 
-                <input type="checkbox" class="btn-check" id="btncheck4" name="CSVcommuns" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck4">Fichiers CSV communs</label>
+                <input type="checkbox" class="btn-check" id="btncheck4" name="CNcsvCommuns" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck4">CN - Fichiers CSV communs</label>
+
+                <input type="checkbox" class="btn-check" id="btncheck5" name="MNoplStack" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck5">MN - OpenPOWERLINK stack</label>
+
+                <input type="checkbox" class="btn-check" id="btncheck6" name="MNappParam" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck6">MN - Paramètres d'application</label>
+
+                <input type="checkbox" class="btn-check" id="btncheck7" name="MNcsvCommuns" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck7">MN - Fichiers CSV communs</label>
             </div>
             <button type="submit" class="btn btn-success" name="btnValue" value="deployer" id="deployer" disabled>Déployer</button>
         </form>
