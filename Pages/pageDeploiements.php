@@ -167,6 +167,66 @@
                     case isset($_GET['erreurExtractionCSVCommuns']):
                         echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction des CSV communs sur l'une des cartes !</div>";
                         break;
+                    case isset($_GET['erreurOPLStackCreerZip']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour le stack OpenPOWERLINK !</div>";
+                        break;
+                    case isset($_GET['erreurOPLStackZipIntrouvable']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour le stack OpenPOWERLINK est introuvable !</div>";
+                        break;
+                    case isset($_GET['erreurOPLStackTeleversement']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour le stack OpenPOWERLINK !</div>";
+                        break;
+                    case isset($_GET['erreurOPLStackExtraction']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour le stack OpenPOWERLINK !</div>";
+                        break;
+                    case isset($_GET['erreurAppCACCreerZip']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour l'application des CAC !</div>";
+                        break;
+                    case isset($_GET['erreurAppCACZipIntrouvable']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour l'application des CAC est introuvable !</div>";
+                        break;
+                    case isset($_GET['erreurAppCACTeleversement']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour l'application des CAC !</div>";
+                        break;
+                    case isset($_GET['erreurAppCACExtraction']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour l'application des CAC !</div>";
+                        break;
+                    case isset($_GET['erreurNodeIdCreerZip']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour NodeId !</div>";
+                        break;
+                    case isset($_GET['erreurNodeIdZipIntrouvable']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour NodeId est introuvable !</div>";
+                        break;
+                    case isset($_GET['erreurNodeIdTeleversement']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour NodeId !</div>";
+                        break;
+                    case isset($_GET['erreurNodeIdCopie']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier NodeId !</div>";
+                        break;
+                    case isset($_GET['erreurCSVphysiquesCreerZip']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour les CSV physiques !</div>";
+                        break;
+                    case isset($_GET['erreurCSVphysiquesZipIntrouvable']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour les CSV physiques est introuvable !</div>";
+                        break;
+                    case isset($_GET['erreurCSVphysiquesTeleversement']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour les CSV physiques !</div>";
+                        break;
+                    case isset($_GET['erreurCSVphysiquesExtraction']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour les CSV physiques !</div>";
+                        break;
+                    case isset($_GET['erreurCSVcommunsCreerZip']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour les CSV communs !</div>";
+                        break;
+                    case isset($_GET['erreurCSVcommunsZipIntrouvable']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour les CSV communs est introuvable !</div>";
+                        break;
+                    case isset($_GET['erreurCSVcommunsTeleversement']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour les CSV communs !</div>";
+                        break;
+                    case isset($_GET['erreurCSVcommunsExtraction']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour les CSV communs !</div>";
+                        break;
                     case isset($_GET['reseauAnalyse']):
                         echo "<div class=\"alert alert-success\" role=\"alert\">Réseau analysé, les IPs peuvent être séléctionnées.</div>";
                         break;

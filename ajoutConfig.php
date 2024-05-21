@@ -82,6 +82,13 @@ switch($btnValue){
                             $handle = fopen($gitIgnoreConfig,'w');
                             fwrite($handle, $data2);
                             fclose($handle);
+
+                            $data1="#define NB_NODES $nbCartes";
+                            $filename = $dossierConfig."/nbNodes.h";
+                            $handle = fopen($filename,'w');
+                            fwrite($handle, $data1);
+                            fclose($handle);
+
                             for($i=1;$i<=$line[1];$i++){
                                 $dossierPhysicalCSV = $dossierConfig."/physicalCSV_CN$i";
                                 mkdir($dossierPhysicalCSV,0777, true);
