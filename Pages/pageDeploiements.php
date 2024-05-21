@@ -152,20 +152,29 @@
                     case isset($_GET['erreurChampsNonRemplis']):
                         echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, tous les champs ne sont pas remplis !</div>";
                         break;
-                    case isset($_GET['erreurExtractionOPLStack']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du stack OpenPOWERLINK sur l'une des cartes !</div>";
+                    case isset($_GET['erreurMnobdCreerZip']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour Mnobd !</div>";
                         break;
-                    case isset($_GET['erreurExtractionAppCAC']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction de l'application des CAC sur l'une des cartes !</div>";
+                    case isset($_GET['erreurmnobdZipIntrouvable']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour Mnobd est introuvable !</div>";
                         break;
-                    case isset($_GET['erreurCopieNodeId']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier 'nodeId.h' sur l'une des cartes !</div>";
+                    case isset($_GET['erreurmnobdTeleversement']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour Mnobd !</div>";
                         break;
-                    case isset($_GET['erreurExtractionCSVPhysiques']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction des CSV physiques sur l'une des cartes !</div>";
+                    case isset($_GET['erreurmnobdCopie']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier ZIP pour Mnobd !</div>";
                         break;
-                    case isset($_GET['erreurExtractionCSVCommuns']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction des CSV communs sur l'une des cartes !</div>";
+                    case isset($_GET['erreurNbNodesCreerZip']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour NbNodes !</div>";
+                        break;
+                    case isset($_GET['erreurNbNodesZipIntrouvable']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour NbNodes est introuvable !</div>";
+                        break;
+                    case isset($_GET['erreurNbNodesTeleversement']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour NbNodes !</div>";
+                        break;
+                    case isset($_GET['erreurNbNodesCopie']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier ZIP pour NbNodes !</div>";
                         break;
                     case isset($_GET['erreurOPLStackCreerZip']):
                         echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour le stack OpenPOWERLINK !</div>";
@@ -275,6 +284,16 @@
         </div>
 
         <form method="post" class="mx-auto p-5 rounded" action="../SSHcommands.php" id="deploiement">
+            <?php
+            if (PHP_OS_FAMILY === 'Windows') { ?>
+                <label for="selectedLabels" class="form-label">Entrez les informations de connexion au MN (l'OBC) :</label>
+                <label for="selectedLabels" class="form-label">Entrez l'IP du MN :</label>
+                <input type="text" class="form-control" name="ipOBC" id="ipOBC" aria-describedby="codeHelp" placeholder="Entrez manuellement l'ip du MN" required>
+                <label for="selectedLabels" class="form-label">Entrez l'utilisateur SSH du MN :</label>
+                <input type="text" class="form-control" name="userOBC" id="userOBC" aria-describedby="codeHelp" placeholder="Entrez l'utilisateur SSH du MN" required>
+                <label for="selectedLabels" class="form-label">Entrez le mot de passe SSH du MN :</label>
+                <input type="text" class="form-control" name="mdpOBC" id="mdpOBC" aria-describedby="codeHelp" placeholder="Entrez le mot de passe SSH du MN" required>
+            <?php } ?>
             <label for="selectedLabels" class="form-label">Choix des éléments à déployer :</label>
             <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
                 <input type="checkbox" class="btn-check" id="btncheck1" name="oplStack" autocomplete="off">
