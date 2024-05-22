@@ -1,7 +1,4 @@
 <?php
-$titre = "Erreur";
-$page = "";
-require 'header.inc.php';
 $nom = "";
 session_start(); // Démarrer la session
 if (!empty($_POST['code']) && !empty($_POST['nom'])) {
@@ -30,12 +27,9 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     $_SESSION['csvFilePath'] = $csvFilePath;
 
     if (!$file) {
-        print("Erreur ! Impossible d ouvrir le fichier.");
         unset($_SESSION['csvFileName']);
         unset($_SESSION['csvFilePath']);  
-        ?>
-        <html><a class="btn btn-primary" href="Pages/pageAjoutCSV.php" role="button">Retour</a>
-        </html><?php
+        header('Location: Pages\pageAjoutCSV.php?erreurFichier');
         exit();
     }
 
@@ -77,23 +71,18 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
 
     // Vérifier si les valeurs existent déjà dans le fichier
     if (valuesExist($hexadecimal, $nom, $filePath)) {
-        print("Erreur ! Les valeurs existent deja dans le fichier.");
         unset($_SESSION['csvFileName']);
         unset($_SESSION['csvFilePath']);
-        ?>
-        <html><a class="btn btn-primary" href="Pages/pageAjoutCSV.php" role="button">Retour</a>
-        </html><?php
+        echo "test";
+        header('Location: Pages\pageAjoutCSV.php?erreurValeursExistent');
         exit();
     }
 
     if (!fwrite($file, $hexadecimal . ';' . $nom . "\n")) {
-        print("Erreur ! La valeur n a pas ete ajoutee.");
         unset($_SESSION['csvFileName']);
         unset($_SESSION['csvFilePath']);  
-        ?>
-        <html><a class="btn btn-primary" href="Pages/pageAjoutCSV.php" role="button">Retour</a>
-        </html>
-        <?php
+        echo 1;
+        header('Location: Pages/pageAjoutCSV.php?erreurValeursAjout');
         exit();
     } else {
         fclose($file);
@@ -118,26 +107,19 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
             fclose($handle);
             unset($_SESSION['csvData']);
             session_write_close();
-            header('Location: Pages/pageAjoutCSV.php');
+            header('Location: Pages/pageAjoutCSV.php?reussite');
             exit();
         } else {
-            echo "Erreur lors de la creation du fichier.";
             unset($_SESSION['csvFileName']);
             unset($_SESSION['csvFilePath']);   
-            ?>
-            <html><a class="btn btn-primary" href="AjoutCSV.php" role="button">Retour</a>
-            </html><?php
-            
+            header('Location: Pages/pageAjoutCSV.php?erreurCreationFichier');
             exit();
         }
     }
 } else {
-    print("Erreur ! Les champs code et nom doivent etre remplis.");
     unset($_SESSION['csvFileName']);
     unset($_SESSION['csvFilePath']);  
-    ?>
-    <html><a class="btn btn-primary" href="AjoutCSV.php" role="button">Retour</a>
-    </html><?php
+    header('Location: Pages/pageAjoutCSV.php?erreurChampsVide');
     exit();
 }
 

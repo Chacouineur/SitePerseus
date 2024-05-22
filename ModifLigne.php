@@ -30,7 +30,8 @@ if (!empty($csvFilePath) && !empty($_POST['btnValue'])) {
     // Ouvrir le fichier CSV en mode écriture
     $monFichier = fopen($csvFilePath, "r+");  // 'r+' permet la lecture et l'écriture
     if (!$monFichier) {
-        die("Impossible d'ouvrir le fichier");
+        header('Location: Pages/pageAjoutCSV.php?erreurOuvrirfichier');
+        exit();
     }
 
     switch($btnValue){
@@ -52,29 +53,39 @@ if (!empty($csvFilePath) && !empty($_POST['btnValue'])) {
                 $monFichier = fopen($csvFilePath, "w");
             
                 if (!$monFichier) {
-                    die("Impossible d'ouvrir le fichier $csvFilePath pour écriture.");
+                    header('Location: Pages/pageAjoutCSV.php?erreurOuverture');
+                    exit();
                 }
             
                 foreach ($csvData as $ligne) {
                     if (fputcsv($monFichier, $ligne, ';') === false) {
-                        die("Erreur lors de l'écriture dans le fichier $csvFilePath.");
+                        header('Location: Pages/pageAjoutCSV.php?erreurEcriture');
+                        exit();
                     }
                 }
             
                 fclose($monFichier);
+                #Je dois trouver fonction pour N cartes
+                if($numLigne<15 && $numLigne >2){
+                    #Ecrire à ligne $numLigne+12
+                }if($numLigne>15 && $numLigne<28){
+                    #Ecrire à ligne $numLigne+37 (+12+12+1+12=sensor à vanne + vanne à offset + offset à sensor + sensor à vanne)
+                }
+                #mettre activation (soit 3e colonne) à 1
             }
             
             
             break;
             
         default:
-            echo "Erreur ! Aucun bouton n'a été appuyé.";
-            break;
+            header('Location: Pages/pageAjoutCSV.php?erreurbtn');
+            exit();
     }
     session_write_close(); 
-    header('Location: Pages/pageAjoutCSV.php');
+    header('Location: Pages/pageAjoutCSV.php?reussiteModif');
     exit();
 } else {
-    echo "Certains champs sont vides. Veuillez remplir tous les champs.";
+    header('Location: Pages/pageAjoutCSV.php?erreurChampsvides');
+    exit();
 }
 ?>

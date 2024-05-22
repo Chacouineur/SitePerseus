@@ -47,22 +47,22 @@ switch($btnValue){
                             $dataActiv = ["Carte", "Vannes/Etat", "Activation"];
                             fputcsv($handle, $dataActiv, ';');
 
-                            $offset = ["OFFSET", "#", "#"];
+                            $offset = ["OFFSET", "EC", "1"];
                             fputcsv($handle, $offset, ';');
 
                             for ($i = 0; $i < $line[1]; $i++) {
                                 $nomCarte = $nom[$i];
                                 
                                 for ($j = 1; $j <= 12; $j++) {
-                                    $dataActiv = [$nomCarte, "sensor$j", "#"];
+                                    $dataActiv = [$nomCarte, "valve$j", "#"];
                                     fputcsv($handle, $dataActiv, ';');
                                 }
 
                                 for ($j = 1; $j <= 12; $j++) {
-                                    $dataActiv = [$nomCarte, "valve$j", "#"];
+                                    $dataActiv = [$nomCarte, "sensor$j", "#"];
                                     fputcsv($handle, $dataActiv, ';');
                                 }
-    
+                                
                                 fputcsv($handle, $offset, ';');
                             }
 
@@ -82,6 +82,13 @@ switch($btnValue){
                             $handle = fopen($gitIgnoreConfig,'w');
                             fwrite($handle, $data2);
                             fclose($handle);
+
+                            $data1="#define NB_NODES $nbCartes";
+                            $filename = $dossierConfig."/nbNodes.h";
+                            $handle = fopen($filename,'w');
+                            fwrite($handle, $data1);
+                            fclose($handle);
+
                             for($i=1;$i<=$line[1];$i++){
                                 $dossierPhysicalCSV = $dossierConfig."/physicalCSV_CN$i";
                                 mkdir($dossierPhysicalCSV,0777, true);

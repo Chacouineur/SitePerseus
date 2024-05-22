@@ -108,6 +108,31 @@
             </div>
 
             <button type="submit" class="btn btn-primary" id="btnAddCorrespondance">Ajouter Correspondance</button>
+            <?php 
+                switch(true) {
+                    case isset($_GET['erreurFichier']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, impossible d'ouvrir le fichier de configuration.</div>";
+                        break;
+                    case isset($_GET['erreurValeursExistent']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, les valeurs existent déjà dans le fichier.</div>";
+                        break;
+                    case isset($_GET['erreurValeursAjout']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, la valeur n'a pas pu être ajoutée au fichier.</div>";
+                        break;
+                    case isset($_GET['erreurCreationFichier']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier.</div>";
+                        break;
+                    case isset($_GET['erreurChampsVide']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, les champs 'code' et 'nom' ne doivent pas être vides.</div>";
+                        break;
+                    case isset($_GET['reussite']):
+                        echo "<div class=\"alert alert-success\" role=\"alert\">Le fichier a été créé et la valeur ajoutée avec succès.</div>";
+                        break;
+                    default:
+                        break;
+                }
+                ?>
+
         </form>
         <?php if($csvFileName == []){?>
             <h5>Aucun fichier fichier n est choisi ! Veuillez creer un fichier ci dessus.</h5><?php
@@ -155,6 +180,31 @@
                 <input type="hidden" id="csvFileName" name="csvFileName" value="<?php echo $csvFileName; ?>">
                 <input type="hidden" id="csvConfigName" name="csvConfigName" value="<?php echo $nomConfig; ?>">
                 <button type="submit" class="btn btn-primary" name="btnValue" value="modif" disabled>Modifier Ligne</button>
+                <?php 
+                    switch(true) {
+                        case isset($_GET['erreurOuvrirfichier']):
+                            echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, impossible d'ouvrir le fichier CSV spécifié !</div>";
+                            break;
+                        case isset($_GET['erreurOuverture']):
+                            echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, ouverture du fichier CSV en écriture a échoué !</div>";
+                            break;
+                        case isset($_GET['erreurEcriture']):
+                            echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, écriture dans le fichier CSV a échoué !</div>";
+                            break;
+                        case isset($_GET['erreurbtn']):
+                            echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, bouton d'action non reconnu !</div>";
+                            break;
+                        case isset($_GET['erreurChampsvides']):
+                            echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, champs requis non remplis ou bouton non sélectionné !</div>";
+                            break;
+                        case isset($_GET['reussiteModif']):
+                            echo "<div class=\"alert alert-success\" role=\"alert\">Modification réussie !</div>";
+                            break;
+                        default:
+                            break;
+                    }
+                ?>
+
             </form>
 
             <table class="tableau table table-hover" id="myTable">
