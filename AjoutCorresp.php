@@ -73,7 +73,6 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     if (valuesExist($hexadecimal, $nom, $filePath)) {
         unset($_SESSION['csvFileName']);
         unset($_SESSION['csvFilePath']);
-        echo "test";
         header('Location: Pages\pageAjoutCSV.php?erreurValeursExistent');
         exit();
     }
@@ -81,7 +80,6 @@ if (!empty($_POST['code']) && !empty($_POST['nom'])) {
     if (!fwrite($file, $hexadecimal . ';' . $nom . "\n")) {
         unset($_SESSION['csvFileName']);
         unset($_SESSION['csvFilePath']);  
-        echo 1;
         header('Location: Pages/pageAjoutCSV.php?erreurValeursAjout');
         exit();
     } else {

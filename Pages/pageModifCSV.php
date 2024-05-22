@@ -43,11 +43,10 @@
                             <a class="nav-link" href="pageAjoutConfig.php">Ajouter Config</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichiers Etats</a>
-                        </li>
-
-                        <li class="nav-item ">
                             <a class="nav-link" href="pageModifCSV.php" style="font-weight: bold;">Modifier Fichiers</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichiers Etats</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="pageSuppCSV.php" >Supprimer Fichiers Etats</a>
@@ -91,6 +90,52 @@
                 </form>
                 <?php 
                 if(!empty($configName)){?>
+                    <form method="post" action="../modifierCSV.php" class="ml-5 mr-5 mb-3" id="ligne">
+                        <div class="row mb-3">
+                            <div class="col" id="formSelect">
+                                <label for="selectFile" class="form-label">Fichier CSV configuration physique vannes de :</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-select" name="FileValve" id="selectFile" placeholder="Selectionnez un fichier"required>
+                                        <?php
+                                        if (!empty($boards)) {
+                                            foreach ($boards as $board) {
+                                                $selected = ($board == $fileName) ? 'selected' : '';  // Si le fichier correspond à $fileName, marquez-le comme sélectionné
+                                                echo "<option value=\"$board\" $selected>$board</option>";
+
+                                            }
+                                        }else{
+                                            echo "<option value=\"\">Veuillez creer un fichier dans « Ajouter Fichier » </option>";
+                                        }
+                                        ?>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary" name="btnValue" value="afficher">Afficher le fichier</button>
+                                </div>
+                            </div>
+                        </div>  
+                    </form>
+                    <form method="post" action="../modifierCSV.php" class="ml-5 mr-5 mb-3" id="ligne">
+                        <div class="row mb-3">
+                            <div class="col" id="formSelect">
+                                <label for="selectFile" class="form-label">Fichier CSV configuration physique capteurs de :</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-select" name="FileSensor" id="selectFile" placeholder="Selectionnez un fichier"required>
+                                        <?php
+                                        if (!empty($boards)) {
+                                            foreach ($boards as $board) {
+                                                $selected = ($board == $fileName) ? 'selected' : '';  // Si le fichier correspond à $fileName, marquez-le comme sélectionné
+                                                echo "<option value=\"$board\" $selected>$board</option>";
+
+                                            }
+                                        }else{
+                                            echo "<option value=\"\">Veuillez creer un fichier dans « Ajouter Fichier » </option>";
+                                        }
+                                        ?>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary" name="btnValue" value="afficher">Afficher le fichier</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                     <form method="post" action="../modifierCSV.php" class="ml-5 mr-5 mb-3" id="firstForm">
                         <div class="row">
                             <div class="col" id="formSelect">
@@ -127,59 +172,12 @@
                         </div>
 
                     </form>
-                    <form method="post" action="../modifierCSV.php" class="ml-5 mr-5 mb-3" id="ligne">
-                        <div class="row mb-3">
-                            <div class="col" id="formSelect">
-                                <label for="selectFile" class="form-label">Fichier CSV configuration physique capteurs de :</label>
-                                <div class="input-group mb-3">
-                                    <select class="form-select" name="FileSensor" id="selectFile" placeholder="Selectionnez un fichier"required>
-                                        <?php
-                                        if (!empty($boards)) {
-                                            foreach ($boards as $board) {
-                                                $selected = ($board == $fileName) ? 'selected' : '';  // Si le fichier correspond à $fileName, marquez-le comme sélectionné
-                                                echo "<option value=\"$board\" $selected>$board</option>";
-
-                                            }
-                                        }else{
-                                            echo "<option value=\"\">Veuillez creer un fichier dans « Ajouter Fichier » </option>";
-                                        }
-                                        ?>
-                                    </select>
-                                    <button type="submit" class="btn btn-primary" name="btnValue" value="afficher">Afficher le fichier</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-
-                    </form>
-                    <form method="post" action="../modifierCSV.php" class="ml-5 mr-5 mb-3" id="ligne">
-                        <div class="row mb-3">
-                            <div class="col" id="formSelect">
-                                <label for="selectFile" class="form-label">Fichier CSV configuration physique vannes de :</label>
-                                <div class="input-group mb-3">
-                                    <select class="form-select" name="FileValve" id="selectFile" placeholder="Selectionnez un fichier"required>
-                                        <?php
-                                        if (!empty($boards)) {
-                                            foreach ($boards as $board) {
-                                                $selected = ($board == $fileName) ? 'selected' : '';  // Si le fichier correspond à $fileName, marquez-le comme sélectionné
-                                                echo "<option value=\"$board\" $selected>$board</option>";
-
-                                            }
-                                        }else{
-                                            echo "<option value=\"\">Veuillez creer un fichier dans « Ajouter Fichier » </option>";
-                                        }
-                                        ?>
-                                    </select>
-                                    <button type="submit" class="btn btn-primary" name="btnValue" value="afficher">Afficher le fichier</button>
-                                </div>
-                            </div>
-                        </div>  
-                    </form>
+                    
                 <?php } ?>
             </div>
             <div class="col" id='colForulaire' >
             <?php if($fileName == [] && $csvData == []){?>
-                    <h4>Aucun fichier fichier n est choisi ! Veuillez creer un fichier ci dessus.</h5><?php
+                    <h4>Aucun fichier fichier n est choisi ! Veuillez choisir un fichier a afficher.</h5><?php
                 }else{
                     if ($fileType === "sensor") {?>
                         <h4>Le fichier ci dessous correspond a la carte : <?php echo "$fileName"; ?></h5>
@@ -259,7 +257,7 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="exampleInputCarte" class="form-label">Carte :</label>
-                                    <input type="text" class="form-control" name="carte" id="exampleInputCarte" placeholder="CACMO/CACOE/etc" disabled>
+                                    <input type="text" class="form-control" name="carte" id="exampleInputCarte" placeholder="CACMO/CACOE/etc" readonly disabled>
                                 </div>
                                 <div class="col">
                                     <label for="exampleInputVannesEtat" class="form-label">Vannes/Etat :</label>

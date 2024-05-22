@@ -5,7 +5,10 @@ header{
 
 .scrollspy-example-2 {
     position: relative;
-    
+    height: 500px;
     overflow: auto;
-    
-  }
+}
+.scrollable-nav {
+    max-height: 500px; /* or any other desired height */
+    overflow-y: auto;
+}

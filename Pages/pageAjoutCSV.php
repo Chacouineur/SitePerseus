@@ -57,11 +57,10 @@
                             <a class="nav-link" href="pageAjoutConfig.php">Ajouter Config</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageAjoutCSV.php" style="font-weight: bold;">Ajouter Fichiers Etats</a>
-                        </li>
-
-                        <li class="nav-item ">
                             <a class="nav-link" href="pageModifCSV.php" >Modifier Fichiers</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="pageAjoutCSV.php" style="font-weight: bold;">Ajouter Fichiers Etats</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="pageSuppCSV.php" >Supprimer Fichiers Etats</a>
@@ -199,6 +198,16 @@
                             break;
                         case isset($_GET['reussiteModif']):
                             echo "<div class=\"alert alert-success\" role=\"alert\">Modification réussie !</div>";
+                            break;
+                        case isset($_GET['erreurLectureActiv']):
+                            $pathActivationCSV = htmlspecialchars($_GET['erreurLectureActiv']);
+                            echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, impossible de lire le fichier d'activation : $pathActivationCSV</div>";
+                            break;
+                        case isset($_GET['erreurOuvertureActiv']):
+                            echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, impossible d'ouvrir le fichier d'activation pour écriture.</div>";
+                            break;
+                        case isset($_GET['erreurEcritureActiv']):
+                            echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, écriture dans le fichier d'activation échouée.</div>";
                             break;
                         default:
                             break;
