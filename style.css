@@ -12,3 +12,17 @@ header{
     max-height: 500px; /* or any other desired height */
     overflow-y: auto;
 }
+
+main {
+    padding: 0 2rem 0 2rem;
+}
+
+p {
+    padding: 10px 0 10px 0;
+}
+
+footer {
+    padding-top: 5px;
+    font-size: small;
+    text-align: center;
+}

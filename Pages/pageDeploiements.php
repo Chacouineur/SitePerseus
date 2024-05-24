@@ -26,46 +26,7 @@
 
 ?>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg" id="nav">
-            <div class="container-fluid">
-                <!-- Bouton de logo à gauche -->
-                <a class="navbar-brand" href="../index.php">
-                    <img src="../logo.png" alt="Logo" width="100" height="100" class="d-inline-block align-text-center">HOME
-                </a>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item ">
-                            <a class="nav-link" href="pageAjoutConfig.php">Ajouter Config</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="pageModifCSV.php" >Modifier Fichiers</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="pageAjoutCSV.php">Ajouter Fichiers Etats</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="pageSuppCSV.php" >Supprimer Fichiers Etats</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="pageSuppConfig.php" >Supprimer Config</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="pageDeploiements.php" style="font-weight: bold;">Déploiements</a>
-                        </li>
-                        
-                    </ul>
-
-                </div>
-            </div>
-        </nav>
-
-    </header>
+    <?php include("headerPages.php"); ?>
     <main>
         
         <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="mappingForm">
@@ -123,10 +84,6 @@
                 <div class="col-auto">
                     <label for="exampleInputValeur" class="form-label">Mot de passe SSH :</label>
                     <input type="text" class="form-control" name="motDePasse" id="mdp" aria-describedby="codeHelp" placeholder="Par défaut : pi" >
-                </div>
-                <div class="col-auto">
-                    <label for="exampleInputValeur" class="form-label">Port SSH :</label>
-                    <input type="text" class="form-control" name="port" id="port" aria-describedby="codeHelp" placeholder="Par défaut : 22" >
                 </div>
             </div>            
             <input type="hidden" class="form-control" placeholder="ligneIndex" name="ligneIndex" id="ligneIndex">
@@ -261,7 +218,6 @@
                             <th scope="col">IP locale sélectionnée</th>
                             <th scope="col">Utilisateur SSH</th>
                             <th scope="col">Mot de passe SSH</th>
-                            <th scope="col">Port SSH</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -282,24 +238,36 @@
             </table>
         </div>
 
+        <?php
+        if (PHP_OS_FAMILY === 'Windows') {
+            $ipOBC = isset($_SESSION['ipOBC']) ? $_SESSION['ipOBC'] : '';
+        }
+        $userOBC = isset($_SESSION['userOBC']) ? $_SESSION['userOBC'] : '';
+        $mdpOBC = isset($_SESSION['mdpOBC']) ? $_SESSION['mdpOBC'] : '';
+        ?>
+
         <form method="post" class="mx-auto p-5 rounded" action="../SSHcommands.php" id="deploiement">
-            <?php
-            if (PHP_OS_FAMILY === 'Windows') { ?>
-                <label for="selectedLabels" class="form-label row">Entrez les informations de connexion au MN (l'OBC) :</label>
-                <label for="selectedLabels" class="form-label">Entrez l'IP du MN :</label>
-                <input type="text" class="form-control" name="ipOBC" id="ipOBC" aria-describedby="codeHelp" placeholder="Entrez manuellement l'ip du MN" required>
-                <label for="selectedLabels" class="form-label">Entrez l'utilisateur SSH du MN :</label>
-                <input type="text" class="form-control" name="userOBC" id="userOBC" aria-describedby="codeHelp" placeholder="Entrez l'utilisateur SSH du MN" required>
-                <label for="selectedLabels" class="form-label">Entrez le mot de passe SSH du MN :</label>
-                <input type="text" class="form-control" name="mdpOBC" id="mdpOBC" aria-describedby="codeHelp" placeholder="Entrez le mot de passe SSH du MN" required>
+            <label for="selectedLabels" class="form-label row">Entrez les informations de connexion au MN (l'OBC) :</label>
+            <?php if (PHP_OS_FAMILY === 'Windows') { ?>
+            <label for="selectedLabels" class="form-label">Entrez l'IP du MN :</label>
+            <input type="text" class="form-control" name="ipOBC" id="ipOBC" aria-describedby="codeHelp" placeholder="Entrez manuellement l'ip du MN" value="<?php echo $ipOBC; ?>" required>
+            <label for="selectedLabels" class="form-label">Entrez l'utilisateur SSH du MN :</label>
+            <input type="text" class="form-control" name="userOBC" id="userOBC" aria-describedby="codeHelp" placeholder="Entrez l'utilisateur SSH du MN" value="<?php echo $userOBC; ?>" required>
+            <label for="selectedLabels" class="form-label">Entrez le mot de passe SSH du MN :</label>
+            <input type="text" class="form-control" name="mdpOBC" id="mdpOBC" aria-describedby="codeHelp" placeholder="Entrez le mot de passe SSH du MN" value="<?php echo $mdpOBC; ?>" required>
+            <?php } else { ?>
+            <label for="selectedLabels" class="form-label">Entrez l'utilisateur local du MN :</label>
+            <input type="text" class="form-control" name="userOBC" id="userOBC" aria-describedby="codeHelp" placeholder="Entrez l'utilisateur local du MN" value="<?php echo $userOBC; ?>" required>
+            <label for="selectedLabels" class="form-label">Entrez le mot de passe local du MN :</label>
+            <input type="text" class="form-control" name="mdpOBC" id="mdpOBC" aria-describedby="codeHelp" placeholder="Entrez le mot de passe local du MN" value="<?php echo $mdpOBC; ?>" required>
             <?php } ?>
             <label for="selectedLabels" class="form-label">Choix des éléments à déployer :</label>
             <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
                 <input type="checkbox" class="btn-check" id="btncheck1" name="CNoplStack" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck1">CN - OpenPOWERLINK stack</label>
+                <label class="btn btn-outline-success" for="btncheck1">CN - OpenPOWERLINK stack et application</label>
 
                 <input type="checkbox" class="btn-check" id="btncheck2" name="CNappParam" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck2">CN - Paramètres d'application</label>
+                <label class="btn btn-outline-success" for="btncheck2">CN - Paramètres d'application et compilation</label>
 
                 <input type="checkbox" class="btn-check" id="btncheck3" name="CNcsvPhysiques" autocomplete="off">
                 <label class="btn btn-outline-success" for="btncheck3">CN - Fichiers CSV physiques</label>
@@ -308,16 +276,17 @@
                 <label class="btn btn-outline-success" for="btncheck4">CN - Fichiers CSV communs</label>
 
                 <input type="checkbox" class="btn-check" id="btncheck5" name="MNoplStack" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck5">MN - OpenPOWERLINK stack</label>
+                <label class="btn btn-outline-success" for="btncheck5">MN - OpenPOWERLINK stack et application</label>
 
                 <input type="checkbox" class="btn-check" id="btncheck6" name="MNappParam" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck6">MN - Paramètres d'application</label>
+                <label class="btn btn-outline-success" for="btncheck6">MN - Paramètres d'application et compilation</label>
 
                 <input type="checkbox" class="btn-check" id="btncheck7" name="MNcsvCommuns" autocomplete="off">
                 <label class="btn btn-outline-success" for="btncheck7">MN - Fichiers CSV communs</label>
             </div>
             <button type="submit" class="btn btn-success" name="btnValue" value="deployer" id="deployer" disabled>Déployer</button>
         </form>
+
 
         <script>
         var ligneIndex = document.getElementById('ligneIndex');
@@ -326,14 +295,12 @@
         var ip = document.getElementById('ip');
         var user = document.getElementById('user');
         var mdp = document.getElementById('mdp');
-        var port = document.getElementById('port');
 
 
         btnModif.disabled = true;
         ip.disabled = true;
         user.disabled = true;
         mdp.disabled = true;
-        port.disabled = true;
 
         // Attacher l'événement click pour sélectionner une ligne du tableau
         document.addEventListener('click', function(event) {
@@ -349,7 +316,6 @@
                 ip.value = selectedRow.children[2].textContent;
                 user.value = selectedRow.children[3].textContent;
                 mdp.value = selectedRow.children[4].textContent;
-                port.value = selectedRow.children[5].textContent;
 
                 // Vérifier si la ligne est déjà active
                 const isActive = selectedRow.classList.contains("table-active");
@@ -362,7 +328,6 @@
                     ip.disabled = true;
                     user.disabled = true;
                     mdp.disabled = true;
-                    port.disabled = true;
                 });
 
                 // Si la ligne n'est pas déjà active, l'activer, sinon la désactiver
@@ -372,7 +337,6 @@
                     ip.disabled = false;
                     user.disabled = false;
                     mdp.disabled = false;
-                    port.disabled = false;
 
                 }
 

@@ -5,7 +5,6 @@ $ligneIndex = $_POST['ligneIndex'];
 $ipSSH = $_POST['ip'];
 $userSSH = $_POST['utilisateur'];
 $mdpSSH = $_POST['motDePasse'];
-$portSSH = $_POST['port'];
 
 session_start();
 
@@ -97,18 +96,18 @@ switch($btnValue) {
             $nomsCNs = explode('|', $nomCartes); 
             if(!file_exists($deploiementCSV)) {
                 $handle = fopen($deploiementCSV, 'w');
-                fputcsv($handle, ['Nom config', 'Numéro carte', 'Nom Carte', 'IP', 'Utilisateur SSH', 'Mot de passe SSH', 'Port SSH'], ';');
+                fputcsv($handle, ['Nom config', 'Numéro carte', 'Nom Carte', 'IP', 'Utilisateur SSH', 'Mot de passe SSH'], ';');
                 for($i = 0; $i < $nbCartes; $i++) {
                     $numCarte = "CN" . ($i+1);
-                    fputcsv($handle, [$nomConfig, $numCarte, $nomsCNs[$i],'#','#','#','#'], ';');
-                    $csvData[] = [$numCarte, $nomsCNs[$i],'#','#','#','#'];
+                    fputcsv($handle, [$nomConfig, $numCarte, $nomsCNs[$i],'#','#','#'], ';');
+                    $csvData[] = [$numCarte, $nomsCNs[$i],'#','#','#'];
                 }
             }
             else {
                 $handle = fopen($deploiementCSV, 'r');
                 fgetcsv($handle, 1000, ";");
                 while (($line = fgetcsv($handle, 1000, ";")) !== false) {
-                    $csvData[] = [$line[1], $line[2], $line[3], $line[4], $line[5], $line[6]];
+                    $csvData[] = [$line[1], $line[2], $line[3], $line[4], $line[5]];
                 }
             }
             $_SESSION['nbCartes'] = $nbCartes;
@@ -126,7 +125,7 @@ switch($btnValue) {
         break;
     case 'modif':
         if (!empty($_SESSION['nomConfig']) && isset($ligneIndex) && isset($ipSSH) 
-            && isset($userSSH) && isset($mdpSSH) && isset($portSSH)) {
+            && isset($userSSH) && isset($mdpSSH)) {
             $handle = fopen($deploiementCSV, 'r');
             while (($line = fgetcsv($handle, 1000, ";")) !== false) {
                 $csvData[] = $line;
@@ -137,7 +136,6 @@ switch($btnValue) {
             $currentConfig[3] = $ipSSH;
             $currentConfig[4] = $userSSH;
             $currentConfig[5] = $mdpSSH;
-            $currentConfig[6] = $portSSH;
 
             $csvData[$ligneIndex+1] = $currentConfig; // Mettre à jour la ligne dans le tableau
             // Réécrire le fichier CSV avec les nouvelles données
@@ -156,7 +154,7 @@ switch($btnValue) {
             $handle = fopen($deploiementCSV, 'r');
             fgetcsv($handle, 1000, ";");
             while (($line = fgetcsv($handle, 1000, ";")) !== false) {
-                $csvData[] = [$line[1], $line[2], $line[3], $line[4], $line[5], $line[6]];
+                $csvData[] = [$line[1], $line[2], $line[3], $line[4], $line[5]];
             }
             $_SESSION['csvDataDeploiement']= $csvData;
         }
