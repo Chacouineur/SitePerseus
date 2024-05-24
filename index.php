@@ -167,6 +167,22 @@
                         Cette valeur peut être contraint d'être activée qu'à partir d'un certain temps et/ou seulement si d'autres vannes
                         de la même carte sont activées.
                         </p>
+                        <p>La quatrième colonne "Timer dépendance" correspond au chronomètre (en secondes double précision) qui se lance 
+                        lorsque tous les dépendances de la cinquième colonne sont déclanchées (sont passées à leurs valeurs de la troisième colonne).
+                        Si aucune dépendance n'est indiquée pour une vanne, le timer de cette vanne démarre directement au passage de ce
+                        fichier CSV d'état général.
+                        </p>
+                        <p>Enfin la cinquième colonne correspond à la liste des dépendances d'une vanne sur d'autres vannes de la même carte.
+                        C'est à dire que cette vanne ne se déclanche (ou démarre le timer) uniquement si toutes les vannes dont elle dépend 
+                        sont déclanchées (sont passées à leurs valeurs de la troisième colonne). 
+                        </p>
+                        <img src="Images/creerFichierCSVPourquoi1.png" alt="Image" height="376" width="800"> 
+                        <p>Par exemple ici, on définit trois vannes, VCE, VPr0 et VMA sur la carte A. On remarque qu VMA dépend de VCE et VPr0 
+                        c'est à dire que réellement, VMA ne démarrera sont timer qu'après que celui de VPr0 soit fini soit 1,2 secondes après, 
+                        enfin VMA se déclanchera à la fin de sont timer soit 3,5 secondes après.
+                        VCE ici se déclanche instantanement dès le changement de fichier CSV d'état général et donc ne bloque pas 
+                        le déclanchement de VMA.
+                        </p>
                     </div>
                     <div id="item-3-2">
                         <h5>Comment ?</h5>
