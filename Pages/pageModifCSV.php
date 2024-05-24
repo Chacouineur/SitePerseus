@@ -3,7 +3,6 @@
     $page = "../pages.css";
     require '../header.inc.php';
     include '../rechercheConfig.php';
-    include '../rechercheCSV.php';
     
     session_start();
     unset($_SESSION['csvFileName']);

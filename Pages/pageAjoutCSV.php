@@ -3,7 +3,7 @@
     $page = "../pageAjoutCSV.css";
     require '../header.inc.php';
     session_start();
-    include '../afficher.php';
+    include '../tabDatas.php';
     include '../rechercheConfig.php';
     unset($_SESSION['csvName']);
     unset($_SESSION['csvDataDeploiement']);

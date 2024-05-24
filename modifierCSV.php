@@ -1,6 +1,6 @@
 <?php
 include 'rechercheCSV.php';
-include 'afficher.php';
+include 'tabDatas.php';
 session_start();
 unset($_SESSION['fileType']);
 $btnValue = $_POST['btnValue'];
