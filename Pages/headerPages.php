@@ -12,7 +12,7 @@
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item ">
-                            <a class="nav-link" href="pageAjoutConfig.php" style="font-weight: bold;">Ajouter Config</a>
+                            <a class="nav-link" href="pageAjoutConfig.php">Ajouter Config</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="pageModifCSV.php" >Modifier Fichiers</a>

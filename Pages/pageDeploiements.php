@@ -110,6 +110,12 @@
                 case isset($_GET['erreurSFTPConn']):
                     echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur de connexion SFTP sur une des cartes CAC !</div>";
                     break;
+                case isset($_GET['erreurOBCProgramRestart']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du redémarrage du programme OpenPOWERLINK MN !</div>";
+                    break;
+                case isset($_GET['erreurCACProgramRestart']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du redémarrage d'un programme OpenPOWERLINK CN !</div>";
+                    break;
                 case isset($_GET['erreurCopieCSVCommuns']):
                     echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie des fichiers CSV communs sur le MN !</div>";
                     break;

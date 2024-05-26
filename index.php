@@ -265,6 +265,7 @@
                         </ul>
                         <p>Attention ne cochez pas OpenPOWERLINK stack et application sans cocher les autres car tout les précédents fichiers CSV sur les cartes CAC seront supprimés.
                         Le programme OpenPOWERLINK ne peut pas fonctionner sans aucun fichiers CSV.
+                        S'il y a eu une erreur lors du déploiement, une erreur s'affichera en rouge sur la page Déploiements.
                         </p>
                     </div>
                     <div id="item-6-2">

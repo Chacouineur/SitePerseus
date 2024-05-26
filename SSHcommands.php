@@ -128,6 +128,17 @@ if(!empty($csvData))
             compileOplApp($sshConn, $bashScriptPath, $errGet);
 
             echo 'appParamMN ' . $CSVcommuns . ' réussi<br>';
+        } 
+        else
+        {
+            try {
+                $ret = $sshConn->exec('sudo service OBCProgram restart');
+            } catch (Exception $e) {
+                ob_get_clean();
+                error_log('General error: ' . $e->getMessage());
+                header('Location: Pages/pageDeploiements.php?erreurOBCProgramRestart');
+                exit;
+            }
         }
 
         if($MNcsvCommuns === 'on')
@@ -172,7 +183,6 @@ if(!empty($csvData))
         //Copie des fichiers local OBC MN et compilation
         if($MNappParam === 'on')
         {
-            //exit;
             $fichierMnobd = __DIR__ . '/FichiersDeploiement/output_'.$nbCartes.'CNs/mnobd.cdc';
             echo $fichierMnobd . '<br>';
             $destMnobd = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/common/openCONFIGURATOR_projects/Demo_3CN/output/mnobd.cdc';
@@ -201,6 +211,14 @@ if(!empty($csvData))
                 exit;
             }
         }
+        else
+        {
+            if(!system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'sudo service OBCProgram restart'"))
+            {
+                header('Location: Pages/pageDeploiements.php?erreurOBCProgramRestart');
+                exit;
+            }
+        }
 
         if($MNcsvCommuns === 'on')
         {
@@ -217,111 +235,125 @@ if(!empty($csvData))
         }
     }
 
-    foreach($csvData as $index => $data)
+    if($CNoplStack === 'on' || $CNappParam === 'on' || $CNcsvPhysiques === 'on' || $CNcsvCommuns === 'on')
     {
-        $sshConn = new SSH2($data[2]); // $data[2] --> ip
-        try {
-            $sshConn->login($data[3], $data[4]);
-        } catch (Exception $e) {
-            ob_get_clean();
-            error_log('General error: ' . $e->getMessage());
-            header('Location: Pages/pageDeploiements.php?erreurSSHConn');
-            exit;
-        }
-
-        $sftpConn = new SFTP($data[2]);
-        try {
-            $sftpConn->login($data[3], $data[4]);
-        } catch (Exception $e) {
-            error_log('General error: ' . $e->getMessage());
-            header('Location: Pages/pageDeploiements.php?erreurSFTPConn');
-            exit;
-        }
-        
-        $sftpConn->disableDatePreservation();
-        $sshConn->setTimeout(1000);
-
-        if($CNoplStack === 'on')
+        foreach($csvData as $index => $data)
         {
-            $dirToCompress = '';
-            $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/' . $versionApp . '/openPOWERLINK_V2_CAC_CN.zip';
-            $remoteCompressedFilePath = '/home/'.$data[3].'/openPOWERLINK_V2_CAC.zip';
-            $remoteDecompressedDest = '/home/'.$data[3].'/';
-            $remoteDirPath = $remoteDecompressedDest . 'openPOWERLINK_V2_CAC';
-            $errGet1 = 'Location: Pages/pageDeploiements.php?erreurOPLStackCreerZip';
-            $errGet2 = 'Location: Pages/pageDeploiements.php?erreurOPLStackZipIntrouvable';
-            $errGet3 = 'Location: Pages/pageDeploiements.php?erreurOPLStackTeleversement';
-            $errGet4 = 'Location: Pages/pageDeploiements.php?erreurOPLStackExtraction';
+            $sshConn = new SSH2($data[2]); // $data[2] --> ip
+            try {
+                $sshConn->login($data[3], $data[4]);
+            } catch (Exception $e) {
+                ob_get_clean();
+                error_log('General error: ' . $e->getMessage());
+                header('Location: Pages/pageDeploiements.php?erreurSSHConn');
+                exit;
+            }
+
+            $sftpConn = new SFTP($data[2]);
+            try {
+                $sftpConn->login($data[3], $data[4]);
+            } catch (Exception $e) {
+                error_log('General error: ' . $e->getMessage());
+                header('Location: Pages/pageDeploiements.php?erreurSFTPConn');
+                exit;
+            }
             
-            compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
-                                    $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
-                                    $errGet1,$errGet2,$errGet3,$errGet4);
+            $sftpConn->disableDatePreservation();
+            $sshConn->setTimeout(1000);
 
-            echo 'oplStack ' . $oplStack . ' réussi<br>';
-        }
-        
-        if($CNappParam === 'on')
-        {
-            // Correct path for the local file
-            $dirToCompress = '';
-            $localCompressedFilePath = $configDir . '/physicalCSV_CN'.($index+1).'/nodeId.h';
-            $remoteCompressedFilePath = '/home/'.$data[3].'/nodeId.h';
-            $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/CAC_CN/include/';
-            $remoteDirPath = $remoteDecompressedDest . 'nodeId.h';                
-            $errGet1 = 'Location: Pages/pageDeploiements.php?erreurNodeIdCreerZip';
-            $errGet2 = 'Location: Pages/pageDeploiements.php?erreurNodeIdZipIntrouvable';
-            $errGet3 = 'Location: Pages/pageDeploiements.php?erreurNodeIdTeleversement';
-            $errGet4 = 'Location: Pages/pageDeploiements.php?erreurNodeIdCopie';
+            if($CNoplStack === 'on')
+            {
+                $dirToCompress = '';
+                $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/' . $versionApp . '/openPOWERLINK_V2_CAC_CN.zip';
+                $remoteCompressedFilePath = '/home/'.$data[3].'/openPOWERLINK_V2_CAC.zip';
+                $remoteDecompressedDest = '/home/'.$data[3].'/';
+                $remoteDirPath = $remoteDecompressedDest . 'openPOWERLINK_V2_CAC';
+                $errGet1 = 'Location: Pages/pageDeploiements.php?erreurOPLStackCreerZip';
+                $errGet2 = 'Location: Pages/pageDeploiements.php?erreurOPLStackZipIntrouvable';
+                $errGet3 = 'Location: Pages/pageDeploiements.php?erreurOPLStackTeleversement';
+                $errGet4 = 'Location: Pages/pageDeploiements.php?erreurOPLStackExtraction';
+                
+                compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                        $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
+                                        $errGet1,$errGet2,$errGet3,$errGet4);
+
+                echo 'oplStack ' . $oplStack . ' réussi<br>';
+            }
             
-            compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
-                                    $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
-                                    $errGet1,$errGet2,$errGet3,$errGet4);
+            if($CNappParam === 'on')
+            {
+                // Correct path for the local file
+                $dirToCompress = '';
+                $localCompressedFilePath = $configDir . '/physicalCSV_CN'.($index+1).'/nodeId.h';
+                $remoteCompressedFilePath = '/home/'.$data[3].'/nodeId.h';
+                $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/CAC_CN/include/';
+                $remoteDirPath = $remoteDecompressedDest . 'nodeId.h';                
+                $errGet1 = 'Location: Pages/pageDeploiements.php?erreurNodeIdCreerZip';
+                $errGet2 = 'Location: Pages/pageDeploiements.php?erreurNodeIdZipIntrouvable';
+                $errGet3 = 'Location: Pages/pageDeploiements.php?erreurNodeIdTeleversement';
+                $errGet4 = 'Location: Pages/pageDeploiements.php?erreurNodeIdCopie';
+                
+                compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                        $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
+                                        $errGet1,$errGet2,$errGet3,$errGet4);
 
-            $bashScriptPath = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/compileAppScript.sh';
-            $errGet = 'Location: Pages/pageDeploiements.php?erreurCompileCN';
-            compileOplApp($sshConn, $bashScriptPath, $errGet);
+                $bashScriptPath = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/compileAppScript.sh';
+                $errGet = 'Location: Pages/pageDeploiements.php?erreurCompileCN';
+                compileOplApp($sshConn, $bashScriptPath, $errGet);
 
-            echo 'appCAC ' . $appCAC . ' réussi<br>';
-        }
-        
-        if($CNcsvPhysiques === 'on')
-        {
-            // Correct path for the local file
-            $dirToCompress = $configDir . '/physicalCSV_CN'.($index+1).'/physicalCONFIG';
-            $localCompressedFilePath = $dirToCompress . '.zip';
-            $remoteCompressedFilePath = '/home/'.$data[3].'/physicalCONFIG.zip';
-            $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/CAC_CN/include/';
-            $remoteDirPath = $remoteDecompressedDest . 'physicalCONFIG';                
-            $errGet1 = 'Location: Pages/pageDeploiements.php?erreurCSVphysiquesCreerZip';
-            $errGet2 = 'Location: Pages/pageDeploiements.php?erreurCSVphysiquesZipIntrouvable';
-            $errGet3 = 'Location: Pages/pageDeploiements.php?erreurCSVphysiquesTeleversement';
-            $errGet4 = 'Location: Pages/pageDeploiements.php?erreurCSVphysiquesExtraction';
+                echo 'appCAC ' . $appCAC . ' réussi<br>';
+            }
+            else
+            {
+                try {
+                    $ret = $sshConn->exec('sudo service CACProgram restart');
+                } catch (Exception $e) {
+                    ob_get_clean();
+                    error_log('General error: ' . $e->getMessage());
+                    header('Location: Pages/pageDeploiements.php?erreurCACProgramRestart');
+                    exit;
+                }
+            }
             
-            compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
-                                    $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
-                                    $errGet1,$errGet2,$errGet3,$errGet4);
+            if($CNcsvPhysiques === 'on')
+            {
+                // Correct path for the local file
+                $dirToCompress = $configDir . '/physicalCSV_CN'.($index+1).'/physicalCONFIG';
+                $localCompressedFilePath = $dirToCompress . '.zip';
+                $remoteCompressedFilePath = '/home/'.$data[3].'/physicalCONFIG.zip';
+                $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/CAC_CN/include/';
+                $remoteDirPath = $remoteDecompressedDest . 'physicalCONFIG';                
+                $errGet1 = 'Location: Pages/pageDeploiements.php?erreurCSVphysiquesCreerZip';
+                $errGet2 = 'Location: Pages/pageDeploiements.php?erreurCSVphysiquesZipIntrouvable';
+                $errGet3 = 'Location: Pages/pageDeploiements.php?erreurCSVphysiquesTeleversement';
+                $errGet4 = 'Location: Pages/pageDeploiements.php?erreurCSVphysiquesExtraction';
+                
+                compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                        $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
+                                        $errGet1,$errGet2,$errGet3,$errGet4);
 
-            echo 'CSVphysiques ' . $CSVphysiques . ' réussi<br>';
-        }
-        
-        if($CNcsvCommuns === 'on')
-        {
-            // Correct path for the local file
-            $dirToCompress = $configDir . '/commonCSVFiles';
-            $localCompressedFilePath = $dirToCompress . '.zip';
-            $remoteCompressedFilePath = '/home/'.$data[3].'/commonCSVFiles.zip';
-            $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/common/';
-            $remoteDirPath = $remoteDecompressedDest . 'commonCSVFiles';
-            $errGet1 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsCreerZip';
-            $errGet2 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsZipIntrouvable';
-            $errGet3 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsTeleversement';
-            $errGet4 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsExtraction';
+                echo 'CSVphysiques ' . $CSVphysiques . ' réussi<br>';
+            }
+            
+            if($CNcsvCommuns === 'on')
+            {
+                // Correct path for the local file
+                $dirToCompress = $configDir . '/commonCSVFiles';
+                $localCompressedFilePath = $dirToCompress . '.zip';
+                $remoteCompressedFilePath = '/home/'.$data[3].'/commonCSVFiles.zip';
+                $remoteDecompressedDest = '/home/'.$data[3].'/openPOWERLINK_V2_CAC/apps/common/';
+                $remoteDirPath = $remoteDecompressedDest . 'commonCSVFiles';
+                $errGet1 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsCreerZip';
+                $errGet2 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsZipIntrouvable';
+                $errGet3 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsTeleversement';
+                $errGet4 = 'Location: Pages/pageDeploiements.php?erreurCSVcommunsExtraction';
 
-            compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
-                                    $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
-                                    $errGet1,$errGet2,$errGet3,$errGet4);
+                compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompressedFilePath,
+                                        $remoteCompressedFilePath,$remoteDecompressedDest,$remoteDirPath,
+                                        $errGet1,$errGet2,$errGet3,$errGet4);
 
-            echo 'CSVcommuns ' . $CSVcommuns . ' réussi<br>';
+                echo 'CSVcommuns ' . $CSVcommuns . ' réussi<br>';
+            }
         }
     }
 }  
@@ -343,7 +375,10 @@ function compressSendDecompress($sftpConn, $sshConn, $dirToCompress, $localCompr
     }
 
     // Attempt to upload the file
-    if (!$sftpConn->put($remoteCompressedFilePath, $localCompressedFilePath, SFTP::SOURCE_LOCAL_FILE)) {
+    try {
+        $sftpConn->put($remoteCompressedFilePath, $localCompressedFilePath, SFTP::SOURCE_LOCAL_FILE);
+    } catch (Exception $e) {
+        error_log('General error: ' . $e->getMessage());
         header($errGet3);
         exit;
     }
