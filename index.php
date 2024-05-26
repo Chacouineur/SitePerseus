@@ -159,6 +159,10 @@
                         d'un ordre EG (état général) envoyé du MN à toutes les cartes CAC (à tous les CNs).
                         Pour créer un CSV d'état général il faut d'abord associer le code EG (état général) au nom du fichier CSV
                         pour que le programme OpenPOWERLINK ce mette à lire le fichier CSV correspondant à l'ordre EG qu'il a reçu.
+                        <b>
+                        Important : pour ne pas confondre les code EG avec les codes hexadécimaux de statuts et d'erreurs du programme OpenPOWERLINK, 
+                        Les codes EG doivent être compris entre 0x1000 et 0x6FFF (ou en décimal entre 4096 et 28671).
+                        </b>
                         De la même façon que pour le fichier "activation.csv", les paramètres des vannes de chaques carte CAC sont
                         mis les uns après les autres de façon cyclique.
                         Par exemple les vannes d'une deuxième carte B seront 13 lignes après celles d'une première carte A.
@@ -179,7 +183,7 @@
                         <img src="Images/creerFichierCSVPourquoi1.png" alt="Image" height="376" width="800"> 
                         <p>Par exemple ici, on définit trois vannes, VCE, VPr0 et VMA sur la carte A. On remarque qu VMA dépend de VCE et VPr0 
                         c'est à dire que réellement, VMA ne démarrera sont timer qu'après que celui de VPr0 soit fini soit 1,2 secondes après, 
-                        enfin VMA se déclanchera à la fin de sont timer soit 3,5 secondes après.
+                        enfin VMA se déclanchera à la fin de son timer soit 3,5 secondes après.
                         VCE ici se déclanche instantanement dès le changement de fichier CSV d'état général et donc ne bloque pas 
                         le déclanchement de VMA.
                         </p>
@@ -194,7 +198,13 @@
                     </div>
                     <div id="item-4-1">
                         <h5>Pourquoi ?</h5>
-                        <p></p>
+                        <p>Les fichiers CSV d'états généraux ne sont pas indispensables au bon fonctionnement du programme CAC,
+                        bien que sans ces fichiers la seule utilité du programme sera de transmettre les valeurs des capteurs
+                        des cartes CAC au MN.
+                        De ce fait il est possible de créer ou de supprimer autant de fichiers CSV d'états généraux que l'on veut
+                        à la limite de 24 575 fichiers CSV.
+                        En revanche la suppression d'un fichier CSV d'état général est irréversible.
+                        </p>
                     </div>
                     <div id="item-4-2">
                         <h5>Comment ?</h5>
@@ -206,7 +216,11 @@
                     </div>
                     <div id="item-5-1">
                         <h5>Pourquoi ?</h5>
-                        <p></p>
+                        <p>Les configurations de ce site web de configuration du programme OpenPOWERLINK n'ont pas de lien avec le programme
+                        et sont présents uniquement pour regrouper les fichiers CSV à déployer.
+                        Les configurations peuvent donc être supprimées ou créées sans limite. En revanche la suppression d'une configuration est
+                        irréversible.
+                        </p>
                     </div>
                     <div id="item-5-2">
                         <h5>Comment ?</h5>
@@ -214,11 +228,44 @@
                     </div>
                     <div id="item-6">
                         <h4>Déploiements</h4>
-                        <p></p>
                     </div>
                     <div id="item-6-1">
                         <h5>Pourquoi ?</h5>
-                        <p></p>
+                        <p>Lorsque tous les fichiers CSV d'une configuration ont été configurés, il faut pouvoir les envoyer sur les cartes CAC et au MN.
+                        Cette page sert donc de liaison entre ce site web de configuration et le programme OpenPOWERLINK des cartes CAC et du MN.
+                        Sur la page déploiement il faut d'abord renseigner les information de connexion aux cartes CAC et au MN.
+                        </p>
+                        <p>
+                        Cette page est differente si le site web est hebergé sur la Raspberry Pi CM4 du MN ou sur un PC sous Windows connecté sur le réseau local
+                        des cartes CAC.
+                        Sur la Raspberry Pi CM4 du MN, on peut analyser le réseau local à l'aide de arp-scan et de avahi resolve, deux commandes uniquement
+                        disponible sur un OS Linux. Toutes les Raspberry Pi CM4 intègre par défaut un daemon avahi qui, quand on l'intérroge depuis le réseau local
+                        nous renvoie le nom d'hôte de la Raspberry Pi CM4 et donc nous permet de confirmer que l'addresse IP correspond bien à telle ou telle carte CAC.
+                        De plus le site web étant hebergé sur le MN, pour le déploiement des fichiers sur le MN, il suffit de copier directement les fichiers du site
+                        vers la localisation du logiciel OpenPOWERLINK au lieu de passer par une connexion SSH.
+                        En revanche il faut bien penser à fixer des hostnames compréhensibles au préalable sur les cartes CAC (voir tutoriel 
+                        "Procédure de préparation des RPi CM4 pour CAC et OBC" de la NT : NT_Ryan_Maël_CAC_2023_2024).
+                        </p>
+                        <p>Sur un PC sous Windows, tout doit être entré manuellement que ce soit l'IP des cartes CAC et du MN. Il est donc nécessaire de bien
+                        connaître les relations entre toutes les IPs et les cartes CAC avant de déployer.
+                        </p>
+                        <ul>Pour la partie déploiement, après avoir entré toutes les renseignements de connexion SSH des cartes, il y a plusieurs choix de déploiement :
+                        <li>
+                        Cochez tout si c'est le premier déploiement que vous voulez faire ou si vous voulez changer de version de l'application OpenPOWERLINK.
+                        </li>
+                        <li>
+                        Cochez "paramètres d'application et compilation" <b>pour le MN et le CN</b> si vous avez changé le nombre de cartes entre deux téléversements.
+                        </li>
+                        <li>
+                        Cochez "fichiers CSV physiques" si vous voulez changer les fichiers CSV de configuration physique des capteurs et des vannes de toutes les cartes CAC.
+                        </li>
+                        <li>
+                        Cochez "fichiers CSV communs" <b>pour le MN et le CN</b> si vous avez changé "activation.csv" ou si vous avez créé ou modifié un ou des fichiers CSV d'états généraux.
+                        </li>
+                        </ul>
+                        <p>Attention ne cochez pas OpenPOWERLINK stack et application sans cocher les autres car tout les précédents fichiers CSV sur les cartes CAC seront supprimés.
+                        Le programme OpenPOWERLINK ne peut pas fonctionner sans aucun fichiers CSV.
+                        </p>
                     </div>
                     <div id="item-6-2">
                         <h5>Comment ?</h5>

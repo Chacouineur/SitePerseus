@@ -3,6 +3,7 @@
     $page = "../pages.css";
     require '../header.inc.php';
     include '../rechercheConfig.php';
+    include '../rechercheVersionApp.php';
     session_start();    
     unset($_SESSION['csvName']);
     unset($_SESSION['csvData']);
@@ -19,6 +20,7 @@
     $ips = !empty($_SESSION['ips']) ? $_SESSION['ips'] : [];
     $csvData = !empty($_SESSION['csvDataDeploiement']) ? $_SESSION['csvDataDeploiement'] : [];
     $configName = !empty($_SESSION['configName']) ? $_SESSION['configName'] : [];
+    $versionAppSel = !empty($_SESSION['versionApp']) ? $_SESSION['versionApp'] : [];
     
     $btnValue = $_POST['btnValue'];
 
@@ -89,124 +91,175 @@
             <input type="hidden" class="form-control" placeholder="ligneIndex" name="ligneIndex" id="ligneIndex">
             <button type="submit" class="btn btn-primary" name="btnValue" value="modif" id="modif" disabled>Modifier Ligne</button>
             <?php
-                switch(true) {
-                    case isset($_GET['erreurPasDeConfigSel']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, pas de configuration sélectionnée !</div>";
-                        break;
-                    case isset($_GET['erreurNoIpFound']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, pas d'IP trouvées sur le réseau local !</div>";
-                        break;
-                    case isset($_GET['erreurFichierConfigurationCSVmanquant']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier CSV 'configurations.csv' n'existe pas !</div>";
-                        break;
-                    case isset($_GET['erreurConfigurationCSV']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier CSV 'configurations.csv' n'est pas conforme, éléments illisibles !</div>";
-                        break;
-                    case isset($_GET['erreurDeploiementCSVecriture']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier CSV 'deploiement.csv' de la configuration n'est pas accessible en écriture !</div>";
-                        break;
-                    case isset($_GET['erreurChampsNonRemplis']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, tous les champs ne sont pas remplis !</div>";
-                        break;
-                    case isset($_GET['erreurMnobdCreerZip']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour Mnobd !</div>";
-                        break;
-                    case isset($_GET['erreurmnobdZipIntrouvable']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour Mnobd est introuvable !</div>";
-                        break;
-                    case isset($_GET['erreurmnobdTeleversement']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour Mnobd !</div>";
-                        break;
-                    case isset($_GET['erreurmnobdCopie']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier ZIP pour Mnobd !</div>";
-                        break;
-                    case isset($_GET['erreurNbNodesCreerZip']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour NbNodes !</div>";
-                        break;
-                    case isset($_GET['erreurNbNodesZipIntrouvable']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour NbNodes est introuvable !</div>";
-                        break;
-                    case isset($_GET['erreurNbNodesTeleversement']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour NbNodes !</div>";
-                        break;
-                    case isset($_GET['erreurNbNodesCopie']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier ZIP pour NbNodes !</div>";
-                        break;
-                    case isset($_GET['erreurOPLStackCreerZip']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour le stack OpenPOWERLINK !</div>";
-                        break;
-                    case isset($_GET['erreurOPLStackZipIntrouvable']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour le stack OpenPOWERLINK est introuvable !</div>";
-                        break;
-                    case isset($_GET['erreurOPLStackTeleversement']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour le stack OpenPOWERLINK !</div>";
-                        break;
-                    case isset($_GET['erreurOPLStackExtraction']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour le stack OpenPOWERLINK !</div>";
-                        break;
-                    case isset($_GET['erreurAppCACCreerZip']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour l'application des CAC !</div>";
-                        break;
-                    case isset($_GET['erreurAppCACZipIntrouvable']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour l'application des CAC est introuvable !</div>";
-                        break;
-                    case isset($_GET['erreurAppCACTeleversement']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour l'application des CAC !</div>";
-                        break;
-                    case isset($_GET['erreurAppCACExtraction']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour l'application des CAC !</div>";
-                        break;
-                    case isset($_GET['erreurNodeIdCreerZip']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour NodeId !</div>";
-                        break;
-                    case isset($_GET['erreurNodeIdZipIntrouvable']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour NodeId est introuvable !</div>";
-                        break;
-                    case isset($_GET['erreurNodeIdTeleversement']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour NodeId !</div>";
-                        break;
-                    case isset($_GET['erreurNodeIdCopie']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier NodeId !</div>";
-                        break;
-                    case isset($_GET['erreurCSVphysiquesCreerZip']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour les CSV physiques !</div>";
-                        break;
-                    case isset($_GET['erreurCSVphysiquesZipIntrouvable']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour les CSV physiques est introuvable !</div>";
-                        break;
-                    case isset($_GET['erreurCSVphysiquesTeleversement']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour les CSV physiques !</div>";
-                        break;
-                    case isset($_GET['erreurCSVphysiquesExtraction']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour les CSV physiques !</div>";
-                        break;
-                    case isset($_GET['erreurCSVcommunsCreerZip']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour les CSV communs !</div>";
-                        break;
-                    case isset($_GET['erreurCSVcommunsZipIntrouvable']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour les CSV communs est introuvable !</div>";
-                        break;
-                    case isset($_GET['erreurCSVcommunsTeleversement']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour les CSV communs !</div>";
-                        break;
-                    case isset($_GET['erreurCSVcommunsExtraction']):
-                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour les CSV communs !</div>";
-                        break;
-                    case isset($_GET['reseauAnalyse']):
-                        echo "<div class=\"alert alert-success\" role=\"alert\">Réseau analysé, les IPs peuvent être séléctionnées.</div>";
-                        break;
-                    case isset($_GET['tableauRempli']):
-                        echo "<div class=\"alert alert-success\" role=\"alert\">Tableau du déploiement affiché.</div>";
-                        break;
-                    case isset($_GET['reussiteModif']):
-                        echo "<div class=\"alert alert-success\" role=\"alert\">Ligne modifiée.</div>";
-                        break;
-                    case isset($_GET['deploiementReussi']):
-                        echo "<div class=\"alert alert-success\" role=\"alert\">Déploiement sur toutes les cartes réussi.</div>";
-                        break;
-                    default:
-                        break;
-                }
+            switch(true) {
+                case isset($_GET['erreurPasDeConfigSel']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, pas de configuration sélectionnée !</div>";
+                    break;
+                case isset($_GET['erreurNoIpFound']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, pas d'IP trouvées sur le réseau local !</div>";
+                    break;
+                case isset($_GET['erreurSSHConnMN']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur de connexion SSH sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurSFTPConnMN']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur de connexion SFTP sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurSSHConn']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur de connexion SSH sur une des cartes CAC !</div>";
+                    break;
+                case isset($_GET['erreurSFTPConn']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur de connexion SFTP sur une des cartes CAC !</div>";
+                    break;
+                case isset($_GET['erreurCopieCSVCommuns']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie des fichiers CSV communs sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurCompileMN']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la compilation du MN !</div>";
+                    break;
+                case isset($_GET['erreurCopieNbNodes']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie des fichiers NbNodes sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurCopieMnobd']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie des fichiers Mnobd sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurExtractOplStackMN']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du stack OpenPOWERLINK sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurCSVcommunsMNCreerZip']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour les CSV communs sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurCSVcommunsMNZipIntrouvable']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour les CSV communs sur le MN est introuvable !</div>";
+                    break;
+                case isset($_GET['erreurCSVcommunsMNTeleversement']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour les CSV communs sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurCSVcommunsMNExtraction']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour les CSV communs sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurMnobdCreerZip']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour Mnobd sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurmnobdZipIntrouvable']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour Mnobd est introuvable sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurmnobdTeleversement']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour Mnobd sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurmnobdCopie']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier ZIP pour Mnobd sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurOPLStackMNCreerZip']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour le stack OpenPOWERLINK sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurOPLStackMNZipIntrouvable']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour le stack OpenPOWERLINK sur le MN est introuvable !</div>";
+                    break;
+                case isset($_GET['erreurOPLStackMNTeleversement']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour le stack OpenPOWERLINK sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurOPLStackMNExtraction']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour le stack OpenPOWERLINK sur le MN !</div>";
+                    break;
+                case isset($_GET['erreurFichierConfigurationCSVmanquant']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier CSV 'configurations.csv' n'existe pas !</div>";
+                    break;
+                case isset($_GET['erreurConfigurationCSV']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier CSV 'configurations.csv' n'est pas conforme, éléments illisibles !</div>";
+                    break;
+                case isset($_GET['erreurDeploiementCSVecriture']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier CSV 'deploiement.csv' de la configuration n'est pas accessible en écriture !</div>";
+                    break;
+                case isset($_GET['erreurChampsNonRemplis']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, tous les champs ne sont pas remplis !</div>";
+                    break;
+                case isset($_GET['erreurNbNodesCreerZip']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour NbNodes !</div>";
+                    break;
+                case isset($_GET['erreurNbNodesZipIntrouvable']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour NbNodes est introuvable !</div>";
+                    break;
+                case isset($_GET['erreurNbNodesTeleversement']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour NbNodes !</div>";
+                    break;
+                case isset($_GET['erreurNbNodesCopie']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier ZIP pour NbNodes !</div>";
+                    break;
+                case isset($_GET['erreurOPLStackCreerZip']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour le stack OpenPOWERLINK !</div>";
+                    break;
+                case isset($_GET['erreurOPLStackZipIntrouvable']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour le stack OpenPOWERLINK est introuvable !</div>";
+                    break;
+                case isset($_GET['erreurOPLStackTeleversement']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour le stack OpenPOWERLINK !</div>";
+                    break;
+                case isset($_GET['erreurOPLStackExtraction']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour le stack OpenPOWERLINK !</div>";
+                    break;
+                case isset($_GET['erreurAppCACCreerZip']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour l'application des CAC !</div>";
+                    break;
+                case isset($_GET['erreurAppCACZipIntrouvable']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour l'application des CAC est introuvable !</div>";
+                    break;
+                case isset($_GET['erreurAppCACTeleversement']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour l'application des CAC !</div>";
+                    break;
+                case isset($_GET['erreurAppCACExtraction']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour l'application des CAC !</div>";
+                    break;
+                case isset($_GET['erreurNodeIdCreerZip']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour NodeId !</div>";
+                    break;
+                case isset($_GET['erreurNodeIdZipIntrouvable']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour NodeId est introuvable !</div>";
+                    break;
+                case isset($_GET['erreurNodeIdTeleversement']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour NodeId !</div>";
+                    break;
+                case isset($_GET['erreurNodeIdCopie']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la copie du fichier NodeId !</div>";
+                    break;
+                case isset($_GET['erreurCSVphysiquesCreerZip']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour les CSV physiques !</div>";
+                    break;
+                case isset($_GET['erreurCSVphysiquesZipIntrouvable']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour les CSV physiques est introuvable !</div>";
+                    break;
+                case isset($_GET['erreurCSVphysiquesTeleversement']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour les CSV physiques !</div>";
+                    break;
+                case isset($_GET['erreurCSVphysiquesExtraction']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour les CSV physiques !</div>";
+                    break;
+                case isset($_GET['erreurCSVcommunsCreerZip']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de la création du fichier ZIP pour les CSV communs !</div>";
+                    break;
+                case isset($_GET['erreurCSVcommunsZipIntrouvable']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le fichier ZIP pour les CSV communs est introuvable !</div>";
+                    break;
+                case isset($_GET['erreurCSVcommunsTeleversement']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors du téléversement du fichier ZIP pour les CSV communs !</div>";
+                    break;
+                case isset($_GET['erreurCSVcommunsExtraction']):
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur lors de l'extraction du fichier ZIP pour les CSV communs !</div>";
+                    break;
+                case isset($_GET['reseauAnalyse']):
+                    echo "<div class=\"alert alert-success\" role=\"alert\">Réseau analysé, les IPs peuvent être sélectionnées.</div>";
+                    break;
+                case isset($_GET['tableauRempli']):
+                    echo "<div class=\"alert alert-success\" role=\"alert\">Tableau du déploiement affiché.</div>";
+                    break;
+                case isset($_GET['reussiteModif']):
+                    echo "<div class=\"alert alert-success\" role=\"alert\">Ligne modifiée.</div>";
+                    break;
+                case isset($_GET['deploiementReussi']):
+                    echo "<div class=\"alert alert-success\" role=\"alert\">Déploiement sur toutes les cartes réussi.</div>";
+                    break;
+                default:
+                    break;
+            }
             ?>
         </form>
         <div id="tableContainer">
@@ -261,8 +314,30 @@
             <label for="selectedLabels" class="form-label">Entrez le mot de passe local du MN :</label>
             <input type="text" class="form-control" name="mdpOBC" id="mdpOBC" aria-describedby="codeHelp" placeholder="Entrez le mot de passe local du MN" value="<?php echo $mdpOBC; ?>" required>
             <?php } ?>
+            <label for="selectedLabels" class="form-label">Choix de la version de l'application OpenPOWERLINK :</label>
+            <select class="form-select" name="versionApp" id="versionApp" placeholder="Selectionnez une version"required>
+                <?php
+                if (!empty($foldersApp)) {
+                    foreach ($foldersApp as $versionApp) {
+                        $selected = ($versionApp == $versionAppSel) ? 'selected' : '';   // Si le fichier correspond à $csvName, marquez-le comme sélectionné
+                        echo "<option value=\"$versionApp\" $selected>$versionApp</option>";
+                    }
+                }else{
+                    echo "<option value=\"\">Veuillez ajouter openPOWERLINK_V2_CAC_CN.zip et openPOWERLINK_V2_CAC_MN.zip dans « FichiersDeploiement/versionsApp/'version'/ » </option>";
+                }
+                ?>
+            </select>
             <label for="selectedLabels" class="form-label">Choix des éléments à déployer :</label>
             <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <input type="checkbox" class="btn-check" id="btncheck5" name="MNoplStack" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck5">MN - OpenPOWERLINK stack et application</label>
+
+                <input type="checkbox" class="btn-check" id="btncheck6" name="MNappParam" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck6">MN - Paramètres d'application et compilation</label>
+
+                <input type="checkbox" class="btn-check" id="btncheck7" name="MNcsvCommuns" autocomplete="off">
+                <label class="btn btn-outline-success" for="btncheck7">MN - Fichiers CSV communs</label>
+
                 <input type="checkbox" class="btn-check" id="btncheck1" name="CNoplStack" autocomplete="off">
                 <label class="btn btn-outline-success" for="btncheck1">CN - OpenPOWERLINK stack et application</label>
 
@@ -275,14 +350,6 @@
                 <input type="checkbox" class="btn-check" id="btncheck4" name="CNcsvCommuns" autocomplete="off">
                 <label class="btn btn-outline-success" for="btncheck4">CN - Fichiers CSV communs</label>
 
-                <input type="checkbox" class="btn-check" id="btncheck5" name="MNoplStack" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck5">MN - OpenPOWERLINK stack et application</label>
-
-                <input type="checkbox" class="btn-check" id="btncheck6" name="MNappParam" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck6">MN - Paramètres d'application et compilation</label>
-
-                <input type="checkbox" class="btn-check" id="btncheck7" name="MNcsvCommuns" autocomplete="off">
-                <label class="btn btn-outline-success" for="btncheck7">MN - Fichiers CSV communs</label>
             </div>
             <button type="submit" class="btn btn-success" name="btnValue" value="deployer" id="deployer" disabled>Déployer</button>
         </form>
@@ -369,14 +436,18 @@
                 const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
                 let allCellsFilled = true;
 
-                Array.from(rows).forEach(row => {
-                    const cells = row.getElementsByTagName('td');
-                    Array.from(cells).forEach(cell => {
-                        if (cell.textContent.trim() === '' || cell.textContent.trim() === '#') {
-                            allCellsFilled = false;
-                        }
+                if (rows.length === 0) {
+                    allCellsFilled = false;
+                } else {
+                    Array.from(rows).forEach(row => {
+                        const cells = row.getElementsByTagName('td');
+                        Array.from(cells).forEach(cell => {
+                            if (cell.textContent.trim() === '' || cell.textContent.trim() === '#') {
+                                allCellsFilled = false;
+                            }
+                        });
                     });
-                });
+                }
 
                 deployButton.disabled = !allCellsFilled;
             }
@@ -389,6 +460,56 @@
             table.addEventListener('click', checkTableCells);
         });
 
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const btncheck1 = document.getElementById('btncheck1');
+            const btncheck2 = document.getElementById('btncheck2');
+            const btncheck3 = document.getElementById('btncheck3');
+            const btncheck4 = document.getElementById('btncheck4');
+            const btncheck5 = document.getElementById('btncheck5');
+            const btncheck6 = document.getElementById('btncheck6');
+            const btncheck7 = document.getElementById('btncheck7');
+
+            const syncCheckboxes = (checkbox1, checkbox2) => {
+                checkbox1.addEventListener('change', () => {
+                    checkbox2.checked = checkbox1.checked;
+                });
+
+                checkbox2.addEventListener('change', () => {
+                    checkbox1.checked = checkbox2.checked;
+                });
+            };
+
+            syncCheckboxes(btncheck1, btncheck5);
+            syncCheckboxes(btncheck2, btncheck6);
+            syncCheckboxes(btncheck4, btncheck7);
+
+            const checkboxes = document.querySelectorAll('.btn-check');
+            const deployButton = document.getElementById('deployer');
+
+            const updateAllCheckboxes = (checked) => {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = checked;
+                });
+            };
+
+            const toggleAllCheckboxes = (event) => {
+                const isChecked = event.target.checked;
+                updateAllCheckboxes(isChecked);
+                deployButton.disabled = !Array.from(checkboxes).some(cb => cb.checked);
+            };
+
+            btncheck1.addEventListener('change', toggleAllCheckboxes);
+            btncheck5.addEventListener('change', toggleAllCheckboxes);
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    deployButton.disabled = !Array.from(checkboxes).some(cb => cb.checked);
+                });
+            });
+
+            deployButton.disabled = !Array.from(checkboxes).some(cb => cb.checked);
+        });
+        
     </script>
     </main>
 </body>
