@@ -175,6 +175,7 @@
                         lorsque tous les dépendances de la cinquième colonne sont déclanchées (sont passées à leurs valeurs de la troisième colonne).
                         Si aucune dépendance n'est indiquée pour une vanne, le timer de cette vanne démarre directement au passage de ce
                         fichier CSV d'état général.
+                        Si vous mettez la 0 en timer, le 0 sera remplacé par un '#' dans le fichier CSV. Le programme OpenPOWERLINK intéprète un '#' en tant que 0.
                         </p>
                         <p>Enfin la cinquième colonne correspond à la liste des dépendances d'une vanne sur d'autres vannes de la même carte.
                         C'est à dire que cette vanne ne se déclanche (ou démarre le timer) uniquement si toutes les vannes dont elle dépend 
