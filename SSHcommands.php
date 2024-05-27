@@ -48,7 +48,6 @@ $configDir = __DIR__ . "/Configurations/" . $configName . "/";
 if(!empty($csvData))
 {
     ini_set('max_execution_time', 1000);
-
     if (PHP_OS_FAMILY === 'Windows') {
         if($MNoplStack === 'on' || $MNappParam === 'on' || $MNcsvCommuns === 'on')
         {
@@ -357,7 +356,12 @@ if(!empty($csvData))
             }
         }
     }
-}  
+}
+else
+{
+    header('Location: Pages/pageDeploiements.php?tableauVide');
+    exit;
+}
 header('Location: Pages/pageDeploiements.php?deploiementReussi');
 exit;
 

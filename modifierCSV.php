@@ -62,7 +62,7 @@ if (!empty($btnValue)) {
             }
             $lines = file($filePath, FILE_IGNORE_NEW_LINES);
             if ($lines === false) {
-                exit("Impossible de lire le fichier CSV.");
+                echo "Impossible de lire le fichier CSV.";
             }
 
             $csvData = [];
@@ -136,7 +136,7 @@ if (!empty($btnValue)) {
                     $_SESSION['csvData2'] = $csvData;
                 }    
             }else{
-                die("Fichier introuvable!");
+                echo "Fichier introuvable!";
             }
             break;
 
@@ -173,7 +173,8 @@ if (!empty($btnValue)) {
                     
                     $monFichier = fopen($filePath, "r+");
                     if (!$monFichier) {
-                        die("Impossible d'ouvrir le fichier $filePath pour écriture.");
+                        echo "Impossible d'ouvrir le fichier $filePath pour écriture.";
+                        exit;
                     }
             
                     foreach ($csvData as $ligne) {
@@ -183,7 +184,8 @@ if (!empty($btnValue)) {
                         }, $ligne);
             
                         if (fputcsv($monFichier, $ligne, ';') === false) {
-                            die("Erreur lors de l'écriture dans le fichier $filePath.");
+                            echo "Erreur lors de l'écriture dans le fichier $filePath.";
+                            exit;
                         }
                     }
                     fclose($monFichier);
@@ -213,7 +215,8 @@ if (!empty($btnValue)) {
                     
                     $monFichier = fopen($filePath, "r+");
                     if (!$monFichier) {
-                        die("Impossible d'ouvrir le fichier $filePath pour écriture.");
+                        echo "Impossible d'ouvrir le fichier $filePath pour écriture.";
+                        exit;
                     }
             
                     foreach ($csvData as $ligne) {
@@ -223,7 +226,8 @@ if (!empty($btnValue)) {
                         }, $ligne);
             
                         if (fputcsv($monFichier, $ligne, ';') === false) {
-                            die("Erreur lors de l'écriture dans le fichier $filePath.");
+                            echo "Erreur lors de l'écriture dans le fichier $filePath.";
+                            exit;
                         }
                     }
                     fclose($monFichier);
@@ -251,7 +255,8 @@ if (!empty($btnValue)) {
                     
                     $monFichier = fopen($filePath, "r+");
                     if (!$monFichier) {
-                        die("Impossible d'ouvrir le fichier $filePath pour écriture.");
+                        echo "Impossible d'ouvrir le fichier $filePath pour écriture.";
+                        exit;
                     }
             
                     foreach ($csvData as $ligne) {
@@ -261,7 +266,8 @@ if (!empty($btnValue)) {
                         }, $ligne);
             
                         if (fputcsv($monFichier, $ligne, ';') === false) {
-                            die("Erreur lors de l'écriture dans le fichier $filePath.");
+                            echo "Erreur lors de l'écriture dans le fichier $filePath.";
+                            exit;
                         }
                     }
                     fclose($monFichier);

@@ -131,9 +131,28 @@
 
                     </form>
                     
-                <?php } ?>
+                <?php } 
+                switch(true) {
+                    case isset($_GET['erreurPasDeConfigSel']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, pas de configuration sélectionnée !</div>";
+                        break;
+                    case isset($_GET['tableauVide']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, le tableau de déploiement est vide !</div>";
+                        break;
+                    case isset($_GET['erreurNoIpFound']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur, pas d'IP trouvées sur le réseau local !</div>";
+                        break;
+                    case isset($_GET['erreurSSHConnMN']):
+                        echo "<div class=\"alert alert-danger\" role=\"alert\">Erreur de connexion SSH sur le MN !</div>";
+                        break;
+                    default:
+                    break;
+                }
+                
+                ?>
+
             </div>
-            <div class="col" id='colForulaire' >
+            <div class="col" id='colFormulaire' >
             <?php if($fileName == [] && $csvData == []){?>
                     <h4>Aucun fichier fichier n est choisi ! Veuillez choisir un fichier a afficher.</h5><?php
                 }else{
