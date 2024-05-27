@@ -22,7 +22,8 @@ if (!empty($btnValue)) {
             unset($_SESSION['fileName']);
             $statesFiles = getCSVState($config);
             $_SESSION['statesFile'] = $statesFiles;
-
+            echo "Config = ".$configName ."<br>";
+            
             $boards = getBoard($config);
             $_SESSION['boards'] = $boards;
 
@@ -70,8 +71,7 @@ if (!empty($btnValue)) {
             break;
         case 'modifState':
             $filePath = __DIR__ . "/Configurations/" . $configName . "/commonCSVFiles/stateCSV/" . $csvFileName;
-            echo "Config = ".$configName ."<br>";
-            echo "FileName = ".$csvFileName;
+            
             if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
                 $carte = $_POST['carte'];
                 $vannesEtat = $_POST['vannesEtat'];
