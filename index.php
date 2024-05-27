@@ -282,8 +282,11 @@
         Vous utilisez actuellement la version Windows du site de configuration,
         vous pouvez mettre le site sur la carte Linux du MN pour plus de fonctionnalités. (voir NT du site)
     </footer>
-    <?php }?>
-    <?php 
+    <?php } else { ?>
+    <footer>
+        Vous utilisez actuellement la version Linux du site de configuration.
+    </footer> 
+    <?php }
         unset($_SESSION['csvData']);
         unset($_SESSION['csvFileName']);
         unset($_SESSION['csvName']);
