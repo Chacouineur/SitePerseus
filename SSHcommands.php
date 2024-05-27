@@ -77,7 +77,7 @@ if(!empty($csvData))
         if($MNoplStack === 'on')
         {
             $dirToCompress = '';
-            $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/' . $versionApp . '/openPOWERLINK_V2_CAC_MN.zip';
+            $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/versionsApp/' . $versionApp . '/openPOWERLINK_V2_CAC_MN.zip';
             $remoteCompressedFilePath = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC.zip';
             $remoteDecompressedDest = './';
             $remoteDirPath = $remoteDecompressedDest . 'openPOWERLINK_V2_CAC';
@@ -164,16 +164,14 @@ if(!empty($csvData))
     else {
         if($MNoplStack === 'on')
         {
-            echo $nbCartes . '<br>';
             $dirToCompress = '';
-            $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/' . $versionApp . '/openPOWERLINK_V2_CAC_MN.zip';
+            $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/versionsApp/' . $versionApp . '/openPOWERLINK_V2_CAC_MN.zip';
             $remoteDecompressedDest = '/home/'.$userOBC.'/';
             $remoteDirPath = $remoteDecompressedDest . 'openPOWERLINK_V2_CAC';
-            $ret = system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'rm -R " . $remoteDirPath . "'");
-            $ret = system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'unzip -q -o " . $localCompressedFilePath . " -d " . $remoteDecompressedDest . "'");
-            $ret = system('echo $?');
-            $ret = trim($ret);
-            if($ret !== '0')
+            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'rm -R " . $remoteDirPath . "'", $ret1);
+            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'unzip -q -o " . $localCompressedFilePath . " -d " . $remoteDecompressedDest . "'", $ret2);
+
+            if($ret2 !== 0)
             {
                 header('Location: Pages/pageDeploiements.php?erreurExtractOplStackMN');
                 exit;
@@ -184,12 +182,11 @@ if(!empty($csvData))
         if($MNappParam === 'on')
         {
             $fichierMnobd = __DIR__ . '/FichiersDeploiement/output_'.$nbCartes.'CNs/mnobd.cdc';
-            echo $fichierMnobd . '<br>';
             $destMnobd = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/common/openCONFIGURATOR_projects/Demo_3CN/output/mnobd.cdc';
-            echo $destMnobd . '<br>';
             
-            $ret = system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'rm -R " . $destMnobd . "'");
-            if(!system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'cp " . $fichierMnobd . " " . $destMnobd . "'"))
+            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'rm -R " . $destMnobd . "'", $ret1);
+            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'cp " . $fichierMnobd . " " . $destMnobd . "'", $ret2);
+            if($ret2 !== 0)
             {
                 header('Location: Pages/pageDeploiements.php?erreurCopieMnobd');
                 exit;
@@ -197,15 +194,17 @@ if(!empty($csvData))
 
             $fichierNbNodes = $configDir."nbNodes.h";
             $destNbNodes = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/OBC_MN/include/nbNodes.h';
-            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'rm -R " . $destNbNodes . "'");
-            if(!system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'cp " . $fichierNbNodes . " " . $destNbNodes . "'"))
+            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'rm -R " . $destNbNodes . "'", $ret1);
+            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'cp " . $fichierNbNodes . " " . $destNbNodes . "'", $ret2);
+            if($ret2 !== 0)
             {
                 header('Location: Pages/pageDeploiements.php?erreurCopieNbNodes');
                 exit;
             }
 
             $bashScriptPath = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/compileAppScript.sh';
-            if(!system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c \"screen -S compileAppOpl -dm /bin/bash -c 'bash " . $bashScriptPath . "'\""))
+            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c \"screen -S compileAppOpl -dm /bin/bash -c 'bash " . $bashScriptPath . "'\"",$ret);
+            if($ret !== 0)
             {
                 header('Location: Pages/pageDeploiements.php?erreurCompileMN');
                 exit;
@@ -213,7 +212,8 @@ if(!empty($csvData))
         }
         else
         {
-            if(!system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'sudo service OBCProgram restart'"))
+            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'sudo service OBCProgram restart'",$ret);
+            if($ret !== 0)
             {
                 header('Location: Pages/pageDeploiements.php?erreurOBCProgramRestart');
                 exit;
@@ -226,8 +226,9 @@ if(!empty($csvData))
             $dircsvCommun = $configDir . '/commonCSVFiles';
             $remoteDecompressedDest = '/home/'.$userOBC.'/openPOWERLINK_V2_CAC/apps/common/';
             $remoteDirPath = $remoteDecompressedDest . 'commonCSVFiles';
-            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'rm -R " . $remoteDirPath . "'");
-            if(!system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'cp -r " . $remoteDirPath . " " . $remoteDecompressedDest . "'"))
+            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'rm -R " . $remoteDirPath . "'", $ret1);
+            system("echo '" . $mdpOBC . "' | su - " . $userOBC . " -c 'cp -r " . $dircsvCommun . " " . $remoteDecompressedDest . "'", $ret2);
+            if($ret2 !== 0)
             {
                 header('Location: Pages/pageDeploiements.php?erreurCopieCSVCommuns');
                 exit;
@@ -264,7 +265,7 @@ if(!empty($csvData))
             if($CNoplStack === 'on')
             {
                 $dirToCompress = '';
-                $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/' . $versionApp . '/openPOWERLINK_V2_CAC_CN.zip';
+                $localCompressedFilePath = __DIR__ . '/FichiersDeploiement/versionsApp/' . $versionApp . '/openPOWERLINK_V2_CAC_CN.zip';
                 $remoteCompressedFilePath = '/home/'.$data[3].'/openPOWERLINK_V2_CAC.zip';
                 $remoteDecompressedDest = '/home/'.$data[3].'/';
                 $remoteDirPath = $remoteDecompressedDest . 'openPOWERLINK_V2_CAC';

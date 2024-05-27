@@ -1,20 +1,22 @@
 <?php
 include 'rechercheCSV.php';
 include 'tabDatas.php';
+
+echo "test <br>";
 session_start();
+echo "test2 <br>";
 unset($_SESSION['fileType']);
 $btnValue = $_POST['btnValue'];
 $config = $_POST['config'];
-
+echo "test3 <br>";
 $boards = !empty($_SESSION['boards']) ? $_SESSION['boards'] : [];
 $configName = !empty($_SESSION['configName2']) ? $_SESSION['configName2'] : [];
-
+echo "test4 <br>";
 $csvFileName = !empty($_SESSION['fileName']) ? $_SESSION['fileName'] : [];
-
+echo "test5 <br>";
 $csvData = $_SESSION['csvData2'];
-$valvesPath = getCSVValves($card, $board, $config);
-$sensorsPath = getCSVSensors($card, $board, $config);
 
+echo "btnValue".$btnValue."<br>";
 // Vérifiez si le fichier existe avant de tenter de le supprimer
 if (!empty($btnValue)) {
     switch ($btnValue) {
@@ -22,7 +24,7 @@ if (!empty($btnValue)) {
             unset($_SESSION['fileName']);
             $statesFiles = getCSVState($config);
             $_SESSION['statesFile'] = $statesFiles;
-            echo "Config = ".$configName ."<br>";
+            echo "Config = ".$config ."<br>";
             foreach($statesFiles as $statesFile){
                 echo "StateFile = ".$statesFile ."<br>";
             }
@@ -35,8 +37,8 @@ if (!empty($btnValue)) {
             $_SESSION['configName2'] = $config;
 
             session_write_close();
-            // header('Location: Pages/pageModifCSV.php');
-            // exit();
+            header('Location: Pages/pageModifCSV.php');
+            exit();
             break;
         case 'afficher':
             $fileEG = $_POST['FileEG'];
@@ -271,8 +273,8 @@ if (!empty($btnValue)) {
             break;
     }
     session_write_close();
-    // header('Location: Pages/pageModifCSV.php');
-    // exit();
+    header('Location: Pages/pageModifCSV.php');
+    exit();
 } else {
     echo "Le fichier n'existe pas et/ou aucun bouton n'a été appuyé";
 }
