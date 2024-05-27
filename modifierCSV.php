@@ -70,7 +70,8 @@ if (!empty($btnValue)) {
             break;
         case 'modifState':
             $filePath = __DIR__ . "/Configurations/" . $configName . "/commonCSVFiles/stateCSV/" . $csvFileName;
-
+            echo "Config = ".$configName ."<br>";
+            echo "FileName = ".$csvFileName;
             if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
                 $carte = $_POST['carte'];
                 $vannesEtat = $_POST['vannesEtat'];
@@ -96,33 +97,43 @@ if (!empty($btnValue)) {
                 }
 
                 if ($numLigne && ($numLigne - 1) % 13 == 0) {
+                    // Vérifier si le nom de la carte de la ligne précédente est "OFFSET"
                     if ($csvData[$numLigne - 1][0] === "OFFSET") {
+                        // Utiliser le nom de la carte de la ligne suivante
                         $carte = $csvData[$numLigne + 1][0];
                     }
+                    // Ne modifie pas la ligne
                 } else {
+                    // Ignorer la modification du champ "Carte"
                     $ligne = [$carte, $vannesEtat, $valeur, $timeDep, $concatenatedString];
                     $csvData[$numLigne] = $ligne;
                     $csvData[0] = ["Carte", "Vannes/Etat", "Valeur", "Timer dependance", "Dependance vannes"];
                     $csvData[1] = ["OFFSET", "EG", "#", "#", "#"];
-                    
+                
                     $monFichier = fopen($filePath, "w");
+                
                     if (!$monFichier) {
-                        die("Impossible d'ouvrir le fichier $filePath pour écriture.");
+                        header('Location: Pages/pageModifCSV.php?erreurOuverture');
+                        exit();
                     }
-
+                
                     foreach ($csvData as $ligne) {
                         if (fputcsv($monFichier, $ligne, ';') === false) {
-                            die("Erreur lors de l'écriture dans le fichier $filePath.");
+                            header('Location: Pages/pageModifCSV.php?erreurEcriture');
+                            exit();
                         }
                     }
+                
                     fclose($monFichier);
                     $csvData = tabData($csvFileName, $configName);
                     $_SESSION['csvData2'] = $csvData;
-                }
+                }    
             }else{
                 die("Fichier introuvable!");
             }
             break;
+
+
             case "modifSensor":
                 $filePath = getCSVSensors($csvFileName, $boards, $configName);
                 
