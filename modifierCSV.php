@@ -23,15 +23,20 @@ if (!empty($btnValue)) {
             $statesFiles = getCSVState($config);
             $_SESSION['statesFile'] = $statesFiles;
             echo "Config = ".$configName ."<br>";
-            
+            foreach($statesFiles as $statesFile){
+                echo "StateFile = ".$statesFile ."<br>";
+            }
             $boards = getBoard($config);
+            foreach($boards as $board){
+                echo "Board = ".$board ."<br>";
+            }
             $_SESSION['boards'] = $boards;
 
             $_SESSION['configName2'] = $config;
 
             session_write_close();
-            header('Location: Pages/pageModifCSV.php');
-            exit();
+            // header('Location: Pages/pageModifCSV.php');
+            // exit();
             break;
         case 'afficher':
             $fileEG = $_POST['FileEG'];
@@ -266,8 +271,8 @@ if (!empty($btnValue)) {
             break;
     }
     session_write_close();
-    header('Location: Pages/pageModifCSV.php');
-    exit();
+    // header('Location: Pages/pageModifCSV.php');
+    // exit();
 } else {
     echo "Le fichier n'existe pas et/ou aucun bouton n'a été appuyé";
 }
