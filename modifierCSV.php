@@ -2,21 +2,20 @@
 include 'rechercheCSV.php';
 include 'tabDatas.php';
 
-echo "test <br>";
+
 session_start();
-echo "test2 <br>";
+
 unset($_SESSION['fileType']);
 $btnValue = $_POST['btnValue'];
 $config = $_POST['config'];
-echo "test3 <br>";
+;
 $boards = !empty($_SESSION['boards']) ? $_SESSION['boards'] : [];
 $configName = !empty($_SESSION['configName2']) ? $_SESSION['configName2'] : [];
-echo "test4 <br>";
+
 $csvFileName = !empty($_SESSION['fileName']) ? $_SESSION['fileName'] : [];
-echo "test5 <br>";
+
 $csvData = $_SESSION['csvData2'];
 
-echo "btnValue".$btnValue."<br>";
 // Vérifiez si le fichier existe avant de tenter de le supprimer
 if (!empty($btnValue)) {
     switch ($btnValue) {
@@ -143,7 +142,7 @@ if (!empty($btnValue)) {
 
             case "modifSensor":
                 $filePath = getCSVSensors($csvFileName, $boards, $configName);
-                
+
                 if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
                     $carte = $_POST['carte'];
                     $capteur = $_POST['capteur'];
@@ -155,34 +154,45 @@ if (!empty($btnValue)) {
                     $modbusDataBits = $_POST['modbusDataBits'];
                     $modbusStopBits = $_POST['modbusStopBits'];
                     $numLigne = $_POST['ligneIndex'];
-            
+
                     $carte = empty($carte) ? '#' : $carte;
                     $capteur = empty($capteur) ? '#' : $capteur;
                     $type = empty($type) ? '#' : $type;
-                    $modbusRemoteSlaveAdress = $modbusRemoteSlaveAdress==='' ? '#' : $modbusRemoteSlaveAdress;
-                    $modbusStartAdress = $modbusStartAdress==='' ? '#' : $modbusStartAdress;
+                    $modbusRemoteSlaveAdress = $modbusRemoteSlaveAdress === '' ? '#' : $modbusRemoteSlaveAdress;
+                    $modbusStartAdress = $modbusStartAdress === '' ? '#' : $modbusStartAdress;
                     $modbusBaudRate = empty($modbusBaudRate) ? '#' : $modbusBaudRate;
                     $modbusParity = empty($modbusParity) ? '#' : $modbusParity;
                     $modbusDataBits = empty($modbusDataBits) ? '#' : $modbusDataBits;
                     $modbusStopBits = empty($modbusStopBits) ? '#' : $modbusStopBits;
-                    
-            
+
                     $ligne = [$carte, $capteur, $type, $modbusRemoteSlaveAdress, $modbusStartAdress, $modbusBaudRate, $modbusParity, $modbusDataBits, $modbusStopBits];
+                    
+                    // Lire le fichier CSV existant dans un tableau
+                    $csvData = [];
+                    if (($handle = fopen($filePath, 'r')) !== FALSE) {
+                        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+                            $csvData[] = $data;
+                        }
+                        fclose($handle);
+                    }
+
                     $csvData[$numLigne] = $ligne;                 
                     $csvData[0] = ["Carte", "Capteur", "Type", "Modbus remote slave address", "Modbus start address", "Modbus baud rate", "Modbus parity", "Modbus Data bits", "Modbus Stop bit"];
-                    
-                    $monFichier = fopen($filePath, "r+");
+
+                    // Ouvrir le fichier pour l'écriture
+                    $monFichier = fopen($filePath, "w");
                     if (!$monFichier) {
                         echo "Impossible d'ouvrir le fichier $filePath pour écriture.";
                         exit;
                     }
-            
+
+                    // Écrire les données dans le fichier CSV
                     foreach ($csvData as $ligne) {
                         // Nettoyage des sauts de ligne indésirables
                         $ligne = array_map(function($field) {
                             return str_replace(["\n", "\r"], '', $field);
                         }, $ligne);
-            
+
                         if (fputcsv($monFichier, $ligne, ';') === false) {
                             echo "Erreur lors de l'écriture dans le fichier $filePath.";
                             exit;
@@ -192,39 +202,136 @@ if (!empty($btnValue)) {
                     $csvData = tabDataPhysical($filePath);
                     $_SESSION['csvData2'] = $csvData;
                     $_SESSION['fileType'] = 'sensor';
+
+                    // Lecture du fichier activation.csv afin de mettre ces valeurs dans un tableau $data[]
+                    $pathActivationCSV = __DIR__ . "/Configurations/" . $configName . "/commonCSVFiles/activation.csv";
+                    if (($handle = fopen($pathActivationCSV, "r")) !== FALSE) {
+                        // Initialiser un tableau pour stocker les données
+                        $data = [];
+                        
+                        // Lire toutes les lignes du fichier et stocker les données dans le tableau
+                        while (($row = fgetcsv($handle, 1000, ";")) !== FALSE) {
+                            $data[] = $row;
+                        }
+                        
+                        // Fermer le fichier
+                        fclose($handle);
+                        
+                    } else {
+                        header('Location: Pages/pageModifCSV.php');
+                        exit();
+                    }
+                    if (($handle = fopen($filePath, "r")) !== FALSE) {
+                        // Initialiser un tableau pour stocker les données
+                        $dataSensor = [];
+                        
+                        // Lire toutes les lignes du fichier et stocker les données dans le tableau
+                        while (($rowS = fgetcsv($handle, 1000, ";")) !== FALSE) {
+                            if ($rowS[1] !== 'Capteur') {
+                                $dataSensor[] = $rowS;
+                            }
+                        }
+                        
+                        // Fermer le fichier
+                        fclose($handle);
+                        
+                    } else {
+                        header('Location: Pages/pageModifCSV.php');
+                        exit();
+                    }
+                    $indiceCarte = 0;
+                    $nbCartes = 0;
+                    
+                    if (($handleConfig = fopen(__DIR__ . "/configurations.csv", 'r')) !== false) {              
+                        // Parcourir chaque ligne du fichier
+                        while (($line = fgetcsv($handleConfig, 1000, ";")) !== false) {
+                            if ($line[0] === $configName) {
+                                $nbCartes = $line[1];
+                                $cartes = $line[2];
+                            }
+                        }
+                        fclose($handleConfig);
+                    }
+                    
+                    $nomCarte = explode('|', $cartes);
+                    for ($i = 0; $i < $nbCartes; $i++) {
+                        if ($nomCarte[$i] === $carte) {
+                            $indiceCarte = $i;
+                            $nomCard = $nomCarte[$i];
+                        }
+                    }
+                    
+                    for ($i = 0; $i < 12; $i++) {
+                        $indice = $i + 14 + $indiceCarte * 25;
+                        if ($dataSensor[$i][1] !== 'sensor' . ($i + 1)) {
+                            $data[$indice] = [$carte, $dataSensor[$i][1], 1];
+                            foreach ($data[$indice] as $cell) {
+                                echo $cell . " | ";
+                            }
+                            echo "<br>";
+                        }
+                    }
+                    
+                    $handle = fopen($pathActivationCSV, "w");
+
+                    if (!$handle) {
+                        header('Location: Pages/pageModifCSV.php');
+                        exit();
+                    }
+                    foreach ($data as $ligne) {
+                        if (fputcsv($handle, $ligne, ';') === false) {
+                            header('Location: Pages/pageModifCSV.php');
+                            exit();
+                        }
+                    }
+                    fclose($handle);
                 }
                 break;
             case 'modifValve':
                 $filePath = getCSVValves($csvFileName, $boards, $configName);
-                
+
                 if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
                     $carte = $_POST['carte'];
                     $vannesEtat = $_POST['vannesEtat'];
                     $etatInit = $_POST['EtatInit'];
                     $portGPIO = $_POST['portGPIO'];
                     $numLigne = $_POST['ligneIndex'];
-            
+
                     $carte = empty($carte) ? '#' : $carte;
                     $vannesEtat = empty($vannesEtat) ? '#' : $vannesEtat;
-                    $etatInit = $etatInit==='' ? '#' : $etatInit;
-                    $portGPIO = $portGPIO==='' ? '#' : $portGPIO;
-            
+                    $etatInit = $etatInit === '' ? '#' : $etatInit;
+                    $portGPIO = $portGPIO === '' ? '#' : $portGPIO;
+
                     $ligne = [$carte, $vannesEtat, $etatInit, $portGPIO];
                     $csvData[$numLigne] = $ligne;                 
-                    $csvData[0] = ["Carte","Vannes","Etat initial","PORT GPIO"];
-                    
-                    $monFichier = fopen($filePath, "r+");
+                    $csvData[0] = ["Carte", "Vannes", "Etat initial", "PORT GPIO"];
+
+                    // Lire le fichier CSV existant dans un tableau
+                    $csvData = [];
+                    if (($handle = fopen($filePath, 'r')) !== FALSE) {
+                        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+                            $csvData[] = $data;
+                        }
+                        fclose($handle);
+                    }
+
+                    $csvData[$numLigne] = $ligne;                 
+                    $csvData[0] = ["Carte", "Vannes", "Etat initial", "PORT GPIO"];
+
+                    // Ouvrir le fichier pour l'écriture
+                    $monFichier = fopen($filePath, "w");
                     if (!$monFichier) {
                         echo "Impossible d'ouvrir le fichier $filePath pour écriture.";
                         exit;
                     }
-            
+
+                    // Écrire les données dans le fichier CSV
                     foreach ($csvData as $ligne) {
                         // Nettoyage des sauts de ligne indésirables
                         $ligne = array_map(function($field) {
                             return str_replace(["\n", "\r"], '', $field);
                         }, $ligne);
-            
+
                         if (fputcsv($monFichier, $ligne, ';') === false) {
                             echo "Erreur lors de l'écriture dans le fichier $filePath.";
                             exit;
@@ -235,8 +342,9 @@ if (!empty($btnValue)) {
                     $_SESSION['csvData2'] = $csvData;
                     $_SESSION['fileType'] = 'valve';
 
-                    
-                    $pathActivationCSV = __DIR__."/Configurations/".$configName."/commonCSVFiles/activation.csv";
+                    // Lecture du fichier activation.csv afin de mettre ces valeurs dans un tableau $data[]
+                    // Les noms des valves de physicalCONFIG_valves.csv seront ensuite injectés dans la 2e colonne du tableau $data[]
+                    $pathActivationCSV = __DIR__ . "/Configurations/" . $configName . "/commonCSVFiles/activation.csv";
                     if (($handle = fopen($pathActivationCSV, "r")) !== FALSE) {
                         // Initialiser un tableau pour stocker les données
                         $data = [];
@@ -259,7 +367,7 @@ if (!empty($btnValue)) {
                         
                         // Lire toutes les lignes du fichier et stocker les données dans le tableau
                         while (($rowV = fgetcsv($handle, 1000, ";")) !== FALSE) {
-                            if($rowV[1] !== 'Vannes'){
+                            if ($rowV[1] !== 'Vannes') {
                                 $dataValve[] = $rowV;
                             }
                         }
@@ -272,52 +380,50 @@ if (!empty($btnValue)) {
                         exit();
                     }
                     $indiceCarte = 0;
-                    $nbCartes=0;
+                    $nbCartes = 0;
                     
-                    if (($handleConfig = fopen(__DIR__."/configurations.csv", 'r')) !== false) {              
+                    if (($handleConfig = fopen(__DIR__ . "/configurations.csv", 'r')) !== false) {              
                         // Parcourir chaque ligne du fichier
                         while (($line = fgetcsv($handleConfig, 1000, ";")) !== false) {
                             if ($line[0] === $configName) {
-                                $nbCartes = $line[1] ;
+                                $nbCartes = $line[1];
                                 $cartes = $line[2];
                             }
                         }
                         fclose($handleConfig);
                     }
                     
-                    $nomCarte = explode('|',$cartes);
-                    for($i=0;$i<$nbCartes;$i++){
-                        if($nomCarte[$i] === $carte){
+                    $nomCarte = explode('|', $cartes);
+                    for ($i = 0; $i < $nbCartes; $i++) {
+                        if ($nomCarte[$i] === $carte) {
                             $indiceCarte = $i;
                             $nomCard = $nomCarte[$i];
                         }
                     }
                     
-                    for($i=0;$i < 12;$i++){
-                        $indice = $i + 2 +$indiceCarte*25;
-                        if($dataValve[$i][1] !== 'valves'.($i+1)){
-                            $data[$indice] = [$carte,$dataValve[$i][1],1];
+                    for ($i = 0; $i < 12; $i++) {
+                        $indice = $i + 2 + $indiceCarte * 25;
+                        if ($dataValve[$i][1] !== 'valves' . ($i + 1)) {
+                            $data[$indice] = [$carte, $dataValve[$i][1], 1];
                         }
-
                     }
                     
                     $handle = fopen($pathActivationCSV, "w");
-                
+
                     if (!$handle) {
                         header('Location: Pages/pageModifCSV.php');
                         exit();
                     }
                     foreach ($data as $ligne) {
                         if (fputcsv($handle, $ligne, ';') === false) {
-                            header('Location: Pages/pageAjoutCSV.php?erreurEcritureActiv');
+                            header('Location: Pages/pageModifCSV.php');
                             exit();
                         }
                     }
-                
+
                     fclose($handle);
-                
-                
                 }
+
                 break;
             case 'modifActiv':
                 

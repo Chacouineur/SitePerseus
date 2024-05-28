@@ -159,9 +159,13 @@
                     if ($fileType === "sensor") {?>
                         <h4>Le fichier ci dessous correspond a la carte : <?php echo "$fileName"; ?></h5>
                         <form method="post" action="../modifierCSV.php" class="mb-5" id="secondForm">
-                            <input type="hidden" name="carte" id="carte" >
-                            <input type="hidden" name="capteur" id="capteur" >
+                            <input type="hidden"  name="carte" id="carte" >    
+                        
                             <div class="row mb-3">
+                                <div class="col">
+                                    <label for="type" class="form-label">Capteur :</label>
+                                    <input type="text" class="form-control" name="capteur" id="capteur" placeholder="Cliquer sur tableau" disabled>
+                                </div>
                                 <div class="col">
                                     <label for="type" class="form-label">Type :</label>
                                     <select class="form-select" name="type" id="type" disabled>
@@ -178,6 +182,9 @@
                                     <label for="modbusStartAdress" class="form-label">Modbus start address :</label>
                                     <input type="text" class="form-control" name="modbusStartAdress" id="modbusStartAdress" placeholder="Ex: 3" disabled>
                                 </div>
+                                
+                            </div>
+                            <div class="row mb-3">
                                 <div class="col">
                                     <label for="modbusBaudRate" class="form-label">Modbus baud rate :</label>
                                     <select class="form-select" name="modbusBaudRate" id="modbusBaudRate" disabled>
@@ -193,8 +200,6 @@
                                         <option value="230400">230400</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
                                 <div class="col">
                                     <label for="modbusParity" class="form-label">Modbus parity :</label>
                                     <select class="form-select" name="modbusParity" id="modbusParity" disabled>
@@ -475,6 +480,7 @@
                                                         radioBtn0.disabled = false;
                                                         radioBtn1.disabled = false;
                                                     }else if(csvFileName==='sensors'){
+                                                        capteur.disabled = false;
                                                         type.disabled = false;
                                                         modbusRemoteSlaveAdress.disabled = false;
                                                         modbusStartAdress.disabled = false;
@@ -559,6 +565,7 @@
                                                         radioBtn0.disabled = true;
                                                         radioBtn1.disabled = true;
                                                     }else if(csvFileName==='sensors'){
+                                                        capteur.disabled = true;
                                                         type.disabled = true;
                                                         modbusRemoteSlaveAdress.disabled = true;
                                                         modbusStartAdress.disabled = true;

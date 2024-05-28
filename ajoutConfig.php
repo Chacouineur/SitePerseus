@@ -54,12 +54,12 @@ switch($btnValue){
                                 $nomCarte = $nom[$i];
                                 
                                 for ($j = 1; $j <= 12; $j++) {
-                                    $dataActiv = [$nomCarte, "valve$j", "#"];
+                                    $dataActiv = [$nomCarte, "valve$j", "0"];
                                     fputcsv($handle, $dataActiv, ';');
                                 }
 
                                 for ($j = 1; $j <= 12; $j++) {
-                                    $dataActiv = [$nomCarte, "sensor$j", "#"];
+                                    $dataActiv = [$nomCarte, "sensor$j", "0"];
                                     fputcsv($handle, $dataActiv, ';');
                                 }
                                 
@@ -99,7 +99,7 @@ switch($btnValue){
                                 $content[0] = ["Carte","Capteur","Type","Modbus remote slave address","Modbus start address","Modbus baud rate","Modbus parity","Modbus Data bits","Modbus Stop bit"];
                                 fputcsv($handle, $content[0],';');
                                 for ($j = 1; $j < 13; $j++) {
-                                    $content[$j] = [$nom[$i - 1],"sensorCH$j","#","#","#","#","#","#","#"];
+                                    $content[$j] = [$nom[$i - 1],"sensor$j","#","#","#","#","#","#","#"];
                                     fputcsv($handle, $content[$j],';');
                                 }
                                 fclose($handle);
