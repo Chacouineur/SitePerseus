@@ -70,13 +70,11 @@
                 <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-smooth-scroll="true" class="scrollspy-example-2" tabindex="0">
                     <div id="item-1">
                         <h4>Ajouter Config</h4>
-                        <p>
-                        </p>
                     </div>
                     <div id="item-1-1">
                         <h5>Pourquoi ?</h5>
                         <p>Une configuration du site contient tous les fichiers CSV de configuration des cartes CAC de cette façon:</p>
-                        <img src="Images/creerConfigPourquoi1.png" alt="Image" height="512" width="800"> 
+                        <img src="Images/creerConfigPourquoi1.png" alt="Image" class="img-fluid"> 
                         <p>Les configurations contiennent aussi le nom de la configuration, le nombre et le nom des cartes CAC.
                         Il est possible de faire autant de configurations que l'on veut avec un nombre maximal de 239 cartes CAC 
                         (bien que pour l'instant ce nombre est limité à 15 cartes en raison du manque de configurations générés 
@@ -92,17 +90,16 @@
                         <p>Pour créer une configuration, il faut ajouter un nom ainsi que le nombre de carte voulu dans la configuration.</p>
                         <img src="Images/creerConfig1.png" alt="Image" height="177" width="400"> 
                         <p>Appuyez ensuite sur le bouton "Créer Tableau". Ce bouton permet de d'obtenir un tableau contenant les valeurs par défaut de la configuration.</p>
-                        <img src="Images/creerConfig2.png" alt="Image" height="464" width="800">
+                        <img src="Images/creerConfig2.png" alt="Image" class="img-fluid">
                         <p>Pour changer ces valeurs, il faut selectionner une ligne puis remplacer dans "Nom des Cartes" le "#" par le nom voulu. Appuyez ensuite sur le bouton "Modifier" afin de modifier le nom de la carte.</p>
-                        <img src="Images/creerConfig3.png" alt="Image" height="91" width="465">
-                        <p>Une fois avoir indiqué le nom de toutes les cartes, cliquez sur le bouton "Ajouter Configuration" afin de créer la configuration et tous ces dossiers associés :</p>
-                        <img src="Images/creerConfig4.png" alt="Image" height="411" width="800">
-                        <p>Un message de confirmation de la création de la configuration apparait :</p>
-                        <img src="Images/creerConfig5.png" alt="Image" height="498" width="800">
+                        <img src="Images/creerConfig3.png" alt="Image" class="img-fluid">
+                        <p>Une fois avoir indiqué le nom de toutes les cartes, cliquez sur le bouton "Ajouter Configuration" afin de créer la configuration et tous ces dossiers associés.</p>
+                        <img src="Images/creerConfig4.png" alt="Image" class="img-fluid">
+                        <p>Un message de confirmation de la création de la configuration apparait.</p>
+                        <img src="Images/creerConfig5.png" alt="Image" class="img-fluid">
                     </div>
                     <div id="item-2">
                         <h4>Modifier Fichiers</h4>
-                        <p></p>
                     </div>
                     <div id="item-2-1">
                         <h5>Pourquoi ?</h5>
@@ -114,7 +111,7 @@
                         correspond aux valeurs lues et appliquées à l'état d'initialisation du programme OpenPOWERLINK de la carte CAC.
                         La quatrième colonne "PORT GPIO" correspond au port logique du contrôleur GPIO de la raspberry pi 4 (ou CM4 de même pinout) connectées au pins ci-dessous :
                         </p>
-                        <img src="Images/modifierFichierPourquoi1.png" alt="Image" height="459" width="800"> 
+                        <img src="Images/modifierFichierPourquoi1.png" alt="Image" class="img-fluid"> 
                         <p>Par exemple si la vanne A de la deuxième est connectée au GPIO 5, on écrit 5 dans le champ port GPIO.
                         L'ordre des vannes dans le tableau est aussi important par exemple, si vanne A est entrée sur la première ligne
                         sans compter l'entête, elle correspond à la 15ème ligne sur un CSV d'état général et à la 27ème ligne sur le fichier "activation.csv"
@@ -145,15 +142,55 @@
                     <div id="item-2-2">
                         <h5>Comment ?</h5>
                         <p>Pour modifier un fichier, il faut choisir une configuration créée plus tôt et appuyer sur "Selectionner Config". Plusieurs types de fichiers s'affichent. </p>
-                        <img src="Images/modifFichiers1.png" alt="Image" height="467" width="800">
-                        <p>
-                        Pour modifier le fichier CSV de la <b>configuration physique</b> des <b>vannes</b>, il faut : 
-                            <ul>
-                                <li>choisir le fichier de la vanne voulue . </li>
-                                <li>appuyer sur "Afficher".</li>
-                                <li>cliquer sur une ligne et chan.</li>
-                            </ul>
-                        </p>
+                        <img src="Images/modifFichiers1.png" alt="Image" class="img-fluid">
+                        <p>Pour modifier le fichier CSV de la <b><u>configuration physique</u></b> des <b><u>vannes</u></b>, il faut : </p>
+                        <ul>
+                            <li>choisir le fichier de la vanne voulue. </li>
+                            <li>appuyer sur "Afficher". Un formulaire apparait.</li>
+                            <li>cliquer sur une ligne et modifier les valeurs.</li>
+                            <img src="Images/modifFichiers2.png" alt="Image" class="img-fluid">
+                            <li>appuyer sur le bouton "Modifier Ligne".</li>
+                            <img src="Images/modifFichiers3.png" alt="Image" class="img-fluid">
+                        </ul>
+                        <p>Pour modifier le fichier CSV de la <b><u>configuration physique</u></b> des <b><u>capteurs</u></b>, il faut : </p>
+                        <ul>
+                            <li>choisir le fichier du capteur voulu. </li>
+                            <li>appuyer sur "Afficher". Un formulaire apparait.</li>
+                            <li>cliquer sur une ligne et modifier les valeurs.</li>
+                            <li>appuyer sur le bouton "Modifier Ligne".</li>
+                        </ul>
+                        <div class="row">
+                            <div class="col">
+                                <img src="Images/modifFichiers4.png" alt="Image" class="img-fluid"> 
+                            </div>
+                            <div class="col">
+                                <img src="Images/modifFichiers5.png" alt="Image" class="img-fluid"> 
+                            </div>
+                        </div>
+                        <p>Pour modifier le fichier CSV des <b><u>activations</u></b>, il faut : </p>
+                        <ul>
+                            <li>appuyer sur "Afficher". Un formulaire apparait.</li>
+                            <li>cliquer sur une ligne et modifier la valeur de activation(3e colonne).</li>
+                            <li>appuyer sur le bouton "Modifier Ligne".</li>
+                        </ul>
+                        <div class="row">
+                            <div class="col">
+                                <img src="Images/modifFichiers6.png" alt="Image" class="img-fluid"> 
+                            </div>
+                            <div class="col">
+                                <img src="Images/modifFichiers7.png" alt="Image" class="img-fluid"> 
+                            </div>
+                        </div>
+                        <p>Pour modifier le fichier CSV des <b><u>fichiers Etat Générals</u></b>, il faut : </p>
+                        <ul>
+                            <li>choisir le fichier du capteur voulu. </li>
+                            <li>appuyer sur "Afficher". Un formulaire apparait.</li>
+                            <li>cliquer sur une ligne et modifier les valeurs.</li>
+                            <img src="Images/modifFichiers8.png" alt="Image" class="img-fluid">
+                            <li>appuyer sur le bouton "Modifier Ligne".</li>
+                            <img src="Images/modifFichiers9.png" alt="Image" class="img-fluid">
+                        </ul>
+                        <p>(<i><b><u>La modification du fichier Etat général est possible si le fichier a déjà été créé</u></b></i>)</p>
                     </div>
                     <div id="item-3">
                         <h4>Ajouter Fichiers Etats</h4>
@@ -165,10 +202,10 @@
                         d'un ordre EG (état général) envoyé du MN à toutes les cartes CAC (à tous les CNs).
                         Pour créer un CSV d'état général il faut d'abord associer le code EG (état général) au nom du fichier CSV
                         pour que le programme OpenPOWERLINK ce mette à lire le fichier CSV correspondant à l'ordre EG qu'il a reçu.
-                        <b>
+                        <b><u>
                         Important : pour ne pas confondre les code EG avec les codes hexadécimaux de statuts et d'erreurs du programme OpenPOWERLINK, 
                         Les codes EG doivent être compris entre 0x1000 et 0x6FFF (ou en décimal entre 4096 et 28671).
-                        </b>
+                        </u></b>
                         De la même façon que pour le fichier "activation.csv", les paramètres des vannes de chaques carte CAC sont
                         mis les uns après les autres de façon cyclique.
                         Par exemple les vannes d'une deuxième carte B seront 13 lignes après celles d'une première carte A.
@@ -197,11 +234,31 @@
                     </div>
                     <div id="item-3-2">
                         <h5>Comment ?</h5>
+                        <p>Choisissez une configuration, un code Etat Général en décimal et un nom pour le fichier état général.</p>
+                        <img src="Images/ajoutEtatEG1.png" alt="Image" height="391" width="800"> 
+                        <p>Une fois le fichier créé, un formulaire et un tableau apparaissent. Cliquez sur une ligne du tableau et modifiez les valeurs. 
+                            (Pour dépendance vanne, la valeur obtenue correspond à l'indice de la ligne de la vanne)</p>
+                        <div class="row">
+                            <div class="col">
+                                <img src="Images/ajoutEtatEG2.png" alt="Image" class="img-fluid"> 
+                            </div>
+                            <div class="col">
+                                <img src="Images/ajoutEtatEG4.png" alt="Image" class="img-fluid">
+                            </div>
+                        </div>
+                        <p>Un message de validation des modifications apparait.</p>
+                        <div class="row">
+                            <div class="col">
+                                <img src="Images/ajoutEtatEG3.png" alt="Image" class="img-fluid"> 
+                            </div>
+                            <div class="col">
+                                <img src="Images/ajoutEtatEG5.png" alt="Image" class="img-fluid">
+                            </div>
+                        </div>
                         <p></p>
                     </div>
                     <div id="item-4">
                         <h4>Supprimer Fichiers Etats</h4>
-                        <p></p>
                     </div>
                     <div id="item-4-1">
                         <h5>Pourquoi ?</h5>
@@ -215,11 +272,25 @@
                     </div>
                     <div id="item-4-2">
                         <h5>Comment ?</h5>
-                        <p></p>
+                        <p>Pour supprimer un fichier état créé précédemment, il faut : </p>
+                        <ul>
+                            <li>sélectionner la configuration. </li>
+                            <li>appuyer sur le bouton "Sélectionner Config".</li>
+                        </ul>   
+                        <p>Une fois le bouton sélectionné, tous les fichiers État général appartenant à la configuration sont affichés dans 
+                        le bouton déroulant. Ici, nous avons juste un fichier état qui est "Etat_1.csv".</p>
+                        <img src="Images/supprEtat1.png" alt="Image"> 
+                        <p>Pour afficher le fichier, il faut appuyer sur le bouton "Afficher le fichier".</p>
+                        <img src="Images/supprEtat2.png" alt="Image" class="img-fluid"> 
+                        <p>Pour supprimer un fichier état, il suffit d'appuyer sur le bouton "Supprimer le fichier". Un message de validation 
+                            apparaît. Cliquez sur "OK".</p>
+                        <img src="Images/supprEtat3.png" alt="Image"> 
+                        <p>Un message de confirmation apparaît confirmant la suppression du fichier.</p>
+                        <img src="Images/supprEtat4.png" alt="Image" height="271" width="500">
+
                     </div>
                     <div id="item-5">
                         <h4>Supprimer Config</h4>
-                        <p></p>
                     </div>
                     <div id="item-5-1">
                         <h5>Pourquoi ?</h5>
@@ -231,7 +302,15 @@
                     </div>
                     <div id="item-5-2">
                         <h5>Comment ?</h5>
-                        <p></p>
+                        <p>Pour supprimer une configuration il faut : 
+                        <ul>
+                            <li>choisir la configuration qu'on veut supprimer. </li>
+                            <li>puis appuyer sur le bouton "Supprimer la config".</li>
+                            <li>appuyez sur le bouton "OK" du message de validation de la suppression pour supprimer la configuration.</li>
+                        </ul>
+                        <img src="Images/supprConfig1.png" alt="Image">
+                        <p>Un message confirmant la suppression de la configuration apparait.</p>
+                        <img src="Images/supprConfig2.png" alt="Image">
                     </div>
                     <div id="item-6">
                         <h4>Déploiements</h4>

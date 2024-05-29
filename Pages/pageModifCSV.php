@@ -290,7 +290,7 @@
                         </form>
                     <?php
                     } else { ?>
-                        <h4>Le fichier est : <?php echo "$fileName" ?> | Correspondance EG : <?php echo getCorrespondance($fileName,$configName); ?> </h5>
+                        <h4>Config : <?php echo $configName; ?> | Fichier : <?php echo "$fileName"; ?> | Correspondance EG : <?php echo getCorrespondance($fileName,$configName); ?> </h5>
                         <form method="post" action="../modifierCSV.php" class="mb-5" id="secondForm">
                             <div class="row mb-3">
                                 <div class="col">

@@ -2,6 +2,7 @@
     $titre = "Page Suppression CSV";
     $page = "../pages.css";
     require '../header.inc.php';
+    include '../rechercheCSV.php';
     include '../rechercheConfig.php';
     session_start();
     unset($_SESSION['csvFileName']);
@@ -98,7 +99,7 @@
                 </div>
                 <div class="col-4 mb-3 ml-5">
                     <?php if(!empty($csvName)){ ?>
-                        <h4>Config : <?php echo $configName;?> | Fichier : <?php echo $csvName; ?></h4>
+                        <h4>Config : <?php echo $configName;?> | Fichier : <?php echo $csvName; ?> | Correspondance EG : <?php echo getCorrespondance($csvName, $configName); ?></h4>
                         <table class="tableau" id="myTable">
                         <thead>
                             <?php 
