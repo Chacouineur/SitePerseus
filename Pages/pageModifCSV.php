@@ -2,6 +2,7 @@
     $titre = "Page Modification CSV";
     $page = "../pages.css";
     require '../header.inc.php';
+    include '../rechercheCSV.php';
     include '../rechercheConfig.php';
     
     session_start();
@@ -265,7 +266,7 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="exampleInputCarte" class="form-label">Carte :</label>
-                                    <input type="text" class="form-control" name="carte" id="exampleInputCarte" placeholder="CACMO/CACOE/etc" disabled>
+                                    <input type="text" class="form-control" name="carte" id="exampleInputCarte" placeholder="CACMO/CACOE/etc" readonly disabled>
                                 </div>
                                 <div class="col">
                                     <label for="exampleInputVannesEtat" class="form-label">Vannes/Etat :</label>
@@ -289,7 +290,7 @@
                         </form>
                     <?php
                     } else { ?>
-                        <h4>Le fichier ci dessous est : <?php echo "$fileName"; ?></h5>
+                        <h4>Le fichier est : <?php echo "$fileName" ?> | Correspondance EG : <?php echo getCorrespondance($fileName,$configName); ?> </h5>
                         <form method="post" action="../modifierCSV.php" class="mb-5" id="secondForm">
                             <div class="row mb-3">
                                 <div class="col">
@@ -306,7 +307,7 @@
                                 </div>
                                 <div class="col">
                                     <label for="exampleInputTimeDep" class="form-label">Timer dépendance :</label>
-                                    <input type="number" min="0" class="form-control" name="timeDep" id="exampleInputTimeDep" aria-describedby="codeHelp" placeholder="Valeur timer" disabled>
+                                    <input type="number" min="0" step="any" class="form-control" name="timeDep" id="exampleInputTimeDep" aria-describedby="codeHelp" placeholder="Valeur timer" disabled>
                                 </div>
                                 <div class="col">
                                     <label for="selectedLabels" class="form-label">Dépendance vannes:</label>

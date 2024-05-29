@@ -71,4 +71,24 @@ function getCSVActivation($folder){
     return $filePath;
 }
 
+function getCorrespondance($fileName, $folder) {
+    $filePath = __DIR__ . "/Configurations/" . $folder . "/commonCSVFiles/liaisonEGEtat.csv";
+    
+    if (($handle = fopen($filePath, "r")) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+            // Vérifier si la deuxième colonne est égale à $fileName
+            if (isset($data[1]) && $data[1] == $fileName) {
+                fclose($handle); 
+                return $data[0]; // Retourner la valeur de la correspondance EG
+            }
+        }
+        fclose($handle); 
+    } else {
+        echo "Impossible d'ouvrir le fichier $filePath.";
+        exit;
+    }
+
+    return null; // Retourner null si aucune correspondance n'est trouvée
+}
+
 ?>
