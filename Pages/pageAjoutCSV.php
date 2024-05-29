@@ -113,7 +113,7 @@
                     </div>
                     <div class="col-auto">
                         <label for="exampleInputTimeDep" class="form-label">Timer dépendance :</label>
-                        <input type="number" min="0" class="form-control" name="timeDep" id="exampleInputTimeDep" aria-describedby="codeHelp" placeholder="Valeur timer">
+                        <input type="number" min="0" step="any" class="form-control" name="timeDep" id="exampleInputTimeDep" aria-describedby="codeHelp" placeholder="Valeur timer">
                     </div>
                     <div class="col-auto">
                         <label for="selectedLabels" class="form-label">Dépendance vannes:</label>

@@ -144,10 +144,16 @@
                     </div>
                     <div id="item-2-2">
                         <h5>Comment ?</h5>
-                        <p>Pour modifier un fichier, il faut choisir une configuration créée plus tôt et appuyer sur "Selectionner Config".</p>
-                        <p>Pour modifier le fichier CSV de la configuration physique des vannes, il faut choisir le fichier de la vanne voulue puis appuyer sur "Afficher". 
-                        il faut ensuite selectionner une ligne puis remplacer dans "Nom des Cartes" le "#" par le nom voulu. </p>
-                        <p></p>
+                        <p>Pour modifier un fichier, il faut choisir une configuration créée plus tôt et appuyer sur "Selectionner Config". Plusieurs types de fichiers s'affichent. </p>
+                        <img src="Images/modifFichiers1.png" alt="Image" height="467" width="800">
+                        <p>
+                        Pour modifier le fichier CSV de la <b>configuration physique</b> des <b>vannes</b>, il faut : 
+                            <ul>
+                                <li>choisir le fichier de la vanne voulue . </li>
+                                <li>appuyer sur "Afficher".</li>
+                                <li>cliquer sur une ligne et chan.</li>
+                            </ul>
+                        </p>
                     </div>
                     <div id="item-3">
                         <h4>Ajouter Fichiers Etats</h4>
