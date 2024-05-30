@@ -131,6 +131,7 @@ if(!empty($csvData))
         else
         {
             try {
+                $ret = $sshConn->exec('sudo service custom_phc2sys_client restart');
                 $ret = $sshConn->exec('sudo service OBCProgram restart');
             } catch (Exception $e) {
                 ob_get_clean();
@@ -306,6 +307,7 @@ if(!empty($csvData))
             else
             {
                 try {
+                    $ret = $sshConn->exec('sudo service custom_phc2sys_client restart');
                     $ret = $sshConn->exec('sudo service CACProgram restart');
                 } catch (Exception $e) {
                     ob_get_clean();
