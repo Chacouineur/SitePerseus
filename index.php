@@ -73,13 +73,14 @@
                     </div>
                     <div id="item-1-1">
                         <h5>Pourquoi ?</h5>
-                        <p>Une configuration du site contient tous les fichiers CSV de configuration des cartes CAC de cette façon:</p>
+                        <p>Une configuration du site contient tous les fichiers CSV de configuration des cartes CAC de cette façon:<br>                             
+                        </p>
                         <img src="Images/creerConfigPourquoi1.png" alt="Image" class="img-fluid"> 
                         <p>Les configurations contiennent aussi le nom de la configuration, le nombre et le nom des cartes CAC.
                         Il est possible de faire autant de configurations que l'on veut avec un nombre maximal de 239 cartes CAC 
                         (bien que pour l'instant ce nombre est limité à 15 cartes en raison du manque de configurations générés 
                         par OpenCONFIGURATOR des dossiers output_xCNs).
-                        Lors de la création d'une configuration ces fichiers sont générés automatiquement : 
+                        Lors de la création d'une configuration ces fichiers sont générés automatiquement : <br>
                         activation.csv, liaisonEGEtat.csv et nbNodes.h en commun pour toutes les cartes et 
                         physicalCONFIG_sensors.csv, physicalCONFIG_valves.csv et nodeId.h pour chacune des cartes comme ci-dessus.
                         Les valeurs non définies dans les fichiers CSV sont indiquées par des '#'.
@@ -87,15 +88,15 @@
                     </div>
                     <div id="item-1-2">
                         <h5>Comment ?</h5>
-                        <p>Pour créer une configuration, il faut ajouter un nom ainsi que le nombre de carte voulu dans la configuration.</p>
+                        <p>Pour créer une configuration, il faut ajouter un nom ainsi que le nombre de carte voulu dans la configuration.<br></p>
                         <img src="Images/creerConfig1.png" alt="Image" height="177" width="400"> 
-                        <p>Appuyez ensuite sur le bouton "Créer Tableau". Ce bouton permet de d'obtenir un tableau contenant les valeurs par défaut de la configuration.</p>
+                        <p>Appuyez ensuite sur le bouton "Créer Tableau". Ce bouton permet de d'obtenir un tableau contenant les valeurs par défaut de la configuration.<br></p>
                         <img src="Images/creerConfig2.png" alt="Image" class="img-fluid">
-                        <p>Pour changer ces valeurs, il faut selectionner une ligne puis remplacer dans "Nom des Cartes" le "#" par le nom voulu. Appuyez ensuite sur le bouton "Modifier" afin de modifier le nom de la carte.</p>
+                        <p>Pour changer ces valeurs, il faut selectionner une ligne puis remplacer dans "Nom des Cartes" le "#" par le nom voulu. Appuyez ensuite sur le bouton "Modifier" afin de modifier le nom de la carte.<br></p>
                         <img src="Images/creerConfig3.png" alt="Image" class="img-fluid">
-                        <p>Une fois avoir indiqué le nom de toutes les cartes, cliquez sur le bouton "Ajouter Configuration" afin de créer la configuration et tous ces dossiers associés.</p>
+                        <p>Une fois avoir indiqué le nom de toutes les cartes, cliquez sur le bouton "Ajouter Configuration" afin de créer la configuration et tous ces dossiers associés.<br></p>
                         <img src="Images/creerConfig4.png" alt="Image" class="img-fluid">
-                        <p>Un message de confirmation de la création de la configuration apparait.</p>
+                        <p>Un message de confirmation de la création de la configuration apparait.<br></p>
                         <img src="Images/creerConfig5.png" alt="Image" class="img-fluid">
                     </div>
                     <div id="item-2">
@@ -109,7 +110,7 @@
                         "Fichier CSV configuration physique capteurs" qu'il faut commencer à configurer pour chaque carte CAC.
                         La troisième colonne "Etat initial" de "Fichier CSV configuration physique vannes"
                         correspond aux valeurs lues et appliquées à l'état d'initialisation du programme OpenPOWERLINK de la carte CAC.
-                        La quatrième colonne "PORT GPIO" correspond au port logique du contrôleur GPIO de la raspberry pi 4 (ou CM4 de même pinout) connectées au pins ci-dessous :
+                        La quatrième colonne "PORT GPIO" correspond au port logique du contrôleur GPIO de la raspberry pi 4 (ou CM4 de même pinout) connectées au pins ci-dessous :<br>
                         </p>
                         <img src="Images/modifierFichierPourquoi1.png" alt="Image" class="img-fluid"> 
                         <p>Par exemple si la vanne A de la deuxième est connectée au GPIO 5, on écrit 5 dans le champ port GPIO.
@@ -125,7 +126,7 @@
                         Les colonnes suivantes correspondent aux paramètres de Modbus à configurer en fonction du capteur rs485 branché.
                         Pour la version 1.2 du programme OpenPOWERLINK des cartes CAC, seulement un registre peut être lu pour une ligne de "Fichier CSV configuration physique capteurs"
                         en raison des limitations d'OpenPOWERLINK de pouvoir envoyer qu'une seule valeur de vanne ou de capteur pour un maximum de 12 vannes et 12 capteurs
-                        par carte CAC (par CN).
+                        par carte CAC (par CN).<br>
                         </p>
                         <p>La prochaine modification possible sont les "Fichiers CSV etats" ou fichiers CSV d'état généraux. Ils sont décrits plus en détails
                         dans la prochaine partie "Ajouter Fichiers Etats". Ici on peut modifier chacuns de ces fichiers CSV pour une configuration de la même façon que pour la création.
@@ -136,14 +137,14 @@
                         pour le programme. Même chose pour un capteur désactivé, le capteur ne sera pas instancié et aucune valeur ne sera lue.
                         Il est donc important de vérifier que les vannes et capteurs entrés dans "Fichier CSV configuration physique vannes" et 
                         "Fichier CSV configuration physique capteurs" sont bien activés dans "activation.csv" 
-                        (rappel : la vanne de la première ligne de "Fichier CSV configuration physique vannes" de la deuxième carte correspond à la 27ème ligne dans "activation.csv").
+                        (rappel : la vanne de la première ligne de "Fichier CSV configuration physique vannes" de la deuxième carte correspond à la 27ème ligne dans "activation.csv").<br>
                         </p>
                     </div>
                     <div id="item-2-2">
                         <h5>Comment ?</h5>
                         <p>Pour modifier un fichier, il faut choisir une configuration créée plus tôt et appuyer sur "Selectionner Config". Plusieurs types de fichiers s'affichent. </p>
                         <img src="Images/modifFichiers1.png" alt="Image" class="img-fluid">
-                        <p>Pour modifier le fichier CSV de la <b><u>configuration physique</u></b> des <b><u>vannes</u></b>, il faut : </p>
+                        <p>Pour modifier le fichier CSV de la <b><u>configuration physique</u></b> des <b><u>vannes</u></b>, il faut : <br></p>
                         <ul>
                             <li>choisir le fichier de la vanne voulue. </li>
                             <li>appuyer sur "Afficher". Un formulaire apparait.</li>
@@ -152,7 +153,7 @@
                             <li>appuyer sur le bouton "Modifier Ligne".</li>
                             <img src="Images/modifFichiers3.png" alt="Image" class="img-fluid">
                         </ul>
-                        <p>Pour modifier le fichier CSV de la <b><u>configuration physique</u></b> des <b><u>capteurs</u></b>, il faut : </p>
+                        <p>Pour modifier le fichier CSV de la <b><u>configuration physique</u></b> des <b><u>capteurs</u></b>, il faut : <br></p>
                         <ul>
                             <li>choisir le fichier du capteur voulu. </li>
                             <li>appuyer sur "Afficher". Un formulaire apparait.</li>
@@ -190,7 +191,7 @@
                             <li>appuyer sur le bouton "Modifier Ligne".</li>
                             <img src="Images/modifFichiers9.png" alt="Image" class="img-fluid">
                         </ul>
-                        <p>(<i><b><u>La modification du fichier Etat général est possible si le fichier a déjà été créé</u></b></i>)</p>
+                        <p>(<i><b><u>La modification du fichier Etat général est possible si le fichier a déjà été créé</u></b></i>)<br></p>
                     </div>
                     <div id="item-3">
                         <h4>Ajouter Fichiers Etats</h4>
@@ -202,29 +203,29 @@
                         d'un ordre EG (état général) envoyé du MN à toutes les cartes CAC (à tous les CNs).
                         Pour créer un CSV d'état général il faut d'abord associer le code EG (état général) au nom du fichier CSV
                         pour que le programme OpenPOWERLINK ce mette à lire le fichier CSV correspondant à l'ordre EG qu'il a reçu.
-                        <b><u>
+                        <b style="color:red"><u>
                         Important : pour ne pas confondre les code EG avec les codes hexadécimaux de statuts et d'erreurs du programme OpenPOWERLINK, 
                         Les codes EG doivent être compris entre 0x1000 et 0x6FFF (ou en décimal entre 4096 et 28671).
                         </u></b>
                         De la même façon que pour le fichier "activation.csv", les paramètres des vannes de chaques carte CAC sont
                         mis les uns après les autres de façon cyclique.
-                        Par exemple les vannes d'une deuxième carte B seront 13 lignes après celles d'une première carte A.
+                        Par exemple les vannes d'une deuxième carte B seront 13 lignes après celles d'une première carte A.<br>
                         </p>
                         <p>La troisième colonne "Valeur" correspond à la valeur GPIO de sortie, 1 pour HIGH et 0 pour LOW.
                         Cette valeur peut être contraint d'être activée qu'à partir d'un certain temps et/ou seulement si d'autres vannes
-                        de la même carte sont activées.
+                        de la même carte sont activées.<br>
                         </p>
                         <p>La quatrième colonne "Timer dépendance" correspond au chronomètre (en secondes double précision) qui se lance 
                         lorsque tous les dépendances de la cinquième colonne sont déclanchées (sont passées à leurs valeurs de la troisième colonne).
                         Si aucune dépendance n'est indiquée pour une vanne, le timer de cette vanne démarre directement au passage de ce
                         fichier CSV d'état général.
-                        Si vous mettez la 0 en timer, le 0 sera remplacé par un '#' dans le fichier CSV. Le programme OpenPOWERLINK intéprète un '#' en tant que 0.
+                        Si vous mettez la 0 en timer, le 0 sera remplacé par un '#' dans le fichier CSV. Le programme OpenPOWERLINK intéprète un '#' en tant que 0.<br>
                         </p>
                         <p>Enfin la cinquième colonne correspond à la liste des dépendances d'une vanne sur d'autres vannes de la même carte.
                         C'est à dire que cette vanne ne se déclanche (ou démarre le timer) uniquement si toutes les vannes dont elle dépend 
-                        sont déclanchées (sont passées à leurs valeurs de la troisième colonne). 
+                        sont déclanchées (sont passées à leurs valeurs de la troisième colonne). <br>
                         </p>
-                        <img src="Images/creerFichierCSVPourquoi1.png" alt="Image" height="376" width="800"> 
+                        <img src="Images/creerFichierCSVPourquoi1.png" alt="Image" class="img-fluid"> 
                         <p>Par exemple ici, on définit trois vannes, VCE, VPr0 et VMA sur la carte A. On remarque qu VMA dépend de VCE et VPr0 
                         c'est à dire que réellement, VMA ne démarrera sont timer qu'après que celui de VPr0 soit fini soit 1,2 secondes après, 
                         enfin VMA se déclanchera à la fin de son timer soit 3,5 secondes après.
@@ -234,10 +235,10 @@
                     </div>
                     <div id="item-3-2">
                         <h5>Comment ?</h5>
-                        <p>Choisissez une configuration, un code Etat Général en décimal et un nom pour le fichier état général.</p>
-                        <img src="Images/ajoutEtatEG1.png" alt="Image" height="391" width="800"> 
+                        <p>Choisissez une configuration, un code Etat Général en décimal et un nom pour le fichier état général.<br></p>
+                        <img src="Images/ajoutEtatEG1.png" alt="Image" class="img-fluid"> 
                         <p>Une fois le fichier créé, un formulaire et un tableau apparaissent. Cliquez sur une ligne du tableau et modifiez les valeurs. 
-                            (Pour dépendance vanne, la valeur obtenue correspond à l'indice de la ligne de la vanne)</p>
+                            (Pour dépendance vanne, la valeur obtenue correspond à l'indice de la ligne de la vanne)<br></p>
                         <div class="row">
                             <div class="col">
                                 <img src="Images/ajoutEtatEG2.png" alt="Image" class="img-fluid"> 
@@ -246,7 +247,7 @@
                                 <img src="Images/ajoutEtatEG4.png" alt="Image" class="img-fluid">
                             </div>
                         </div>
-                        <p>Un message de validation des modifications apparait.</p>
+                        <p>Un message de validation des modifications apparait.<br></p>
                         <div class="row">
                             <div class="col">
                                 <img src="Images/ajoutEtatEG3.png" alt="Image" class="img-fluid"> 
@@ -272,20 +273,20 @@
                     </div>
                     <div id="item-4-2">
                         <h5>Comment ?</h5>
-                        <p>Pour supprimer un fichier état créé précédemment, il faut : </p>
+                        <p>Pour supprimer un fichier état créé précédemment, il faut : <br></p>
                         <ul>
                             <li>sélectionner la configuration. </li>
                             <li>appuyer sur le bouton "Sélectionner Config".</li>
                         </ul>   
                         <p>Une fois le bouton sélectionné, tous les fichiers État général appartenant à la configuration sont affichés dans 
-                        le bouton déroulant. Ici, nous avons juste un fichier état qui est "Etat_1.csv".</p>
+                        le bouton déroulant. Ici, nous avons juste un fichier état qui est "Etat_1.csv".<br></p>
                         <img src="Images/supprEtat1.png" alt="Image"> 
-                        <p>Pour afficher le fichier, il faut appuyer sur le bouton "Afficher le fichier".</p>
+                        <p>Pour afficher le fichier, il faut appuyer sur le bouton "Afficher le fichier".<br></p>
                         <img src="Images/supprEtat2.png" alt="Image" class="img-fluid"> 
                         <p>Pour supprimer un fichier état, il suffit d'appuyer sur le bouton "Supprimer le fichier". Un message de validation 
-                            apparaît. Cliquez sur "OK".</p>
+                            apparaît. Cliquez sur "OK".<br></p>
                         <img src="Images/supprEtat3.png" alt="Image"> 
-                        <p>Un message de confirmation apparaît confirmant la suppression du fichier.</p>
+                        <p>Un message de confirmation apparaît confirmant la suppression du fichier.<br></p>
                         <img src="Images/supprEtat4.png" alt="Image" height="271" width="500">
 
                     </div>
@@ -297,20 +298,20 @@
                         <p>Les configurations de ce site web de configuration du programme OpenPOWERLINK n'ont pas de lien avec le programme
                         et sont présents uniquement pour regrouper les fichiers CSV à déployer.
                         Les configurations peuvent donc être supprimées ou créées sans limite. En revanche la suppression d'une configuration est
-                        irréversible.
+                        irréversible.<br>
                         </p>
                     </div>
                     <div id="item-5-2">
                         <h5>Comment ?</h5>
-                        <p>Pour supprimer une configuration il faut : 
+                        <p>Pour supprimer une configuration il faut : <br>
                         <ul>
                             <li>choisir la configuration qu'on veut supprimer. </li>
                             <li>puis appuyer sur le bouton "Supprimer la config".</li>
                             <li>appuyez sur le bouton "OK" du message de validation de la suppression pour supprimer la configuration.</li>
                         </ul>
                         <img src="Images/supprConfig1.png" alt="Image">
-                        <p>Un message confirmant la suppression de la configuration apparait.</p>
-                        <img src="Images/supprConfig2.png" alt="Image">
+                        <p>Un message confirmant la suppression de la configuration apparait.<br></p>
+                        <img src="Images/supprConfig2.png" alt="Image" class="img-fluid">
                     </div>
                     <div id="item-6">
                         <h4>Déploiements</h4>
@@ -319,7 +320,7 @@
                         <h5>Pourquoi ?</h5>
                         <p>Lorsque tous les fichiers CSV d'une configuration ont été configurés, il faut pouvoir les envoyer sur les cartes CAC et au MN.
                         Cette page sert donc de liaison entre ce site web de configuration et le programme OpenPOWERLINK des cartes CAC et du MN.
-                        Sur la page déploiement il faut d'abord renseigner les information de connexion aux cartes CAC et au MN.
+                        Sur la page déploiement il faut d'abord renseigner les information de connexion aux cartes CAC et au MN.<br>
                         </p>
                         <p>
                         Cette page est differente si le site web est hebergé sur la Raspberry Pi CM4 du MN ou sur un PC sous Windows connecté sur le réseau local
@@ -330,10 +331,10 @@
                         De plus le site web étant hebergé sur le MN, pour le déploiement des fichiers sur le MN, il suffit de copier directement les fichiers du site
                         vers la localisation du logiciel OpenPOWERLINK au lieu de passer par une connexion SSH.
                         En revanche il faut bien penser à fixer des hostnames compréhensibles au préalable sur les cartes CAC (voir tutoriel 
-                        "Procédure de préparation des RPi CM4 pour CAC et OBC" de la NT : NT_Ryan_Maël_CAC_2023_2024).
+                        "Procédure de préparation des RPi CM4 pour CAC et OBC" de la NT : NT_Ryan_Maël_CAC_2023_2024).<br>
                         </p>
                         <p>Sur un PC sous Windows, tout doit être entré manuellement que ce soit l'IP des cartes CAC et du MN. Il est donc nécessaire de bien
-                        connaître les relations entre toutes les IPs et les cartes CAC avant de déployer.
+                        connaître les relations entre toutes les IPs et les cartes CAC avant de déployer.<br>
                         </p>
                         <ul>Pour la partie déploiement, après avoir entré toutes les renseignements de connexion SSH des cartes, il y a plusieurs choix de déploiement :
                         <li>
@@ -351,7 +352,7 @@
                         </ul>
                         <p>Attention ne cochez pas OpenPOWERLINK stack et application sans cocher les autres car tout les précédents fichiers CSV sur les cartes CAC seront supprimés.
                         Le programme OpenPOWERLINK ne peut pas fonctionner sans aucun fichiers CSV.
-                        S'il y a eu une erreur lors du déploiement, une erreur s'affichera en rouge sur la page Déploiements.
+                        S'il y a eu une erreur lors du déploiement, une erreur s'affichera en rouge sur la page Déploiements.<br>
                         </p>
                     </div>
                     <div id="item-6-2">

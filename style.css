@@ -19,6 +19,18 @@ main {
 
 p {
     padding: 10px 0 10px 0;
+    text-justify: auto;
+    text-align: justify;
+}
+
+p:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+  }
+
+.scrollspy-example-2 {
+    padding: 15px 15px 15px 15px;
 }
 
 footer {
@@ -26,3 +38,4 @@ footer {
     font-size: small;
     text-align: center;
 }
+
