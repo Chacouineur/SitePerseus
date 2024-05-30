@@ -144,6 +144,7 @@ if (!empty($btnValue)) {
                 $filePath = getCSVSensors($csvFileName, $boards, $configName);
 
                 if (!empty($csvFileName) && !empty($_POST['btnValue'])) {
+                    //Récuperation des valeurs du formulaire
                     $carte = $_POST['carte'];
                     $capteur = $_POST['capteur'];
                     $type = $_POST['type'];
@@ -155,6 +156,7 @@ if (!empty($btnValue)) {
                     $modbusStopBits = $_POST['modbusStopBits'];
                     $numLigne = $_POST['ligneIndex'];
 
+                    //mettre "#" dans le champ de la variable si elle est nulle
                     $carte = empty($carte) ? '#' : $carte;
                     $capteur = empty($capteur) ? '#' : $capteur;
                     $type = empty($type) ? '#' : $type;
@@ -164,7 +166,7 @@ if (!empty($btnValue)) {
                     $modbusParity = empty($modbusParity) ? '#' : $modbusParity;
                     $modbusDataBits = empty($modbusDataBits) ? '#' : $modbusDataBits;
                     $modbusStopBits = empty($modbusStopBits) ? '#' : $modbusStopBits;
-
+                    //Valeur de la ligne modifié
                     $ligne = [$carte, $capteur, $type, $modbusRemoteSlaveAdress, $modbusStartAdress, $modbusBaudRate, $modbusParity, $modbusDataBits, $modbusStopBits];
                     
                     // Lire le fichier CSV existant dans un tableau
@@ -175,8 +177,9 @@ if (!empty($btnValue)) {
                         }
                         fclose($handle);
                     }
-
-                    $csvData[$numLigne] = $ligne;                 
+                    //mettre la ligne modifié à l'indice cliqué $numLigne dans le tableau récupéré  $csvData[]
+                    $csvData[$numLigne] = $ligne;             
+                    //réécrire l'entete du fichier    
                     $csvData[0] = ["Carte", "Capteur", "Type", "Modbus remote slave address", "Modbus start address", "Modbus baud rate", "Modbus parity", "Modbus Data bits", "Modbus Stop bit"];
 
                     // Ouvrir le fichier pour l'écriture
@@ -221,17 +224,18 @@ if (!empty($btnValue)) {
                         header('Location: Pages/pageModifCSV.php');
                         exit();
                     }
+                    //lire le fichier du capteur afin de mettre les valeurs dans un tableau s'il existe
                     if (($handle = fopen($filePath, "r")) !== FALSE) {
                         // Initialiser un tableau pour stocker les données
                         $dataSensor = [];
                         
                         // Lire toutes les lignes du fichier et stocker les données dans le tableau
                         while (($rowS = fgetcsv($handle, 1000, ";")) !== FALSE) {
+                            //faire un tableau de toutes les valeurs de la 2e colonne sans l'entete
                             if ($rowS[1] !== 'Capteur') {
                                 $dataSensor[] = $rowS;
                             }
                         }
-                        
                         // Fermer le fichier
                         fclose($handle);
                         
@@ -241,7 +245,7 @@ if (!empty($btnValue)) {
                     }
                     $indiceCarte = 0;
                     $nbCartes = 0;
-                    
+                    //lis le fichier configuration.csv
                     if (($handleConfig = fopen(__DIR__ . "/configurations.csv", 'r')) !== false) {              
                         // Parcourir chaque ligne du fichier
                         while (($line = fgetcsv($handleConfig, 1000, ";")) !== false) {
@@ -252,7 +256,7 @@ if (!empty($btnValue)) {
                         }
                         fclose($handleConfig);
                     }
-                    
+                    //récupère l'indice de la carte. Ex: $cartes=['CACMO','CACOE'] donc si $carte est CACMO, j'obtiens $indiceCarte = 0 et $nomCard
                     $nomCarte = explode('|', $cartes);
                     for ($i = 0; $i < $nbCartes; $i++) {
                         if ($nomCarte[$i] === $carte) {

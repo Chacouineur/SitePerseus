@@ -139,7 +139,7 @@ switch($btnValue){
     case "creerTab":
         if (!empty($nomConfig) && !empty($nbCartes)) {
             $vide = implode('|', array_fill(0, $nbCartes, '#'));
-    
+            //Vérifie si le fichier configuration.csv existe. S'il n'existe pas, il est créé et ajout de la config dans le fichier
             if (!file_exists($configurations)) {
                 $handle = fopen($configurations, 'w');
                 fputcsv($handle, ['Nom', 'Nombre CNs', 'Noms CNs'], ';');
@@ -158,9 +158,11 @@ switch($btnValue){
                 }
                 fclose($handle);
                 if ($found) {
+                    //la configuration existe deja donc redirection avec message d'erreur
                     header('Location: Pages/pageAjoutConfig.php?erreurConfigExiste');
                     exit;
                 } else {
+                    //la configuration n'existe pas donc ajout de la config dans le fichier
                     $handle = fopen($configurations, 'a');
                     if (fputcsv($handle, [$nomConfig, $nbCartes, $vide], ';')) {
                         $_SESSION['nomConfig'] = $nomConfig;
@@ -169,7 +171,7 @@ switch($btnValue){
                 }
             }
             $nomsCNs = explode('|', $vide); 
-            // Créer les nouvelles lignes pour chaque carte
+            // Crée un tableau qui sera utilisé pour contenir le nom des cartes
             for($i = 0; $i < $nbCartes; $i++) {
                 $numCarte = "CN" . ($i+1);
                 $nomCarte = $nomsCNs[$i];        
@@ -177,7 +179,6 @@ switch($btnValue){
             }
             $_SESSION['dataConfig'] = $csvData;
             $_SESSION['nbCartes'] = $nbCartes;
-            
         }
         else {
             header('Location: Pages/pageAjoutConfig.php?erreurChampsNonRenseignes');
@@ -202,12 +203,13 @@ switch($btnValue){
                 fclose($handle);
             }
         
-            // Si la configuration est trouvée, la modifier
+            // Si la configuration est trouvée dans configurations.csv, la modifier
             if ($found) {
-                $currentConfig = $csvData[$currentConfigIndex];
+                $currentConfig = $csvData[$currentConfigIndex]; //la configuration en cours de modif
                 $nbCartes = $currentConfig[1];
-                $noms = explode('|', $currentConfig[2]);
+                $noms = explode('|', $currentConfig[2]); //transforme "#|#" en noms[0]="#" et noms[1]="#"
                 if (in_array($nomCarte, $noms)) {
+                    //si le nom existe deja, redirection avec message d'erreur
                     header('Location: Pages/pageAjoutConfig.php?erreurNomExiste');
                     exit();
                 }
