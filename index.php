@@ -339,7 +339,7 @@
                     </div>
                     <div id="item-6-2">
                         <h5>Comment ?</h5>
-                        <p><u>Version Windows</u> :</p>
+                        <p><u>Version Windows</u> :<br></p>
                         <ul>
                             <li>Il faut choisir une configuration et appuyer sur le bouton "Selectionner Config".</li>
                             <img src="Images/deploiement1,5.png" alt="Image" class="img-fluid">
@@ -348,16 +348,17 @@
                             <li>Il faut ensuite donné l'adresse IP du MN, son nom d'utilisateur, son mot de passe, et choisir une version du MN : </li>
                             <img src="Images/deploiement3,5.png" alt="Image" class="img-fluid">
                         </ul>
-                        <p><u>Version Linux</u> :</p>
+                        <p><u>Version Linux</u> :<br></p>
                         <ul>
                             <li>Appuyez sur le bouton "Analyser le réseau local".  </li>
                             <li>Choisissez une configuration et appuyez sur le bouton "Selectionner Config".</li>
-                            <li>Remplissez le tableau en remplissant les champs. Une fois fait, on obtient le tableau :</li>
+                            <li>Remplissez le tableau en remplissant les champs et sélectionner l'IP correspondante dans le résultat de l'analyse réseau. <br>
+                                Une fois fait, on obtient le tableau :<br></li>
                             <img src="Images/deploiement1.png" alt="Image" class="img-fluid">
                             <li>Il faut ensuite entrer les valeurs dans les champs pour le MN :</li>
-                            <img src="Images/deploiement2.png" alt="Image" class="img-fluid">
+                            <img src="Images/deploiement2,6.png" alt="Image" class="img-fluid">
                         </ul>
-                        <p><u>Sur Windows et Linux</u> :</p>
+                        <p><u>Sur Windows et Linux</u> :<br></p>
                         <ul>Il y a plusieurs choix de déploiement, il faut en choisir 1 ou tous et appuyer sur le bouton "Déployer":
                             <li>
                             Cochez tout si c'est le premier déploiement que vous voulez faire ou si vous voulez changer de version de l'application OpenPOWERLINK.
