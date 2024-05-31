@@ -336,24 +336,6 @@
                         <p>Sur un PC sous Windows, tout doit être entré manuellement que ce soit l'IP des cartes CAC et du MN. Il est donc nécessaire de bien
                         connaître les relations entre toutes les IPs et les cartes CAC avant de déployer.<br>
                         </p>
-                        <ul>Pour la partie déploiement, après avoir entré toutes les renseignements de connexion SSH des cartes, il y a plusieurs choix de déploiement :
-                        <li>
-                        Cochez tout si c'est le premier déploiement que vous voulez faire ou si vous voulez changer de version de l'application OpenPOWERLINK.
-                        </li>
-                        <li>
-                        Cochez "paramètres d'application et compilation" <b>pour le MN et le CN</b> si vous avez changé le nombre de cartes entre deux téléversements.
-                        </li>
-                        <li>
-                        Cochez "fichiers CSV physiques" si vous voulez changer les fichiers CSV de configuration physique des capteurs et des vannes de toutes les cartes CAC.
-                        </li>
-                        <li>
-                        Cochez "fichiers CSV communs" <b>pour le MN et le CN</b> si vous avez changé "activation.csv" ou si vous avez créé ou modifié un ou des fichiers CSV d'états généraux.
-                        </li>
-                        </ul>
-                        <p>Attention ne cochez pas OpenPOWERLINK stack et application sans cocher les autres car tout les précédents fichiers CSV sur les cartes CAC seront supprimés.
-                        Le programme OpenPOWERLINK ne peut pas fonctionner sans aucun fichiers CSV.
-                        S'il y a eu une erreur lors du déploiement, une erreur s'affichera en rouge sur la page Déploiements.<br>
-                        </p>
                     </div>
                     <div id="item-6-2">
                         <h5>Comment ?</h5>
@@ -376,9 +358,27 @@
                             <img src="Images/deploiement2.png" alt="Image" class="img-fluid">
                         </ul>
                         <p><u>Sur Windows et Linux</u> :</p>
-                        <p>Il faut choisir les documents  à déployer(1 ou tous) et appuyer sur le bouton "Déployer":</p>
-                        <img src="Images/deploiement3.png" alt="Image" class="img-fluid">
-                        <img src="Images/deploiement4.png" alt="Image" class="img-fluid">
+                        <ul>Il y a plusieurs choix de déploiement, il faut en choisir 1 ou tous et appuyer sur le bouton "Déployer":
+                            <li>
+                            Cochez tout si c'est le premier déploiement que vous voulez faire ou si vous voulez changer de version de l'application OpenPOWERLINK.
+                            </li>
+                            <img src="Images/deploiement3.png" alt="Image" class="img-fluid">
+                            <li>
+                            Cochez "paramètres d'application et compilation" <b>pour le MN et le CN</b> si vous avez changé le nombre de cartes entre deux téléversements.
+                            </li>
+                            <li>
+                            Cochez "fichiers CSV physiques" si vous voulez changer les fichiers CSV de configuration physique des capteurs et des vannes de toutes les cartes CAC.
+                            </li>
+                            <img src="Images/deploiement5.png" alt="Image" class="img-fluid">
+                            <li>
+                            Cochez "fichiers CSV communs" <b>pour le MN et le CN</b> si vous avez changé "activation.csv" ou si vous avez créé ou modifié un ou des fichiers CSV d'états généraux.
+                            </li>
+                            <img src="Images/deploiement4.png" alt="Image" class="img-fluid">
+                        </ul>
+                        <p>Attention ne cochez pas OpenPOWERLINK stack et application sans cocher les autres car tout les précédents fichiers CSV sur les cartes CAC seront supprimés.
+                        Le programme OpenPOWERLINK ne peut pas fonctionner sans aucun fichiers CSV.
+                        S'il y a eu une erreur lors du déploiement, une erreur s'affichera en rouge sur la page Déploiements.<br>
+                        </p>
                     </div>
                 </div>
             </div>
