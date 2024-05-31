@@ -350,9 +350,9 @@
                         </ul>
                         <p><u>Version Linux</u> :</p>
                         <ul>
-                            <li>Il faut appuyer sur le bouton "Analyser le réseau local".  </li>
-                            <li>Il faut choisir une configuration et appuyer sur le bouton "Selectionner Config".</li>
-                            <li>Il faut remplir le tableau en remplissant les champs. Une fois fait, on obtient le tableau :</li>
+                            <li>Appuyez sur le bouton "Analyser le réseau local".  </li>
+                            <li>Choisissez une configuration et appuyez sur le bouton "Selectionner Config".</li>
+                            <li>Remplissez le tableau en remplissant les champs. Une fois fait, on obtient le tableau :</li>
                             <img src="Images/deploiement1.png" alt="Image" class="img-fluid">
                             <li>Il faut ensuite entrer les valeurs dans les champs pour le MN :</li>
                             <img src="Images/deploiement2.png" alt="Image" class="img-fluid">
