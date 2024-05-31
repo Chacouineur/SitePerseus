@@ -256,7 +256,7 @@ if (!empty($btnValue)) {
                         }
                         fclose($handleConfig);
                     }
-                    //récupère l'indice de la carte. Ex: $cartes=['CACMO','CACOE'] donc si $carte est CACMO, j'obtiens $indiceCarte = 0 et $nomCard
+                    //récupère l'indice de la carte. Ex: $cartes=['CACMO','CACOE'] donc si $carte est CACMO, j'obtiens $indiceCarte = 0 et $nomCard='CACMO'
                     $nomCarte = explode('|', $cartes);
                     for ($i = 0; $i < $nbCartes; $i++) {
                         if ($nomCarte[$i] === $carte) {
@@ -264,24 +264,22 @@ if (!empty($btnValue)) {
                             $nomCard = $nomCarte[$i];
                         }
                     }
-                    
+                    //écrit le noms de capteurs 
                     for ($i = 0; $i < 12; $i++) {
                         $indice = $i + 14 + $indiceCarte * 25;
                         if ($dataSensor[$i][1] !== 'sensor' . ($i + 1)) {
                             $data[$indice] = [$carte, $dataSensor[$i][1], 1];
-                            foreach ($data[$indice] as $cell) {
-                                echo $cell . " | ";
-                            }
-                            echo "<br>";
+                            
                         }
                     }
-                    
+                    //ouvre le fichier en mode écriture 
                     $handle = fopen($pathActivationCSV, "w");
 
                     if (!$handle) {
                         header('Location: Pages/pageModifCSV.php');
                         exit();
                     }
+                    //ecrit les nouvelles valeurs dans le fichier activation.csv 
                     foreach ($data as $ligne) {
                         if (fputcsv($handle, $ligne, ';') === false) {
                             header('Location: Pages/pageModifCSV.php');

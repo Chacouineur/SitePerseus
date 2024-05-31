@@ -33,10 +33,9 @@
         
         <form method="post" class="mx-auto p-5 rounded" action="../deploiement.php" id="mappingForm">
         <?php
-        if (PHP_OS_FAMILY === 'Windows') {}
-        else { ?>
-                <label for="code" class="form-label">Appuyez sur ce bouton pour récupérer les IPs connectées sur le réseau local :</label>
-                <button type="submit" class="btn btn-primary" name="btnValue" value="analyserRes">Analyser le réseau local</button>
+        if (PHP_OS_FAMILY !== 'Windows') { ?>
+            <label for="code" class="form-label">Appuyez sur ce bouton pour récupérer les IPs connectées sur le réseau local :</label>
+            <button type="submit" class="btn btn-primary" name="btnValue" value="analyserRes">Analyser le réseau local</button>
         <?php } ?>
             <div class="mb-3">
                 <label for="config" class="form-label">Configuration :</label>

@@ -593,8 +593,11 @@
                         });
                         
                         function updateSelectedValues() {
+                            //selectionne les checkboxes cochées
                             var selectedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+                            //écrit tous les indices des checkboxes cochées dans le champ selectedLabels en séparant les valeurs par '|'
                             var selectedValues = Array.from(selectedCheckboxes).map(cb => cb.value).join('|');
+                            //ecrit la valeur dans le champ "selectedLabels"
                             document.getElementById('selectedLabels').value = selectedValues;
                         }
                         

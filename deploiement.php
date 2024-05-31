@@ -28,24 +28,18 @@ switch($btnValue) {
         $ips = [];
         $stock = [];
         
-        
-        if (PHP_OS_FAMILY === 'Windows') {
-        }
-        else {
-            // Must be run as root
+        if (PHP_OS_FAMILY !== 'Windows') {
+            // Commande linux pour scanner le réseau local
             $arp_scan = shell_exec('arp-scan --interface=eth0 --localnet');
-    
+            
             $arp_scan = explode("\n", $arp_scan);
             $descs = [];
-        
+            
             foreach($arp_scan as $scan) {
-                
                 $matches = [];
-                
                 if(preg_match('/^([0-9\.]+)[[:space:]]+([0-9a-f:]+)[[:space:]]+(.+)$/', $scan, $matches) !== 1) {
                     continue;
                 }
-                
                 $ips[] = $matches[1];
             }
             // Debug: Output IPs and descriptions
@@ -55,6 +49,7 @@ switch($btnValue) {
                 exit;
             }
             foreach($ips as $index => $ip) {
+                //Commande permettant d'obtenir les hostname des différentes adresses IP.
                 $last_line = shell_exec('avahi-resolve -a '.$ip);
                 $parts = explode("\t", $last_line);
                 $hostname = trim($parts[1]);
@@ -72,28 +67,29 @@ switch($btnValue) {
         $csvData=[];
         $nomCartes = "";
         $nbCartes = 0;
-
+        //Si le fichier configuration.csv existe, lecture du fichier
         if (file_exists($configurations)) {
             $handle = fopen($configurations, 'r');
             $found = false;
             while (($line = fgetcsv($handle, 1000, ";")) !== false) {
                 if ($line[0] === $nomConfig) {
                     $found = true;
+                    //obtention du nombre de carte et du nom des cartes
                     $nbCartes = $line[1];
                     $nomCartes = $line[2];
                     break;
                 }
             }
-            
             fclose($handle);
         }
         else {
             header('Location: Pages/pageDeploiements.php?erreurFichierConfigurationCSVmanquant');
         }
-
+        //Si le nom des cartes et du nombre de cartes
         if(!empty($nomCartes) && !empty($nbCartes))
         {
             $nomsCNs = explode('|', $nomCartes); 
+            //si le fichier deploiement.csv n'existe pas, il est créé
             if(!file_exists($deploiementCSV)) {
                 $handle = fopen($deploiementCSV, 'w');
                 fputcsv($handle, ['Nom config', 'Numéro carte', 'Nom Carte', 'IP', 'Utilisateur SSH', 'Mot de passe SSH'], ';');
@@ -104,6 +100,7 @@ switch($btnValue) {
                 }
             }
             else {
+                //Si le fichier déploiement.csv existe, les valeurs du fichier sont mises dans un tableau.
                 $handle = fopen($deploiementCSV, 'r');
                 fgetcsv($handle, 1000, ";");
                 while (($line = fgetcsv($handle, 1000, ";")) !== false) {
